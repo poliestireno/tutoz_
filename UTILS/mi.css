@@ -1,0 +1,22 @@
+.btn-outline {
+    background-color: transparent;
+    color: inherit;
+    transition: all .5s;
+}
+
+.btn-wrap-text {
+    overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  text-overflow: ellipsis;
+  style=height:200px; 
+  width:200px;  
+}
+.qr-code {
+  max-width: 200px;
+  margin: 10px;
+}
+.labelito{
+  display: inline-block;
+  width: 120px;
+}
