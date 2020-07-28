@@ -8,7 +8,7 @@ function getEstrellasPareja($aF,$nEstrellasPareja)
 function getEstrellasDoblePareja($aF,$nEstrellasDoblePareja)
 {
    return (
-   	((($aF[0]==$aF[1])&&$aF[1]!=-1)&&(($aF[2]==$aF[3])&&$aF[2]!=-1))||((($aF[0]==$aF[2])&&$aF[2]!=-1)&&(($aF[1]==$aF[3])&&$aF[1]!=-1))||((($aF[0]==$aF[3])&&$aF[3]!=-1)&&(($aF[1]==$aF[2])&&$aF[1]!=-1)))?$nEstrellasDoblePareja:0;
+    ((($aF[0]==$aF[1])&&$aF[1]!=-1)&&(($aF[2]==$aF[3])&&$aF[2]!=-1))||((($aF[0]==$aF[2])&&$aF[2]!=-1)&&(($aF[1]==$aF[3])&&$aF[1]!=-1))||((($aF[0]==$aF[3])&&$aF[3]!=-1)&&(($aF[1]==$aF[2])&&$aF[1]!=-1)))?$nEstrellasDoblePareja:0;
 }
 function getEstrellasTrio($aF,$nEstrellasTrio)
 {
@@ -18,13 +18,33 @@ function getEstrellasCuarteto($aF,$nEstrellasCuarteto)
 {
    return ((($aF[0]==$aF[1])&&$aF[1]!=-1)&&(($aF[1]==$aF[2])&&$aF[1]!=-1)&&(($aF[2]==$aF[3])&&$aF[3]!=-1)&&(($aF[0]==$aF[3])&&$aF[3]!=-1))?$nEstrellasCuarteto:0;
 }
-function getEstrellasEscalera3($aF,$nEstrellasEscalera3)
+function getEstrellasEscaleraSimple3($aF,$nEstrellasEscaleraSimple3)
 {
-   return ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))||(($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1))))?$nEstrellasEscalera3:0;
+   return ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))||(($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1))))?$nEstrellasEscaleraSimple3:0;
 }
-function getEstrellasEscalera4($aF,$nEstrellasEscalera4)
+function getEstrellasEscaleraSimple4($aF,$nEstrellasEscaleraSimple4)
 {
-   return (($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2	]+1)))?$nEstrellasEscalera4:0;
+   return (($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))?$nEstrellasEscaleraSimple4:0;
+}
+function getEstrellasEscalera3($aF,$aFI,$nEstrellasEscalera3)
+{
+   return (((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))&&((($aFI[0]==$aFI[1])&&$aFI[1]!=-1)&&(($aFI[1]==$aFI[2])&&$aFI[1]!=-1)))
+    ||
+    ((($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))&&((($aFI[1]==$aFI[2])&&$aFI[1]!=-1)&&(($aFI[2]==$aFI[3])&&$aFI[2]!=-1))))?$nEstrellasEscalera3:0;    
+}
+function getEstrellasEscalera4($aF,$aFI,$nEstrellasEscalera4)
+{
+   return ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2  ]+1)))&&
+    (((($aFI[0]==$aFI[1])&&$aFI[1]!=-1)&&(($aFI[1]==$aFI[2])&&$aFI[1]!=-1)&&(($aFI[2]==$aFI[3])&&$aFI[3]!=-1)&&(($aFI[0]==$aFI[3])&&$aFI[3]!=-1)))
+  )?$nEstrellasEscalera4:0;
+}
+function getEstrellasEscaleraEstrellas3($aF,$nEstrellasEscaleraEstrellas3)
+{
+   return ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))||(($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1))))?$nEstrellasEscaleraEstrellas3:0;
+}
+function getEstrellasEscaleraEstrellas4($aF,$nEstrellasEscaleraEstrellas4)
+{
+   return (($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))?$nEstrellasEscaleraEstrellas4:0;
 }
 
 
@@ -32,13 +52,13 @@ function getEstrellasEscalera4($aF,$nEstrellasEscalera4)
 
 function getEstrellasCromos($dbh,$correo)
 {
-	  	 $totalEstrellasCromos = 0;
-		 $vectorCromos = getCromosDeAlbum($dbh,$correo);
-		 foreach ($vectorCromos as $croo) 
-		 {
-		    $totalEstrellasCromos +=$croo['mana_w'];
-		 }
-		 return $totalEstrellasCromos;
+       $totalEstrellasCromos = 0;
+     $vectorCromos = getCromosDeAlbum($dbh,$correo);
+     foreach ($vectorCromos as $croo) 
+     {
+        $totalEstrellasCromos +=$croo['mana_w'];
+     }
+     return $totalEstrellasCromos;
 }
 
 function getEstrellasGanas($dbh,$correo)
@@ -68,14 +88,21 @@ function getEstrellasRetos($dbh,$correo)
 
 function getEstrellasCombinaciones($dbh,$correo)
 {
-	$ordenCombosDBAnt = getAlumnoFromCorreo($dbh, $correo)['ORDEN_COMBOS'];
+  
+  $alumnoDB = getAlumnoFromCorreo($dbh, $correo);
+
+  $ordenCombosDBAnt = $alumnoDB['ORDEN_COMBOS'];
 $vectorOrdenCombosAnt = explode(",", $ordenCombosDBAnt);
 
-$ordenReferenciasDB = getAlumnoFromCorreo($dbh, $correo)['ORDEN_REFERENCIAS_TOTAL'];
+$ordenReferenciasDB = $alumnoDB['ORDEN_REFERENCIAS_TOTAL'];
 $aReferencias= explode(',', $ordenReferenciasDB);
 
-$ordenCreadoresDB = getAlumnoFromCorreo($dbh, $correo)['ORDEN_CREADORES'];
+$ordenCreadoresDB = $alumnoDB['ORDEN_CREADORES'];
 $aCreators= explode(',', $ordenCreadoresDB);
+
+$ordenAlbumDB = $alumnoDB['ORDEN_ALBUM'];
+$aCromosAlbum= explode(',', $ordenAlbumDB);
+
   $estrellas = 0;
   $sEstrellas = "";
   $mas="";
@@ -107,6 +134,13 @@ if (Count($aCreators)>1)
       $aAuxRef[]=-1;
       $aAuxRef[]=-1;     
     }
+    $aAuxCromos = array();
+    
+$aAuxCromos[]=($aCromosAlbum[$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[$i*4])['mana_w']:-1;
+$aAuxCromos[]=($aCromosAlbum[(1)+$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[(1)+$i*4])['mana_w']:-1;
+$aAuxCromos[]=($aCromosAlbum[(2)+$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[(2)+$i*4])['mana_w']:-1;
+$aAuxCromos[]=($aCromosAlbum[(3)+$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[(3)+$i*4])['mana_w']:-1;
+    
     $filaI=NULL;
     if (isset($_POST['selfila_'.($i+1)])) 
     {
@@ -119,24 +153,37 @@ if (Count($aCreators)>1)
     $aCombos.=$comma.$filaI;
     $comma=",";
  //   var_dump($filaI);
+    $adCromos = getAdminCromos($dbh);
     switch ($filaI) {
       case '1':
-        $estreAux=getEstrellasPareja($aAux,getAdminCromos($dbh)['PAREJA']);
+        $estreAux=getEstrellasPareja($aAux,$adCromos['PAREJA']);
         break;
       case '2':
-        $estreAux=getEstrellasDoblePareja($aAux,getAdminCromos($dbh)['DOBLEPAREJA']);
+        $estreAux=getEstrellasDoblePareja($aAux,$adCromos['DOBLEPAREJA']);
         break;
       case '3':
-        $estreAux=getEstrellasTrio($aAux,getAdminCromos($dbh)['TRIO']);
+        $estreAux=getEstrellasTrio($aAux,$adCromos['TRIO']);
         break;
       case '4':
-        $estreAux=getEstrellasCuarteto($aAux,getAdminCromos($dbh)['CUARTETO']);
+        $estreAux=getEstrellasCuarteto($aAux,$adCromos['CUARTETO']);
         break;
       case '5':
-        $estreAux=getEstrellasEscalera3($aAuxRef,getAdminCromos($dbh)['ESCALERA3']);
+        $estreAux=getEstrellasEscaleraSimple3($aAuxRef,$adCromos['ESCALERASIMPLE3']);
         break;
       case '6':
-        $estreAux=getEstrellasEscalera4($aAuxRef,getAdminCromos($dbh)['ESCALERA4']);
+        $estreAux=getEstrellasEscaleraSimple4($aAuxRef,$adCromos['ESCALERASIMPLE4']);
+        break;
+      case '7':
+        $estreAux=getEstrellasEscalera3($aAuxRef,$aAux,$adCromos['ESCALERA3']);
+        break;
+      case '8':
+        $estreAux=getEstrellasEscalera4($aAuxRef,$aAux,$adCromos['ESCALERA4']);
+        break;
+      case '9':
+        $estreAux=getEstrellasEscaleraEstrellas3($aAuxCromos,$adCromos['ESCALERA3_ESTRELLAS']);
+        break;
+      case '10':
+        $estreAux=getEstrellasEscaleraEstrellas4($aAuxCromos,$adCromos['ESCALERA4_ESTRELLAS']);
         break;
       
       default:
@@ -205,6 +252,8 @@ if (isset($_SESSION['alogin']))
 
       //echo 'nivelReal:'.$nivelReal;
       $nivelActual = getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['NUMERO_NIVEL'];
+      //echo 'nivelActual:'.$nivelActual;
+      
       if ($nivelReal!=$nivelActual)
       {
         cambiarNivelAlumno($dbh,$_SESSION['alogin'],$nivelReal);
@@ -215,10 +264,14 @@ if (isset($_SESSION['alogin']))
         //meter aqui las demas recompesas.
         
         
-        // notificación al alumno de subida de nivel
+        // notificación general de subida de nivel a la clase
+        $alumnoDB = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
+        $clase = getAsignaturasFromCurso($dbh,$alumnoDB['ID_CURSO'])[0]['NOMBRE'];
+        $nombreAlumno = $alumnoDB['NOMBRE']." ".$alumnoDB['APELLIDO1'];
+
         $recompensasAlumno= getNivelFromNumeroNivel($dbh,$_SESSION['alogin'],$nivelReal)['RECOMPENSAS'];
-        $mensaje = "Has pasado a nivel ".$nivelReal." obteniendo las siguientes recompensas: ".$recompensasAlumno;
-        mandarNotificacion($dbh,'Admin',$_SESSION['alogin'],$mensaje);
+        $mensaje = $nombreAlumno." ha pasado a nivel ".$nivelReal." obteniendo las siguientes recompensas: ".$recompensasAlumno;
+        mandarNotificacion($dbh,'Admin',$clase,$mensaje);
       }
   }
 }

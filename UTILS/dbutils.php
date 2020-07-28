@@ -28,7 +28,7 @@ function conectarDB()
 
 function mandarNotificacion($db,$remitente,$receptor,$mensaje)
 {
-$sqlnoti="insert into notification (notiuser,notireciver,notitype) values (:notiuser,:notireciver,:notitype)";
+$sqlnoti="insert into notification (notiuser,notireciver,notitype,readit) values (:notiuser,:notireciver,:notitype,0)";
     $querynoti = $db->prepare($sqlnoti);
     $querynoti-> bindParam(':notiuser', $remitente, PDO::PARAM_STR);
     $querynoti-> bindParam(':notireciver',$receptor, PDO::PARAM_STR);
@@ -289,7 +289,46 @@ function getAlumnosInforme($db,$IDAsignatura){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error inserción alumno:".$ex->getMessage();
+     echo "Error getAlumnosInforme:".$ex->getMessage();
+  }
+  return $vectorTotal;
+}
+function setNotificationsOff($db,$notireciver)
+{
+  try 
+  {
+    $sql = "UPDATE notification SET readit=1  where notireciver='".$notireciver."' AND readit=0";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! cambiarNivelAlumno ".$ex->getMessage();
+  }   
+}
+
+function getNotificationsGenerales($db,$notireciver,$fechaUltimaLeida){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("select * from notification where notireciver='".$notireciver."' AND '".$fechaUltimaLeida."' < time ORDER BY time");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     echo "Error getNotificationsOff:".$ex->getMessage();
+  }
+  return $vectorTotal;
+}
+function getNotificationsOff($db,$notireciver){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("select * from notification where notireciver='".$notireciver."' AND readit=0 ORDER BY time");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     echo "Error getNotificationsOff:".$ex->getMessage();
   }
   return $vectorTotal;
 }
@@ -307,7 +346,7 @@ function getAlumnosInformeEstrellas($db,$IDAsignatura){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error inserción alumno:".$ex->getMessage();
+     echo "Error getAlumnosInformeEstrellas:".$ex->getMessage();
   }
   return $vectorTotal;
 }
@@ -942,6 +981,18 @@ function getFantasma($db,$IDAsignatura,$dia)
 }
    
 
+function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS SET ULTIMA_FECHA_NOTI_GENERAL=now() WHERE CORREO='".$correo."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! setNowUltimaFechaNotiGeneralAlumno ".$ex->getMessage();
+  }   
+}
 function cambiarNivelAlumno($db,$correo, $nivelReal)
 {
   try 

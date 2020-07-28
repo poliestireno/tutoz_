@@ -78,9 +78,13 @@ else{
 									   <div class="panel-body">
 <?php 
 $reciver = $_SESSION['alogin'];
-$sql = "SELECT * from  notification where notireciver = (:reciver) order by time DESC";
+$alumnoDB = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
+$clase = getAsignaturasFromCurso($dbh,$alumnoDB['ID_CURSO'])[0]['NOMBRE'];
+$sql = "SELECT * from  notification where notireciver = (:reciver) 
+or notireciver = (:clase) order by time DESC";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+$query-> bindParam(':clase', $clase, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;

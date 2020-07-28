@@ -1,4 +1,4 @@
-<?php
+    <?php
 include('includes/config.php');
 require_once("UTILS/dbutils.php");
 if(isset($_POST['submit']))
@@ -32,7 +32,7 @@ if (!(existeCorreo($dbh,$CORREO)))
     insertarBot($dbh,"HOLA","",0,"",1,2,9,0,0,0);
     $lastInsertIdBot = $dbh->lastInsertId();
 
-    $sql ="INSERT INTO ALUMNOS(NOMBRE,CORREO, password, gender, APELLIDO1, APELLIDO2, image,ORDEN_ALBUM,ORDEN_COMBOS,ORDEN_CREADORES,ORDEN_REFERENCIAS_TOTAL,NUMERO_NIVEL, ID_MIBOT,ID_CURSO) VALUES(:name, :CORREO, :password, :gender, :APELLIDO1no, :APELLIDO2, :image,'','','','',1, :IDMiBot,:IDCurso)";
+    $sql ="INSERT INTO ALUMNOS(NOMBRE,CORREO, password, gender, APELLIDO1, APELLIDO2, image,ORDEN_ALBUM,ORDEN_COMBOS,ORDEN_CREADORES,ORDEN_REFERENCIAS_TOTAL,NUMERO_NIVEL,ULTIMA_FECHA_NOTI_GENERAL, ID_MIBOT,ID_CURSO) VALUES(:name, :CORREO, :password, :gender, :APELLIDO1no, :APELLIDO2, :image,'','','','',1,NULL, :IDMiBot,:IDCurso)";
     $query= $dbh -> prepare($sql);
     $query-> bindParam(':name', $name, PDO::PARAM_STR);
     $query-> bindParam(':CORREO', $CORREO, PDO::PARAM_STR);

@@ -27,9 +27,9 @@ $vectorOrden = explode(",", $ordenAlbumDB);
 
 
 $aRe = getEstrellasCombinaciones($dbh,$_SESSION['alogin']);
-$estrellasCombinaciones=$aRe [0];
-$sEstrellas=$aRe [1];
-$aCombos=$aRe [2];
+$estrellasCombinaciones=$aRe[0];
+$sEstrellas=$aRe[1];
+$aCombos=$aRe[2];
 
 if(isset($_POST['ordentotal']))
 { 
@@ -216,8 +216,12 @@ echo '<span class="label label-success">'.getAdminCromos($dbh)['TRIO'].'</span>'
 echo '<span class="label label-primary">CUARTETO</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['CUARTETO'].'</span>';
 echo '<span class="label label-primary">ESCALERA(3)(referencia)</span>';
-echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA3'].'</span>';
+echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERASIMPLE3'].'</span>';
 echo '<span class="label label-primary">ESCALERA(4)(referencia)</span>';
+echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERASIMPLE4'].'</span>';
+echo '<span class="label label-primary">ESCALERA COLOR(3)(referencia)</span>';
+echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA3'].'</span>';
+echo '<span class="label label-primary">ESCALERA COLOR(4)(referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA4'].'</span>';
 echo '<span class="label label-primary">ESCALERA(3)(estrellas)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA3_ESTRELLAS'].'</span>';
@@ -351,8 +355,10 @@ for ($i=1; $i < $numSelect+1; $i++)
         <option value="4" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="4")?" selected='selected' ":"")?>>cuarteto</option>
         <option value="5" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="5")?" selected='selected' ":"")?>>escalera(3)(referencia)</option>
         <option value="6" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="6")?" selected='selected' ":"")?>>escalera(4)(referencia)</option>
-        <option value="7" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="7")?" selected='selected' ":"")?>>escalera(3)(estrellas)</option>
-        <option value="8" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="8")?" selected='selected' ":"")?>>escalera(4)(estrellas)</option>
+        <option value="7" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="7")?" selected='selected' ":"")?>>escalera color(3)(referencia)</option>
+        <option value="8" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="8")?" selected='selected' ":"")?>>escalera color(4)(referencia)</option>
+        <option value="9" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="9")?" selected='selected' ":"")?>>escalera(3)(estrellas)</option>
+        <option value="10" <?php if (Count($vectorOrdenCombos)>1) echo (($vectorOrdenCombos[$i-1]=="10")?" selected='selected' ":"")?>>escalera(4)(estrellas)</option>
       </select>
 
 <?php 

@@ -5,8 +5,8 @@ include('includes/config.php');
 require_once("UTILS/dbutils.php");
 $msg=0;
 if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
-	{	
-header('location:index.php');
+{	
+	header('location:index.php');
 }
 else{
 	
@@ -93,7 +93,7 @@ if(isset($_POST['submit']))
 
 </head>
 
-<body>
+<body onload="showNotis()">
 <?php
 		$CORREO = $_SESSION['alogin'];
 		$sql = "SELECT * from ALUMNOS where CORREO = (:CORREO);";
@@ -178,6 +178,7 @@ if(isset($_POST['submit']))
 	</div>
 
 	<!-- Loading Scripts -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -193,6 +194,44 @@ if(isset($_POST['submit']))
 						$('.succWrap').slideUp("slow");
 					}, 3000);
 					});
+	function showNotis()
+	{		
+		<?php
+		$notisOff = getNotificationsOff($dbh,$_SESSION['alogin']);
+		$i=1;
+		$notas="";
+		foreach ($notisOff as $noti) 
+		{
+			$nota = preg_replace( "/\r|\n/", "", $noti["notitype"] );
+			$notas.="<p>".$i.".- ".$nota."</p>";
+			$i++;
+		}
+		setNotificationsOff($dbh,$_SESSION['alogin']);
+		
+		$alumnoDB = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
+		$notisGene = getNotificationsGenerales($dbh,getAsignaturasFromCurso($dbh,$alumnoDB['ID_CURSO'])[0]['NOMBRE'],$alumnoDB['ULTIMA_FECHA_NOTI_GENERAL']);
+		foreach ($notisGene as $noti) 
+		{
+			$nota = preg_replace( "/\r|\n/", "", $noti["notitype"] );
+			$notas.="<p>".$i.".- ".$nota."</p>";
+			$i++;
+		}
+		setNowUltimaFechaNotiGeneralAlumno($dbh,$_SESSION['alogin']);
+		if ($notas!="")
+		{
+		?>
+				const { value: formValues } =  Swal.fire({
+  title: 'Notas pendientes:',
+         showConfirmButton: false,
+  html:
+        '<?php echo $notas?>'
+        ,
+        showCloseButton: true,
+  focusConfirm: false,
+  
+});
+	<?php }?>	
+	}
 	</script>
 </body>
 </html>

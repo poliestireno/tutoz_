@@ -102,7 +102,6 @@ if(isset($_POST['submit']))
 	<?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
 <h3>Ranking de mi clase (<?php 
-
 	echo getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID_CURSO'])[0]['NOMBRE']?>)</h3>
 <!--Table-->
 <table class="table table-striped w-auto table-bordered">
@@ -142,8 +141,8 @@ if(isset($_POST['submit']))
 
 // INI CODIGO IGUAL EN mialbum.php y ranking.php, si se modifica hay que copiarlo
 $aRe = getEstrellasCombinaciones($dbh,$alumno['CORREO']);
-$estrellasCombinaciones=$aRe [0];
-$sEstrellas=$aRe [1];
+$estrellasCombinaciones=$aRe[0];
+$sEstrellas=$aRe[1];
 // FIN CODIGO IGUAL EN mialbum.php y ranking.php, si se modifica hay que copiarlo
 
 
@@ -201,11 +200,11 @@ foreach ($aTotalAlumnos as $alum)
 	      echo '<th scope="row">'.$contador.'</th>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Nombre'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Nivel'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Total'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Retos'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Comportamiento'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Cromos'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Suerte'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Total']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Retos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Cromos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Suerte']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	    echo '</tr>';
 	    $contador++;
 }
