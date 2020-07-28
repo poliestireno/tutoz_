@@ -47,7 +47,64 @@ require_once("../UTILS/dbutils.php");
 
 		$array       = array();
 		$result      = "";
+
+// varios dias horas intentando borrar de la parte de events los custom, no conseguido, intentarlo más adelante...
+
+//$arr = decode_json($response);
+
+    // removing the value
+	
+/*
+$result2 =urldecode($gameData);
+$jjson = json_decode($result2,true);
+if (isset($jjson['map']['_events']))
+{
+$resultttt = array();
+foreach($jjson['map']['_events'] as $element) {
+	
+	if(is_array($element)) {
+		$i=0;
+
+		foreach($element as $ele) {
+			//$teet .="....hh...".$ele->_name;
+			
+			if(isset($ele['_eventData'])){
+		   		unset($element[$i]);
+		   	
+				mi_info_log("Borramos ".$i);		   		
+   			}
+   			$i++;	
+		}
+				//mi_info_log($element);	
 				
+        $resultttt['@a']=$element;
+    } 
+    else
+    {
+		$resultttt['@c']=$element;
+    }
+
+}
+unset($jjson['map']['_events']);
+$newLoginHistory = array();
+$newLoginHistory['@a'] = "1411053989";
+$newLoginHistory['@b'] = "example-city-3";
+
+$jjson['map']['_events']= $resultttt;
+$gameData = json_encode($jjson);
+//mi_info_log($jjson);
+}
+*/
+
+
+/*
+$jjson = json_encode($jjson);
+//mi_info_log($teet);
+mi_info_log("TOTALLL12");
+
+mi_info_log($jjson);
+*/
+			
 		$db = new PDO('sqlite:rmmv.sqlite');
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
