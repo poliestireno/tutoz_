@@ -59,7 +59,7 @@ if(isset($_POST['submit']))
 	//var_dump($_POST);
 	//$CORREO=$_POST['CORREO'];
 	//$sql="UPDATE admin SET username=(:name), email=(:CORREO)";
-	$sql="UPDATE ADMIN_CROMOS SET N_CROMOS_INI=(:n_cromos_iniciales), N_CROMOS_PROPIOS=(:n_cromos_propios), NUM_SLOTS= (:nslots) ,  PAREJA=(:valorpareja),  DOBLEPAREJA=(:valordoblepareja),  TRIO=(:valortrio), CUARTETO=(:valorcuarteto),  ESCALERA3=(:valorescalera3),  ESCALERA4=(:valorescalera4),  ESCALERA3_ESTRELLAS=(:valorescalera3_estrellas),  ESCALERA4_ESTRELLAS=(:valorescalera4_estrellas) ";
+	$sql="UPDATE ADMIN_CROMOS SET N_CROMOS_INI=(:n_cromos_iniciales), N_CROMOS_PROPIOS=(:n_cromos_propios), NUM_SLOTS= (:nslots) ,  PAREJA=(:valorpareja),  DOBLEPAREJA=(:valordoblepareja),  TRIO=(:valortrio), CUARTETO=(:valorcuarteto),  ESCALERA3=(:valorescalera3),  ESCALERA4=(:valorescalera4),ESCALERASIMPLE3=(:valorescalerasimple3),  ESCALERASIMPLE4=(:valorescalerasimple4),  ESCALERA3_ESTRELLAS=(:valorescalera3_estrellas),  ESCALERA4_ESTRELLAS=(:valorescalera4_estrellas) ";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':n_cromos_iniciales', $_POST['n_cromos_iniciales'], PDO::PARAM_STR);
 	$query-> bindParam(':n_cromos_propios', $_POST['n_cromos_propios'], PDO::PARAM_STR);
@@ -69,7 +69,9 @@ if(isset($_POST['submit']))
 	$query-> bindParam(':valordoblepareja', $_POST['valordoblepareja'], PDO::PARAM_STR);
 	$query-> bindParam(':valortrio', $_POST['valortrio'], PDO::PARAM_STR);
 	$query-> bindParam(':valorcuarteto', $_POST['valorcuarteto'], PDO::PARAM_STR);
-	$query-> bindParam(':valorescalera3', $_POST['valorescalera3'], PDO::PARAM_STR);
+	$query-> bindParam(':valorescalerasimple3', $_POST['valorescalerasimple3'], PDO::PARAM_STR);
+  $query-> bindParam(':valorescalerasimple4', $_POST['valorescalerasimple4'], PDO::PARAM_STR);
+  $query-> bindParam(':valorescalera3', $_POST['valorescalera3'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera4', $_POST['valorescalera4'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera3_estrellas', $_POST['valorescalera3_estrellas'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera4_estrellas', $_POST['valorescalera4_estrellas'], PDO::PARAM_STR);
@@ -407,9 +409,19 @@ foreach ($setsCromos as $seti) {
 <div class="form-group">
 <label class="col-sm-2 control-label">Valor escalera(3)(referencia)</label>
 <div class="col-sm-4">
+<input type="text" name="valorescalerasimple3" class="form-control" required value="<?php echo htmlentities($result->ESCALERASIMPLE3);?>">
+</div>
+<label class="col-sm-2 control-label">Valor escalera(4)(referencia)</label>
+<div class="col-sm-4">
+<input type="text" name="valorescalerasimple4" class="form-control" required value="<?php echo htmlentities($result->ESCALERASIMPLE4);?>">
+</div>
+</div>
+<div class="form-group">
+<label class="col-sm-2 control-label">Valor escalera color(3)(referencia)</label>
+<div class="col-sm-4">
 <input type="text" name="valorescalera3" class="form-control" required value="<?php echo htmlentities($result->ESCALERA3);?>">
 </div>
-<label class="col-sm-2 control-label">Valor  escalera(4)(referencia)</label>
+<label class="col-sm-2 control-label">Valor  escalera color(4)(referencia)</label>
 <div class="col-sm-4">
 <input type="text" name="valorescalera4" class="form-control" required value="<?php echo htmlentities($result->ESCALERA4);?>">
 </div>
