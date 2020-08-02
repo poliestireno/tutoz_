@@ -1120,12 +1120,12 @@ function modificarCromo($db,$correo, $nombre,$color,$nestrellas,$atributo,$tipoc
    echo "An Error occured! modificarCromo ".$ex->getMessage();
   }   
 }
-function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$localizacion,$fantasma,$saltando,$personaje)
+function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$localizacion,$fantasma,$saltando,$personaje,$porcentajesPPT)
 {
   try 
   {
-
-    $sql = "UPDATE MIBOT SET PERSONAJE=".$personaje.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",ID_MAPA=".$localizacion.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
+  
+    $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."',PERSONAJE=".$personaje.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",ID_MAPA=".$localizacion.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
     $stmt = $db->prepare($sql);
     $stmt->execute();
   } catch(PDOException $ex) 

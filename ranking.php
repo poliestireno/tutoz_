@@ -170,7 +170,18 @@ $totalComportamiento =getEstrellasGanas($dbh,$alumno['CORREO']);
 		$arrayAlumno['Cromos']=$totalCromos;
 		$arrayAlumno['Suerte']=$totalSuerte;
 		$arrayAlumno['Total']=$totalTotal;
-		$arrayAlumno['Nivel']=$alumno['NUMERO_NIVEL']." (".getNivelFromNumeroNivel($dbh,$alumno['CORREO'],$alumno['NUMERO_NIVEL'])['NOMBRE'].")";
+
+		$siguienteNivel = getNivelFromNumeroNivel($dbh,$alumno['CORREO'],$alumno['NUMERO_NIVEL']+1);
+		
+		$estrellasFaltanSiguienteNivel = $siguienteNivel['ESTRELLAS_DESBLOQUEO']-$totalTotal;
+		$textoSiguienteNivel = "";
+		if ($estrellasFaltanSiguienteNivel>0)
+		{	
+			$textoSiguienteNivel = " [Siguiente nivel a ".$estrellasFaltanSiguienteNivel	." estrellas]";
+		}
+		
+		$arrayAlumno['NivelSinSiguiente']=$alumno['NUMERO_NIVEL']." (".getNivelFromNumeroNivel($dbh,$alumno['CORREO'],$alumno['NUMERO_NIVEL'])['NOMBRE'].")";
+		$arrayAlumno['NivelConSiguiente']=$alumno['NUMERO_NIVEL']." (".getNivelFromNumeroNivel($dbh,$alumno['CORREO'],$alumno['NUMERO_NIVEL'])['NOMBRE'].")".$textoSiguienteNivel;
 		$arrayAlumno['CORREO']=$alumno['CORREO'];
 		$aTotalAlumnos[]=$arrayAlumno;	
 
@@ -195,11 +206,25 @@ usort($aTotalAlumnos, "cmp");
   	 $contador=1;
 foreach ($aTotalAlumnos as $alum) 
  {
+		if ($_SESSION['alogin']==$alum['CORREO'])
+		{
+			echo '<tr>
+      <th></th>
+      <th>Nombre</th>
+      <th>Nivel</th>
+      <th>Total Estrellas</th>
+      <th>Retos</th>
+      <th>Ganas</th>
+      <th>Cromos</th>
+      <th>Suerte</th>
+    </tr>';
+		}
+
 
 	  	echo '<tr class="table-info">';
 	      echo '<th scope="row">'.$contador.'</th>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Nombre'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Nivel'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['NivelConSiguiente']:$alum['NivelSinSiguiente']).finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Total']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Retos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
@@ -216,7 +241,18 @@ foreach ($aTotalAlumnos as $alum)
     
   </tbody>
   <!--Table body-->
-
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Nivel</th>
+      <th>Total Estrellas</th>
+      <th>Retos</th>
+      <th>Ganas</th>
+      <th>Cromos</th>
+      <th>Suerte</th>
+    </tr>
+  </thead>
 
 </table>
 <h3>Mis Retos conseguidos</h3>

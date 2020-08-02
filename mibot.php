@@ -12,6 +12,12 @@ else{
 //var_dump($_POST);
 if(isset($_POST['submit']))
 {	
+	$porcentajesPPT="33,33,33";
+	if (isset($_POST['slider1-valh']))
+	{
+		$porcentajesPPT=$_POST['slider1-valh'].",".$_POST['slider2-valh'].",".$_POST['slider3-valh'];
+	}
+
 	modificarBot($dbh,$_SESSION['alogin'],
 		(!isset($_POST['saludo']))?"":$_POST['saludo'],
 		(!isset($_POST['palabra_clave']))?"":$_POST['palabra_clave'],
@@ -20,7 +26,8 @@ if(isset($_POST['submit']))
 		(!isset($_POST['localizacion']))?"":$_POST['localizacion'],
 		(!isset($_POST['checkFantasma']))?"0":"1",
 		(!isset($_POST['checkSaltando']))?"0":"1",
-		(!isset($_POST['personaje']))?"0":$_POST['personaje']
+		(!isset($_POST['personaje']))?"0":$_POST['personaje'],
+		$porcentajesPPT
 	);
 	$msg=" Información actualizada correctamente";
 	
@@ -56,6 +63,7 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css">
 
 	<style>
 	.errorWrap {
@@ -182,12 +190,16 @@ if(isset($_POST['submit']))
   color: #fff;
   background-color: #5bc0de;
 }
-		</style>
+
+.slider { width: 200px; }
+.sliderVal {height: 30px; display: inline-block;}
+
+</style>
 
 
 </head>
 
-<body>
+<body onload="cargaInicial()">
 <?php
 		$CORREO = $_SESSION['alogin'];
 
@@ -211,7 +223,12 @@ if(isset($_POST['submit']))
 <?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>
 
 <div class="panel-body">
-<form method="post" class="form-horizontal" enctype="multipart/form-data">
+<form id="form2" method="post" class="form-horizontal" enctype="multipart/form-data">
+
+<input type='hidden' name='slider1-valh' id='slider1-valh'/>
+<input type='hidden' name='slider2-valh' id='slider2-valh'/>
+<input type='hidden' name='slider3-valh' id='slider3-valh'/>
+  
 
 
 <?php
@@ -224,6 +241,7 @@ $getPropsAlummo['saltando']=1;
 $getPropsAlummo['fantasma']=1;
 $getPropsAlummo['localizacion']=1;
 $getPropsAlummo['personajes']=1;
+$getPropsAlummo['ppt1']=1;
 ?>
 <div class="form-group">
 	<?php if ($getPropsAlummo['saludo']==1) {?>
@@ -374,10 +392,32 @@ $getPropsAlummo['personajes']=1;
 	</div><?php } ?>
 </div>
 
+<div class="form-group">
+	<?php if ($getPropsAlummo['ppt1']==1) {?>
+	<label class="col-sm-2 control-label">Porcentajes Postura 1</label>
+	<div class="col-sm-4">
+PIEDRA:<div id="slider1" class="slider"></div>
+<div id="slider1-val" name="slider1-val" class="sliderVal"></div>%
+
+<div>PAPEL:</div><div id="slider2" class="slider"></div>
+<div id="slider2-val" name="slider2-val" class="sliderVal"></div>%
+
+<div>TIJERA:</div><div id="slider3" class="slider"></div>
+<div id="slider3-val" name="slider3-val" class="sliderVal"></div>%
+	</div>
+	<?php } if ($getPropsAlummo['ppt1']==1) {?>
+	<label class="col-sm-2 control-label">CAMBIAR</label>
+	<div class="col-sm-4">
+	<input type="text" name="palabra_clave" maxlength = "50" class="form-control"  value="<?php echo htmlentities($bot['PALABRA_CLAVE']);?>">
+	</div>
+	<?php } ?>
+</div>
+
 
 
 	<div class="col-sm-4 col-sm-offset-2">
-		<button class="btn btn-primary" name="submit" type="submit">Guardar cambios</button>
+		<button class="btn btn-primary" name="submit" onclick="manageSubmit()" >Guardar cambios</button>
+
 	</div>
 </form>
 									</div>
@@ -389,9 +429,9 @@ $getPropsAlummo['personajes']=1;
 			</div>
 		</div>
 	</div>
-
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.dataTables.min.js"></script>
@@ -401,11 +441,115 @@ $getPropsAlummo['personajes']=1;
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
 	<script type="text/javascript">
-				 $(document).ready(function () {          
-					setTimeout(function() {
-						$('.succWrap').slideUp("slow");
-					}, 3000);
-					});
+	function manageSubmit()
+	{ 
+		document.getElementById('slider1-valh').value=document.getElementById("slider1-val").innerHTML;
+		document.getElementById('slider2-valh').value=document.getElementById("slider2-val").innerHTML;
+		document.getElementById('slider3-valh').value=document.getElementById("slider3-val").innerHTML;
+		//document.getElementById("form2").submit();
+	}
+	function cargaInicial()
+	{ 
+		<?php
+		$datos = explode(',', htmlentities($bot['PORCENT_PPT']));
+		if (Count($datos)==0)
+		{
+			$datos = array();
+			$datos[]='33';$datos[]='33';$datos[]='33';
+		}
+		?>
+	document.getElementById("slider1-val").innerHTML=<?php echo $datos[0]?>;
+	document.getElementById("slider2-val").innerHTML=<?php echo $datos[1]?>;
+	document.getElementById("slider3-val").innerHTML=<?php echo $datos[2]?>;
+	var allSlidersTotal = 0;
+	var allSliders = $(".slider");
+    var arr = [<?php echo $datos[0]?>,<?php echo $datos[1]?>,<?php echo $datos[2]?>];
+    var ii =0;
+    allSliders.each(function() {
+        $(this).slider("value", arr[ii]);
+        ii++;
+    });
+	}
+
+
+	$(document).ready(function () {          
+		setTimeout(function() {
+			$('.succWrap').slideUp("slow");
+		}, 3000);
+		});
+
+	$(function() {
+    // set the initial value of the sliders
+    var sliderStartPosition = 100 / $(".slider").length;
+    // create the sliders
+    $(".slider").slider({
+    	
+        range: "min",
+        value: sliderStartPosition,
+        min: 0,
+        max: 100,
+        slide: function(event, ui) {
+            var movement = ui.value - $(this).slider("value");        
+            console.log($(this));
+            // move the following sliders
+            var allSliders = $(".slider");
+            var currentSliderIndex = allSliders.index($(this));
+            var previousSliders = allSliders.filter(":lt(" + currentSliderIndex + ")");
+            var followingSliders = allSliders.filter(":gt(" + currentSliderIndex + ")");
+            var numFollowingSliders = followingSliders.length;
+           
+
+            // if the last slider is being moved, then adjust the previous slider
+            if (currentSliderIndex == (allSliders.length - 1))
+            {
+                followingSliders = allSliders.filter(":eq(" + (currentSliderIndex - 1) + ")");
+                previousSliders = allSliders.filter(":lt(" + (currentSliderIndex - 1) + ")");
+            }
+            
+            // get the total value of all sliders
+            var allSlidersTotal = 0;
+            allSliders.each(function() {
+                allSlidersTotal += $(this).slider("value");
+            });
+            allSlidersTotal = allSlidersTotal - $(this).slider("value") + ui.value;
+            
+            // get the total value of the previous sliders
+            var previousSlidersTotal = 0;
+            previousSliders.each(function() {
+                previousSlidersTotal += $(this).slider("value");
+            });
+
+            // reset the following sliders
+            var allSlidersDifference = 100 - allSlidersTotal;
+            var singleSliderDifference = Math.round(allSlidersDifference / followingSliders.length);
+            followingSliders.each(function() {
+              var currentVal = $(this).slider("value");
+              var newVal = currentVal + singleSliderDifference;
+              $(this).slider("value", newVal);
+            });
+
+            // lock slider so we don't go over 100%
+            if ((previousSlidersTotal + ui.value) > 100)
+                event.preventDefault();
+            else {
+                // set sliderVal display val
+                followingSliders.each(function() {
+                    $(this).next().html($(this).slider("value"))
+                });
+                
+                // reset current value
+                $(this).next().html(ui.value);
+            }
+        }
+    });
+
+    // set initial slider value
+/*    $(".sliderVal").each(function() {
+    	alert($(this).prev().slider("value"));
+        $(this).html($(this).prev().slider("value"))
+    });
+*/
+});
 	</script>
 </body>
 </html>
