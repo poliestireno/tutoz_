@@ -9,13 +9,13 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 header('location:index.php');
 }
 else{
-//var_dump($_POST);
+//var_export($_POST);
 if(isset($_POST['submit']))
 {	
-	$porcentajesPPT="33,33,33";
+	$porcentajesPPT="33,33,33|33,33,33|33,33,33";
 	if (isset($_POST['slider1-valh']))
 	{
-		$porcentajesPPT=$_POST['slider1-valh'].",".$_POST['slider2-valh'].",".$_POST['slider3-valh'];
+		$porcentajesPPT=$_POST['slider1-valh'].",".$_POST['slider2-valh'].",".$_POST['slider3-valh']."|".$_POST['slider1-valh2'].",".$_POST['slider2-valh2'].",".$_POST['slider3-valh2']."|".$_POST['slider1-valh3'].",".$_POST['slider2-valh3'].",".$_POST['slider3-valh3'];
 	}
 
 	modificarBot($dbh,$_SESSION['alogin'],
@@ -192,7 +192,11 @@ if(isset($_POST['submit']))
 }
 
 .slider { width: 200px; }
+.slider2 { width: 200px; }
+.slider3 { width: 200px; }
 .sliderVal {height: 30px; display: inline-block;}
+.sliderVal2 {height: 30px; display: inline-block;}
+.sliderVal3 {height: 30px; display: inline-block;}
 
 </style>
 
@@ -229,6 +233,14 @@ if(isset($_POST['submit']))
 <input type='hidden' name='slider2-valh' id='slider2-valh'/>
 <input type='hidden' name='slider3-valh' id='slider3-valh'/>
   
+<input type='hidden' name='slider1-valh2' id='slider1-valh2'/>
+<input type='hidden' name='slider2-valh2' id='slider2-valh2'/>
+<input type='hidden' name='slider3-valh2' id='slider3-valh2'/>
+  
+<input type='hidden' name='slider1-valh3' id='slider1-valh3'/>
+<input type='hidden' name='slider2-valh3' id='slider2-valh3'/>
+<input type='hidden' name='slider3-valh3' id='slider3-valh3'/>
+  
 
 
 <?php
@@ -242,6 +254,8 @@ $getPropsAlummo['fantasma']=1;
 $getPropsAlummo['localizacion']=1;
 $getPropsAlummo['personajes']=1;
 $getPropsAlummo['ppt1']=1;
+$getPropsAlummo['ppt2']=1;
+$getPropsAlummo['ppt3']=1;
 ?>
 <div class="form-group">
 	<?php if ($getPropsAlummo['saludo']==1) {?>
@@ -412,7 +426,47 @@ PIEDRA:<div id="slider1" class="slider"></div>
 	</div>
 	<?php } ?>
 </div>
+<div class="form-group">
+	<?php if ($getPropsAlummo['ppt2']==1) {?>
+	<label class="col-sm-2 control-label">Porcentajes Postura 2</label>
+	<div class="col-sm-4">
+PIEDRA:<div id="slider12" class="slider2"></div>
+<div id="slider1-val2" name="slider1-val2" class="sliderVal2"></div>%
 
+<div>PAPEL:</div><div id="slider22" class="slider2"></div>
+<div id="slider2-val2" name="slider2-val2" class="sliderVal2"></div>%
+
+<div>TIJERA:</div><div id="slider32" class="slider2"></div>
+<div id="slider3-val2" name="slider3-val2" class="sliderVal2"></div>%
+	</div>
+	<?php } if ($getPropsAlummo['ppt2']==1) {?>
+	<label class="col-sm-2 control-label">CAMBIAR</label>
+	<div class="col-sm-4">
+	<input type="text" name="palabra_clave" maxlength = "50" class="form-control"  value="<?php echo htmlentities($bot['PALABRA_CLAVE']);?>">
+	</div>
+	<?php } ?>
+</div>
+
+<div class="form-group">
+	<?php if ($getPropsAlummo['ppt3']==1) {?>
+	<label class="col-sm-2 control-label">Porcentajes Postura 3</label>
+	<div class="col-sm-4">
+PIEDRA:<div id="slider13" class="slider3"></div>
+<div id="slider1-val3" name="slider1-val3" class="sliderVal3"></div>%
+
+<div>PAPEL:</div><div id="slider23" class="slider3"></div>
+<div id="slider2-val3" name="slider2-val3" class="sliderVal3"></div>%
+
+<div>TIJERA:</div><div id="slider33" class="slider3"></div>
+<div id="slider3-val3" name="slider3-val3" class="sliderVal3"></div>%
+	</div>
+	<?php } if ($getPropsAlummo['ppt2']==1) {?>
+	<label class="col-sm-2 control-label">CAMBIAR</label>
+	<div class="col-sm-4">
+	<input type="text" name="palabra_clave" maxlength = "50" class="form-control"  value="<?php echo htmlentities($bot['PALABRA_CLAVE']);?>">
+	</div>
+	<?php } ?>
+</div>
 
 
 	<div class="col-sm-4 col-sm-offset-2">
@@ -446,22 +500,39 @@ PIEDRA:<div id="slider1" class="slider"></div>
 		document.getElementById('slider1-valh').value=document.getElementById("slider1-val").innerHTML;
 		document.getElementById('slider2-valh').value=document.getElementById("slider2-val").innerHTML;
 		document.getElementById('slider3-valh').value=document.getElementById("slider3-val").innerHTML;
-		//document.getElementById("form2").submit();
+
+		document.getElementById('slider1-valh2').value=document.getElementById("slider1-val2").innerHTML;
+		document.getElementById('slider2-valh2').value=document.getElementById("slider2-val2").innerHTML;
+		document.getElementById('slider3-valh2').value=document.getElementById("slider3-val2").innerHTML;
+
+		document.getElementById('slider1-valh3').value=document.getElementById("slider1-val3").innerHTML;
+		document.getElementById('slider2-valh3').value=document.getElementById("slider2-val3").innerHTML;
+		document.getElementById('slider3-valh3').value=document.getElementById("slider3-val3").innerHTML;
 	}
 	function cargaInicial()
 	{ 
 		<?php
-		$datos = explode(',', htmlentities($bot['PORCENT_PPT']));
-		if (Count($datos)==0)
+		$datosAll = explode('|', htmlentities($bot['PORCENT_PPT']));
+		if (Count($datosAll)<3)
 		{
 			$datos = array();
 			$datos[]='33';$datos[]='33';$datos[]='33';
+			$datos2 = array();
+			$datos2[]='33';$datos2[]='33';$datos2[]='33';
+			$datos3 = array();
+			$datos3[]='33';$datos3[]='33';$datos3[]='33';
+		}
+		else
+		{
+			$datos = explode(',', $datosAll[0]);
+			$datos2 = explode(',', $datosAll[1]);
+			$datos3 = explode(',', $datosAll[2]);
 		}
 		?>
+
 	document.getElementById("slider1-val").innerHTML=<?php echo $datos[0]?>;
 	document.getElementById("slider2-val").innerHTML=<?php echo $datos[1]?>;
 	document.getElementById("slider3-val").innerHTML=<?php echo $datos[2]?>;
-	var allSlidersTotal = 0;
 	var allSliders = $(".slider");
     var arr = [<?php echo $datos[0]?>,<?php echo $datos[1]?>,<?php echo $datos[2]?>];
     var ii =0;
@@ -469,6 +540,31 @@ PIEDRA:<div id="slider1" class="slider"></div>
         $(this).slider("value", arr[ii]);
         ii++;
     });
+
+	document.getElementById("slider1-val2").innerHTML=<?php echo $datos2[0]?>;
+	document.getElementById("slider2-val2").innerHTML=<?php echo $datos2[1]?>;
+	document.getElementById("slider3-val2").innerHTML=<?php echo $datos2[2]?>;
+	var allSliders2 = $(".slider2");
+    var arr = [<?php echo $datos2[0]?>,<?php echo $datos2[1]?>,<?php echo $datos2[2]?>];
+    var ii =0;
+    allSliders2.each(function() {
+        $(this).slider("value", arr[ii]);
+        ii++;
+    });
+
+	document.getElementById("slider1-val3").innerHTML=<?php echo $datos3[0]?>;
+	document.getElementById("slider2-val3").innerHTML=<?php echo $datos3[1]?>;
+	document.getElementById("slider3-val3").innerHTML=<?php echo $datos3[2]?>;
+	var allSliders3 = $(".slider3");
+    var arr = [<?php echo $datos3[0]?>,<?php echo $datos3[1]?>,<?php echo $datos3[2]?>];
+    var ii =0;
+    allSliders3.each(function() {
+        $(this).slider("value", arr[ii]);
+        ii++;
+    });
+
+
+
 	}
 
 
@@ -543,10 +639,133 @@ PIEDRA:<div id="slider1" class="slider"></div>
         }
     });
 
+        $(".slider2").slider({
+    	
+        range: "min",
+        value: sliderStartPosition,
+        min: 0,
+        max: 100,
+        slide: function(event, ui) {
+            var movement = ui.value - $(this).slider("value");        
+            console.log($(this));
+            // move the following sliders
+            var allSliders = $(".slider2");
+            var currentSliderIndex = allSliders.index($(this));
+            var previousSliders = allSliders.filter(":lt(" + currentSliderIndex + ")");
+            var followingSliders = allSliders.filter(":gt(" + currentSliderIndex + ")");
+            var numFollowingSliders = followingSliders.length;
+           
+
+            // if the last slider is being moved, then adjust the previous slider
+            if (currentSliderIndex == (allSliders.length - 1))
+            {
+                followingSliders = allSliders.filter(":eq(" + (currentSliderIndex - 1) + ")");
+                previousSliders = allSliders.filter(":lt(" + (currentSliderIndex - 1) + ")");
+            }
+            
+            // get the total value of all sliders
+            var allSlidersTotal = 0;
+            allSliders.each(function() {
+                allSlidersTotal += $(this).slider("value");
+            });
+            allSlidersTotal = allSlidersTotal - $(this).slider("value") + ui.value;
+            
+            // get the total value of the previous sliders
+            var previousSlidersTotal = 0;
+            previousSliders.each(function() {
+                previousSlidersTotal += $(this).slider("value");
+            });
+
+            // reset the following sliders
+            var allSlidersDifference = 100 - allSlidersTotal;
+            var singleSliderDifference = Math.round(allSlidersDifference / followingSliders.length);
+            followingSliders.each(function() {
+              var currentVal = $(this).slider("value");
+              var newVal = currentVal + singleSliderDifference;
+              $(this).slider("value", newVal);
+            });
+
+            // lock slider so we don't go over 100%
+            if ((previousSlidersTotal + ui.value) > 100)
+                event.preventDefault();
+            else {
+                // set sliderVal display val
+                followingSliders.each(function() {
+                    $(this).next().html($(this).slider("value"))
+                });
+                
+                // reset current value
+                $(this).next().html(ui.value);
+            }
+        }
+    });
+
+
+        $(".slider3").slider({
+    	
+        range: "min",
+        value: sliderStartPosition,
+        min: 0,
+        max: 100,
+        slide: function(event, ui) {
+            var movement = ui.value - $(this).slider("value");        
+            console.log($(this));
+            // move the following sliders
+            var allSliders = $(".slider3");
+            var currentSliderIndex = allSliders.index($(this));
+            var previousSliders = allSliders.filter(":lt(" + currentSliderIndex + ")");
+            var followingSliders = allSliders.filter(":gt(" + currentSliderIndex + ")");
+            var numFollowingSliders = followingSliders.length;
+           
+
+            // if the last slider is being moved, then adjust the previous slider
+            if (currentSliderIndex == (allSliders.length - 1))
+            {
+                followingSliders = allSliders.filter(":eq(" + (currentSliderIndex - 1) + ")");
+                previousSliders = allSliders.filter(":lt(" + (currentSliderIndex - 1) + ")");
+            }
+            
+            // get the total value of all sliders
+            var allSlidersTotal = 0;
+            allSliders.each(function() {
+                allSlidersTotal += $(this).slider("value");
+            });
+            allSlidersTotal = allSlidersTotal - $(this).slider("value") + ui.value;
+            
+            // get the total value of the previous sliders
+            var previousSlidersTotal = 0;
+            previousSliders.each(function() {
+                previousSlidersTotal += $(this).slider("value");
+            });
+
+            // reset the following sliders
+            var allSlidersDifference = 100 - allSlidersTotal;
+            var singleSliderDifference = Math.round(allSlidersDifference / followingSliders.length);
+            followingSliders.each(function() {
+              var currentVal = $(this).slider("value");
+              var newVal = currentVal + singleSliderDifference;
+              $(this).slider("value", newVal);
+            });
+
+            // lock slider so we don't go over 100%
+            if ((previousSlidersTotal + ui.value) > 100)
+                event.preventDefault();
+            else {
+                // set sliderVal display val
+                followingSliders.each(function() {
+                    $(this).next().html($(this).slider("value"))
+                });
+                
+                // reset current value
+                $(this).next().html(ui.value);
+            }
+        }
+    });
+
     // set initial slider value
 /*    $(".sliderVal").each(function() {
     	alert($(this).prev().slider("value"));
-        $(this).html($(this).prev().slider("value"))
+        $(this).html($(this).prev().slider("value")) 
     });
 */
 });
