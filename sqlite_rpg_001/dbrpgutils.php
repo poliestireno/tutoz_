@@ -22,6 +22,15 @@ switch ($funcion) {
 	case 'getAlumnoFromCorreoJS':
 		echo getAlumnoFromCorreoJS();
 		break;
+	case 'getCromoAleatorioFromCorreoJS':
+		echo getCromoAleatorioFromCorreoJS();
+		break;
+	case 'mandarNotificacion':
+		echo mandarNotificacionJS();
+		break;
+	case 'iniciarPartidaPPTJS':
+		echo iniciarPartidaPPTJS();
+		break;
 	
 	default:
 		# code...
@@ -81,6 +90,16 @@ function getIDCompanerosMasPersonajes()
 	$result = json_encode($result);
 	return $result;
 }
+
+function iniciarPartidaPPTJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correoJugador = $_POST["param01"];
+	if(!isset($_POST["param02"])) die("No param02 found");
+	$correoPNJ = $_POST["param02"];	
+	return iniciarPartidaPPT($dbh,$correoJugador,$correoPNJ);
+}
 function getAlumnoFromIdJS()
 {
 	global $dbh;
@@ -92,6 +111,21 @@ function getAlumnoFromIdJS()
 	$result = json_encode($aInfoAlumno);
 	return $result;
 }
+
+	
+
+function mandarNotificacionJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$remitente = $_POST["param01"];
+	if(!isset($_POST["param02"])) die("No param02 found");
+	$receptor = $_POST["param02"];
+	if(!isset($_POST["param03"])) die("No param03 found");
+	$mensaje = $_POST["param03"];
+	mandarNotificacion($dbh,$remitente,$receptor,$mensaje);
+	return "";
+}
 function getAlumnoFromCorreoJS()
 {
 	global $dbh;
@@ -102,6 +136,27 @@ function getAlumnoFromCorreoJS()
 	$aInfoAlumno = array_merge($aluBD, $mibotBD); 
 	$result = json_encode($aInfoAlumno);
 	return $result;
+}
+function url(){
+  return sprintf(
+    "%s://%s%s",
+    isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+    $_SERVER['SERVER_NAME'],
+    $_SERVER['REQUEST_URI']
+  );
+}
+function getCromoAleatorioFromCorreoJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+
+
+	$vectorCromos = getCromosDeAlbum($dbh,$correo);
+
+	$cromo = $vectorCromos[random_int (0, Count($vectorCromos)-1 )];
+
+return "https://www.mtgcardmaker.com/mcmaker/createcard.php?name=". $cromo['name']."&color=". $cromo['color']."&mana_w=". $cromo['mana_w']."&picture=". substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture']."&cardtype=". $cromo['cardtype']."&rarity=". $cromo['rarity']."&cardtext=". $cromo['cardtext']."&power=". $cromo['power']."&toughness=". $cromo['toughness']."&artist=". $cromo['artist']."&bottom=". $cromo['bottom'];
 }
 
 function getData()

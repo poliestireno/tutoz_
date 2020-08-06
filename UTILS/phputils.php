@@ -299,6 +299,31 @@ function getNumeroSegundosAlumno($dbh,$correo)
   return $segundosApertura;
 }
   
+function iniciarPartidaPPT($dbh,$correoJugador,$correoPNJ)
+{
+  $yajugada=0;
+  $listaJugadasJugador = getBot($dbh,$correoJugador)['LISTA_JUGADAS_HOY_PTT'];
+  $aJugadasJugador = explode(",", $listaJugadasJugador);
+  $filaPNJ = getAlumnoFromCorreo($dbh,$correoPNJ);
+  if ((Count($aJugadasJugador)>0)&&(date('Y-m-d')==$aJugadasJugador[0]))
+  {
+    //ya jugada?
+    if (in_array($filaPNJ['ID'], $aJugadasJugador)) 
+    {
+      return 1;
+    }
+    else
+    {
+      $listaJugadasJugador.=",".$filaPNJ['ID'];
+    }   
+  }
+  else
+  {
+    $listaJugadasJugador=date('Y-m-d').",".$filaPNJ['ID'];
+  }
+  modificarListaJugadasPPT($dbh,getBot($dbh,$correoJugador)['ID'], $listaJugadasJugador);
+  return $yajugada;
+}
 function getPropsVisiblesCromo($dbh,$correo)
 {
   $aProps = [

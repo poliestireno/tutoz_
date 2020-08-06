@@ -159,16 +159,15 @@ function insertarCromo($db,$ID_CREADOR,$ID_POSEEDOR,$GENERADO, $setId, $name, $c
         echo "Error inserción cromo:".$ex->getMessage();
     }  
 }
-function insertarBot($db,$SALUDO,$DESCRIPCION,$VESTIMENTA,$PALABRA_CLAVE,$MOVILIDAD,$VELOCIDAD,$ID_MAPA,$FANTASMA,$SALTANDO,$PERSONAJE)
+function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCIDAD,$ID_MAPA,$FANTASMA,$SALTANDO,$PERSONAJE,$PORCENT_PPT,$POSTURA1,$POSTURA2,$POSTURA3,$LISTA_JUGADAS_HOY_PTT)
 {
-  $sentencia= "INSERT INTO MIBOT(SALUDO,DESCRIPCION,VESTIMENTA,PALABRA_CLAVE,MOVILIDAD,VELOCIDAD,ID_MAPA,FANTASMA,SALTANDO,PERSONAJE) VALUES (:SALUDO,:DESCRIPCION,:VESTIMENTA,:PALABRA_CLAVE,:MOVILIDAD,:VELOCIDAD,:ID_MAPA,:FANTASMA,:SALTANDO,:PERSONAJE)";
+  $sentencia= "INSERT INTO MIBOT(SALUDO,DESCRIPCION,PALABRA_CLAVE,MOVILIDAD,VELOCIDAD,ID_MAPA,FANTASMA,SALTANDO,PERSONAJE,PORCENT_PPT,POSTURA1,POSTURA2,POSTURA3,LISTA_JUGADAS_HOY_PTT) VALUES (:SALUDO,:DESCRIPCION,:PALABRA_CLAVE,:MOVILIDAD,:VELOCIDAD,:ID_MAPA,:FANTASMA,:SALTANDO,:PERSONAJE,:PORCENT_PPT,:POSTURA1,:POSTURA2,:POSTURA3,:LISTA_JUGADAS_HOY_PTT)";
   //echo $sentencia;
   try
   {
       $stmt = $db->prepare($sentencia);
       $stmt->bindParam(':SALUDO',$SALUDO);
       $stmt->bindParam(':DESCRIPCION',$DESCRIPCION);
-      $stmt->bindParam(':VESTIMENTA',$VESTIMENTA);
       $stmt->bindParam(':PALABRA_CLAVE',$PALABRA_CLAVE);
       $stmt->bindParam(':MOVILIDAD',$MOVILIDAD);
       $stmt->bindParam(':VELOCIDAD',$VELOCIDAD);
@@ -176,6 +175,11 @@ function insertarBot($db,$SALUDO,$DESCRIPCION,$VESTIMENTA,$PALABRA_CLAVE,$MOVILI
       $stmt->bindParam(':FANTASMA',$FANTASMA);
       $stmt->bindParam(':SALTANDO',$SALTANDO);
       $stmt->bindParam(':PERSONAJE',$PERSONAJE);
+      $stmt->bindParam(':PORCENT_PPT',$PORCENT_PPT);
+      $stmt->bindParam(':POSTURA1',$POSTURA1);
+      $stmt->bindParam(':POSTURA2',$POSTURA2);
+      $stmt->bindParam(':POSTURA3',$POSTURA3);
+      $stmt->bindParam(':LISTA_JUGADAS_HOY_PTT',$LISTA_JUGADAS_HOY_PTT);
       $stmt->execute();
     }
     catch (PDOException $ex)
@@ -1005,6 +1009,18 @@ function cambiarNivelAlumno($db,$correo, $nivelReal)
    echo "An Error occured! cambiarNivelAlumno ".$ex->getMessage();
   }   
 }
+function modificarListaJugadasPPT($db,$id, $listajugadas)
+{
+  try 
+  {
+    $sql = "UPDATE MIBOT SET LISTA_JUGADAS_HOY_PTT='".$listajugadas."' WHERE ID='".$id."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarListaJugadasPPT ".$ex->getMessage();
+  }   
+}
 function modificarOrdenAlbum($db,$correo, $ordentotal)
 {
   try 
@@ -1120,12 +1136,15 @@ function modificarCromo($db,$correo, $nombre,$color,$nestrellas,$atributo,$tipoc
    echo "An Error occured! modificarCromo ".$ex->getMessage();
   }   
 }
-function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$localizacion,$fantasma,$saltando,$personaje,$porcentajesPPT)
+function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$localizacion,$fantasma,$saltando,$personaje,$porcentajesPPT,$postura1,$postura2,$postura3)
 {
   try 
   {
   
-    $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."',PERSONAJE=".$personaje.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",ID_MAPA=".$localizacion.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
+    $setPersonaje=($personaje!=-1)?(",PERSONAJE=".$personaje):"";
+
+    $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."'".$setPersonaje.",POSTURA1=".$postura1.",POSTURA2=".$postura2.",POSTURA3=".$postura3.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",ID_MAPA=".$localizacion.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
+    //echo $sql;
     $stmt = $db->prepare($sql);
     $stmt->execute();
   } catch(PDOException $ex) 

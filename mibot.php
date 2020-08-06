@@ -18,6 +18,12 @@ if(isset($_POST['submit']))
 		$porcentajesPPT=$_POST['slider1-valh'].",".$_POST['slider2-valh'].",".$_POST['slider3-valh']."|".$_POST['slider1-valh2'].",".$_POST['slider2-valh2'].",".$_POST['slider3-valh2']."|".$_POST['slider1-valh3'].",".$_POST['slider2-valh3'].",".$_POST['slider3-valh3'];
 	}
 
+	$pperson = (!isset($_POST['personaje']))?"0":$_POST['personaje'];
+	// que no modifique personaje
+	if ($pperson==0)
+	{
+		$pperson=-1;
+	}
 	modificarBot($dbh,$_SESSION['alogin'],
 		(!isset($_POST['saludo']))?"":$_POST['saludo'],
 		(!isset($_POST['palabra_clave']))?"":$_POST['palabra_clave'],
@@ -26,8 +32,12 @@ if(isset($_POST['submit']))
 		(!isset($_POST['localizacion']))?"":$_POST['localizacion'],
 		(!isset($_POST['checkFantasma']))?"0":"1",
 		(!isset($_POST['checkSaltando']))?"0":"1",
-		(!isset($_POST['personaje']))?"0":$_POST['personaje'],
-		$porcentajesPPT
+		$pperson,
+		$porcentajesPPT,
+		(!isset($_POST['sPostura1']))?"0":$_POST['sPostura1'],
+		(!isset($_POST['sPostura2']))?"0":$_POST['sPostura2'],
+		(!isset($_POST['sPostura3']))?"0":$_POST['sPostura3']
+		
 	);
 	$msg=" Información actualizada correctamente";
 	
@@ -63,7 +73,7 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css">
 
 	<style>
 	.errorWrap {
@@ -254,8 +264,6 @@ $getPropsAlummo['fantasma']=1;
 $getPropsAlummo['localizacion']=1;
 $getPropsAlummo['personajes']=1;
 $getPropsAlummo['ppt1']=1;
-$getPropsAlummo['ppt2']=1;
-$getPropsAlummo['ppt3']=1;
 ?>
 <div class="form-group">
 	<?php if ($getPropsAlummo['saludo']==1) {?>
@@ -403,12 +411,23 @@ $getPropsAlummo['ppt3']=1;
 		10
 		</option>
 	</select>
-	</div><?php } ?>
+	</div>
+<?php } ?>
 </div>
 
 <div class="form-group">
 	<?php if ($getPropsAlummo['ppt1']==1) {?>
-	<label class="col-sm-2 control-label">Porcentajes Postura 1</label>
+	<label class="col-sm-2 control-label">Reglas postura 1</label>
+	<div class="col-sm-4">
+	<select name="sPostura1" class="form-control">
+		<option value="0" <?php echo (($bot['POSTURA1']=="0")?" selected='selected' ":"")?>>
+			Porcentajes
+		</option>
+	</select>
+	</div>
+
+	<?php } if ($getPropsAlummo['ppt1']==1) {?>
+	<label class="col-sm-2 control-label">Porcentajes</label>
 	<div class="col-sm-4">
 PIEDRA:<div id="slider1" class="slider"></div>
 <div id="slider1-val" name="slider1-val" class="sliderVal"></div>%
@@ -419,16 +438,66 @@ PIEDRA:<div id="slider1" class="slider"></div>
 <div>TIJERA:</div><div id="slider3" class="slider"></div>
 <div id="slider3-val" name="slider3-val" class="sliderVal"></div>%
 	</div>
-	<?php } if ($getPropsAlummo['ppt1']==1) {?>
-	<label class="col-sm-2 control-label">CAMBIAR</label>
-	<div class="col-sm-4">
-	<input type="text" name="palabra_clave" maxlength = "50" class="form-control"  value="<?php echo htmlentities($bot['PALABRA_CLAVE']);?>">
-	</div>
 	<?php } ?>
 </div>
 <div class="form-group">
-	<?php if ($getPropsAlummo['ppt2']==1) {?>
-	<label class="col-sm-2 control-label">Porcentajes Postura 2</label>
+	<?php if ($getPropsAlummo['ppt1']==1) {?>
+	<label class="col-sm-2 control-label">Reglas postura 2</label>
+	<div class="col-sm-4">
+	<select name="sPostura2" class="form-control">
+		<option value="0" <?php echo (($bot['POSTURA2']=="0")?" selected='selected' ":"")?>>
+			Porcentajes
+		</option>		
+		<option value="1" <?php echo (($bot['POSTURA2']=="1")?" selected='selected' ":"")?>>
+		Si en la anterior gané repito postura
+		</option>
+		<option value="2" <?php echo (($bot['POSTURA2']=="2")?" selected='selected' ":"")?>>
+		Si en la anterior gané no repito postura
+		</option>
+		<option value="3" <?php echo (($bot['POSTURA2']=="3")?" selected='selected' ":"")?>>
+		Si en la anterior empaté repito postura
+		</option>
+		<option value="4" <?php echo (($bot['POSTURA2']=="4")?" selected='selected' ":"")?>>
+		Si en la anterior empaté no repito postura
+		</option>
+		<option value="5" <?php echo (($bot['POSTURA2']=="5")?" selected='selected' ":"")?>>
+		Si en la anterior perdí repito postura
+		</option>
+		<option value="6" <?php echo (($bot['POSTURA2']=="6")?" selected='selected' ":"")?>>
+		Si en la anterior perdí no repito postura
+		</option>
+		<option value="7" <?php echo (($bot['POSTURA2']=="7")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó piedra ahora saco piedra
+		</option>
+		<option value="8" <?php echo (($bot['POSTURA2']=="8")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó piedra ahora saco papel 
+		</option>
+		<option value="9" <?php echo (($bot['POSTURA2']=="9")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó piedra ahora saco tijera 
+		</option>
+		<option value="10" <?php echo (($bot['POSTURA2']=="10")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó papel ahora saco piedra
+		</option>
+		<option value="11" <?php echo (($bot['POSTURA2']=="11")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó papel ahora saco papel 
+		</option>
+		<option value="12" <?php echo (($bot['POSTURA2']=="12")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó papel ahora saco tijera 
+		</option>
+		<option value="13" <?php echo (($bot['POSTURA2']=="13")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó tijera ahora saco piedra
+		</option>
+		<option value="14" <?php echo (($bot['POSTURA2']=="14")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó tijera ahora saco papel 
+		</option>
+		<option value="15" <?php echo (($bot['POSTURA2']=="15")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó tijera ahora saco tijera 
+		</option>			
+	</select>
+	<b>(si no se cumple la regla elegida se aplican los porcentajes)</b>
+	</div>		
+	<?php } if ($getPropsAlummo['ppt1']==1) {?>
+	<label class="col-sm-2 control-label">Porcentajes</label>
 	<div class="col-sm-4">
 PIEDRA:<div id="slider12" class="slider2"></div>
 <div id="slider1-val2" name="slider1-val2" class="sliderVal2"></div>%
@@ -439,17 +508,68 @@ PIEDRA:<div id="slider12" class="slider2"></div>
 <div>TIJERA:</div><div id="slider32" class="slider2"></div>
 <div id="slider3-val2" name="slider3-val2" class="sliderVal2"></div>%
 	</div>
-	<?php } if ($getPropsAlummo['ppt2']==1) {?>
-	<label class="col-sm-2 control-label">CAMBIAR</label>
-	<div class="col-sm-4">
-	<input type="text" name="palabra_clave" maxlength = "50" class="form-control"  value="<?php echo htmlentities($bot['PALABRA_CLAVE']);?>">
-	</div>
+
 	<?php } ?>
 </div>
 
 <div class="form-group">
-	<?php if ($getPropsAlummo['ppt3']==1) {?>
-	<label class="col-sm-2 control-label">Porcentajes Postura 3</label>
+	<?php if ($getPropsAlummo['ppt1']==1) {?>
+	<label class="col-sm-2 control-label">Reglas postura 3</label>
+	<div class="col-sm-4">
+	<select name="sPostura3" class="form-control">
+		<option value="0" <?php echo (($bot['POSTURA3']=="0")?" selected='selected' ":"")?>>
+			Porcentajes
+		</option>		
+		<option value="1" <?php echo (($bot['POSTURA3']=="1")?" selected='selected' ":"")?>>
+		Si en la anterior gané repito postura
+		</option>
+		<option value="2" <?php echo (($bot['POSTURA3']=="2")?" selected='selected' ":"")?>>
+		Si en la anterior gané no repito postura
+		</option>
+		<option value="3" <?php echo (($bot['POSTURA3']=="3")?" selected='selected' ":"")?>>
+		Si en la anterior empaté repito postura
+		</option>
+		<option value="4" <?php echo (($bot['POSTURA3']=="4")?" selected='selected' ":"")?>>
+		Si en la anterior empaté no repito postura
+		</option>
+		<option value="5" <?php echo (($bot['POSTURA3']=="5")?" selected='selected' ":"")?>>
+		Si en la anterior perdí repito postura
+		</option>
+		<option value="6" <?php echo (($bot['POSTURA3']=="6")?" selected='selected' ":"")?>>
+		Si en la anterior perdí no repito postura
+		</option>
+		<option value="7" <?php echo (($bot['POSTURA3']=="7")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó piedra ahora saco piedra
+		</option>
+		<option value="8" <?php echo (($bot['POSTURA3']=="8")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó piedra ahora saco papel 
+		</option>
+		<option value="9" <?php echo (($bot['POSTURA3']=="9")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó piedra ahora saco tijera 
+		</option>
+		<option value="10" <?php echo (($bot['POSTURA3']=="10")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó papel ahora saco piedra
+		</option>
+		<option value="11" <?php echo (($bot['POSTURA3']=="11")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó papel ahora saco papel 
+		</option>
+		<option value="12" <?php echo (($bot['POSTURA3']=="12")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó papel ahora saco tijera 
+		</option>
+		<option value="13" <?php echo (($bot['POSTURA3']=="13")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó tijera ahora saco piedra
+		</option>
+		<option value="14" <?php echo (($bot['POSTURA3']=="14")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó tijera ahora saco papel 
+		</option>
+		<option value="15" <?php echo (($bot['POSTURA3']=="15")?" selected='selected' ":"")?>>
+		Si en la anterior el adversario sacó tijera ahora saco tijera 
+		</option>
+	</select>
+	<b>(si no se cumple la regla elegida se aplican los porcentajes)</b>
+	</div>
+	<?php } if ($getPropsAlummo['ppt1']==1) {?>
+	<label class="col-sm-2 control-label">Porcentajes</label>
 	<div class="col-sm-4">
 PIEDRA:<div id="slider13" class="slider3"></div>
 <div id="slider1-val3" name="slider1-val3" class="sliderVal3"></div>%
@@ -459,11 +579,6 @@ PIEDRA:<div id="slider13" class="slider3"></div>
 
 <div>TIJERA:</div><div id="slider33" class="slider3"></div>
 <div id="slider3-val3" name="slider3-val3" class="sliderVal3"></div>%
-	</div>
-	<?php } if ($getPropsAlummo['ppt2']==1) {?>
-	<label class="col-sm-2 control-label">CAMBIAR</label>
-	<div class="col-sm-4">
-	<input type="text" name="palabra_clave" maxlength = "50" class="form-control"  value="<?php echo htmlentities($bot['PALABRA_CLAVE']);?>">
 	</div>
 	<?php } ?>
 </div>
@@ -586,7 +701,7 @@ PIEDRA:<div id="slider13" class="slider3"></div>
         max: 100,
         slide: function(event, ui) {
             var movement = ui.value - $(this).slider("value");        
-            console.log($(this));
+            //console.log($(this));
             // move the following sliders
             var allSliders = $(".slider");
             var currentSliderIndex = allSliders.index($(this));
@@ -647,7 +762,7 @@ PIEDRA:<div id="slider13" class="slider3"></div>
         max: 100,
         slide: function(event, ui) {
             var movement = ui.value - $(this).slider("value");        
-            console.log($(this));
+            //console.log($(this));
             // move the following sliders
             var allSliders = $(".slider2");
             var currentSliderIndex = allSliders.index($(this));
@@ -709,7 +824,7 @@ PIEDRA:<div id="slider13" class="slider3"></div>
         max: 100,
         slide: function(event, ui) {
             var movement = ui.value - $(this).slider("value");        
-            console.log($(this));
+            //console.log($(this));
             // move the following sliders
             var allSliders = $(".slider3");
             var currentSliderIndex = allSliders.index($(this));
