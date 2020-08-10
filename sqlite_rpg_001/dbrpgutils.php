@@ -31,6 +31,9 @@ switch ($funcion) {
 	case 'iniciarPartidaPPTJS':
 		echo iniciarPartidaPPTJS();
 		break;
+	case 'modificarCalas':
+		echo modificarCalasJS();
+		break;
 	
 	default:
 		# code...
@@ -107,7 +110,9 @@ function getAlumnoFromIdJS()
 	$IDAlumno = $_POST["param01"];
 	$aluBD = getAlumnoFromID($dbh,$IDAlumno);
 	$mibotBD = getMiBotFromAlumnoID($dbh,$IDAlumno);
+	$miactorBD = getMiActorFromAlumnoID($dbh,$IDAlumno);
 	$aInfoAlumno = array_merge($aluBD, $mibotBD); 
+	$aInfoAlumno = array_merge($aInfoAlumno, $miactorBD); 
 	$result = json_encode($aInfoAlumno);
 	return $result;
 }
@@ -126,6 +131,18 @@ function mandarNotificacionJS()
 	mandarNotificacion($dbh,$remitente,$receptor,$mensaje);
 	return "";
 }
+function modificarCalasJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+	if(!isset($_POST["param02"])) die("No param02 found");
+	$cantidad = $_POST["param02"];
+	mi_info_log('modificarCalasJS:'.$correo.','.$cantidad);
+	modificarCalas($dbh,$correo,$cantidad);
+	return "";
+}
+
 function getAlumnoFromCorreoJS()
 {
 	global $dbh;
@@ -133,7 +150,9 @@ function getAlumnoFromCorreoJS()
 	$correo = $_POST["param01"];
 	$aluBD = getAlumnoFromCorreo($dbh,$correo);
 	$mibotBD = getMiBotFromAlumnoID($dbh,$aluBD['ID']);
-	$aInfoAlumno = array_merge($aluBD, $mibotBD); 
+	$aInfoAlumno = array_merge($aluBD, $mibotBD);
+	$miactorBD = getMiActorFromAlumnoID($dbh,getAlumnoFromCorreo($dbh,$correo)['ID']);
+	$aInfoAlumno = array_merge($aInfoAlumno, $miactorBD); 
 	$result = json_encode($aInfoAlumno);
 	return $result;
 }

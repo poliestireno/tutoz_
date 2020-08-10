@@ -31,8 +31,12 @@ if (!(existeCorreo($dbh,$CORREO)))
     // se inserta su bot inicial
     insertarBot($dbh,"HOLA","","",1,2,9,0,0,0,"",0,0,0,"");
     $lastInsertIdBot = $dbh->lastInsertId();
-
-    $sql ="INSERT INTO ALUMNOS(NOMBRE,CORREO, password, gender, APELLIDO1, APELLIDO2, image,ORDEN_ALBUM,ORDEN_COMBOS,ORDEN_CREADORES,ORDEN_REFERENCIAS_TOTAL,NUMERO_NIVEL,ULTIMA_FECHA_NOTI_GENERAL, ID_MIBOT,ID_CURSO) VALUES(:name, :CORREO, :password, :gender, :APELLIDO1no, :APELLIDO2, :image,'','','','',1,NULL, :IDMiBot,:IDCurso)";
+    
+    // se inserta su actor (jugador) inicial
+    insertarActor($dbh,500,100,0,50);
+    $lastInsertIdActor = $dbh->lastInsertId();
+    
+    $sql ="INSERT INTO ALUMNOS(NOMBRE,CORREO, password, gender, APELLIDO1, APELLIDO2, image,ORDEN_ALBUM,ORDEN_COMBOS,ORDEN_CREADORES,ORDEN_REFERENCIAS_TOTAL,NUMERO_NIVEL,ULTIMA_FECHA_NOTI_GENERAL, ID_MIBOT,ID_MIACTOR,ID_CURSO) VALUES(:name, :CORREO, :password, :gender, :APELLIDO1no, :APELLIDO2, :image,'','','','',1,NULL, :IDMiBot,:IDActor,:IDCurso)";
     $query= $dbh -> prepare($sql);
     $query-> bindParam(':name', $name, PDO::PARAM_STR);
     $query-> bindParam(':CORREO', $CORREO, PDO::PARAM_STR);
@@ -42,6 +46,7 @@ if (!(existeCorreo($dbh,$CORREO)))
     $query-> bindParam(':APELLIDO2', $APELLIDO2, PDO::PARAM_STR);
     $query-> bindParam(':image', $image, PDO::PARAM_STR);
     $query-> bindParam(':IDMiBot', $lastInsertIdBot, PDO::PARAM_STR);
+    $query-> bindParam(':IDActor', $lastInsertIdActor, PDO::PARAM_STR);
     $query-> bindParam(':IDCurso', $curso, PDO::PARAM_STR);
     $query->execute();
     $lastInsertId = $dbh->lastInsertId();

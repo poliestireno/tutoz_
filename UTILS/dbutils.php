@@ -159,6 +159,25 @@ function insertarCromo($db,$ID_CREADOR,$ID_POSEEDOR,$GENERADO, $setId, $name, $c
         echo "Error inserción cromo:".$ex->getMessage();
     }  
 }
+
+function insertarActor($db,$PV, $PM, $PT, $CALAS)
+{
+  $sentencia= "INSERT INTO MIACTOR(PV, PM, PT, CALAS) VALUES (:PV, :PM, :PT, :CALAS)";
+  //echo $sentencia;
+  try
+  {
+      $stmt = $db->prepare($sentencia);
+      $stmt->bindParam(':PV',$PV);
+      $stmt->bindParam(':PM',$PM);
+      $stmt->bindParam(':PT',$PT);
+      $stmt->bindParam(':CALAS',$CALAS);
+      $stmt->execute();
+    }
+    catch (PDOException $ex)
+    {
+        echo "Error inserción bot:".$ex->getMessage();
+    }  
+}
 function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCIDAD,$ID_MAPA,$FANTASMA,$SALTANDO,$PERSONAJE,$PORCENT_PPT,$POSTURA1,$POSTURA2,$POSTURA3,$LISTA_JUGADAS_HOY_PTT)
 {
   $sentencia= "INSERT INTO MIBOT(SALUDO,DESCRIPCION,PALABRA_CLAVE,MOVILIDAD,VELOCIDAD,ID_MAPA,FANTASMA,SALTANDO,PERSONAJE,PORCENT_PPT,POSTURA1,POSTURA2,POSTURA3,LISTA_JUGADAS_HOY_PTT) VALUES (:SALUDO,:DESCRIPCION,:PALABRA_CLAVE,:MOVILIDAD,:VELOCIDAD,:ID_MAPA,:FANTASMA,:SALTANDO,:PERSONAJE,:PORCENT_PPT,:POSTURA1,:POSTURA2,:POSTURA3,:LISTA_JUGADAS_HOY_PTT)";
@@ -644,6 +663,18 @@ function getMiBotFromAlumnoID($db,$IDAlumno)
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! getMiBotFromAlumnoID ".$ex->getMessage();
+  } 
+  return $fila;
+}
+function getMiActorFromAlumnoID($db,$IDAlumno)
+{
+  try 
+  {   
+    $stmt = $db->query("SELECT * FROM MIACTOR WHERE ID = (SELECT ID_MIACTOR FROM ALUMNOS WHERE ID=".$IDAlumno.") LIMIT 1");
+    $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! getMiActorFromAlumnoID ".$ex->getMessage();
   } 
   return $fila;
 }
@@ -1134,6 +1165,19 @@ function modificarCromo($db,$correo, $nombre,$color,$nestrellas,$atributo,$tipoc
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! modificarCromo ".$ex->getMessage();
+  }   
+}
+
+function modificarCalas($db,$correo,$cantidad)
+{
+  try 
+  {
+    $sql = "UPDATE MIACTOR SET CALAS= CALAS + (".$cantidad.") WHERE ID = (SELECT ID_MIACTOR FROM ALUMNOS WHERE CORREO='".$correo."')";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarCalas ".$ex->getMessage();
   }   
 }
 function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$localizacion,$fantasma,$saltando,$personaje,$porcentajesPPT,$postura1,$postura2,$postura3)
