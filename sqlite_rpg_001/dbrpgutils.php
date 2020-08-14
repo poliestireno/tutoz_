@@ -138,7 +138,6 @@ function modificarCalasJS()
 	$correo = $_POST["param01"];
 	if(!isset($_POST["param02"])) die("No param02 found");
 	$cantidad = $_POST["param02"];
-	mi_info_log('modificarCalasJS:'.$correo.','.$cantidad);
 	modificarCalas($dbh,$correo,$cantidad);
 	return "";
 }

@@ -21,7 +21,8 @@
 // ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-
+session_start();
+include('../includes/config.php');
 require_once("../UTILS/dbutils.php");
 
 	if(!isset($_POST["action"])) die("No action found");
@@ -48,72 +49,52 @@ require_once("../UTILS/dbutils.php");
 		$array       = array();
 		$result      = "";
 
-// varios dias horas intentando borrar de la parte de events los custom, no conseguido, intentarlo más adelante...
-
-//$arr = decode_json($response);
-
-    // removing the value
-	
-/*
-$result2 =urldecode($gameData);
-$jjson = json_decode($result2,true);
-if (isset($jjson['map']['_events']))
-{
-$resultttt = array();
-foreach($jjson['map']['_events'] as $element) {
-	
-	if(is_array($element)) {
-		$i=0;
-
-		foreach($element as $ele) {
-			//$teet .="....hh...".$ele->_name;
-			
-			if(isset($ele['_eventData'])){
-		   		unset($element[$i]);
-		   	
-				mi_info_log("Borramos ".$i);		   		
-   			}
-   			$i++;	
-		}
-				//mi_info_log($element);	
-				
-        $resultttt['@a']=$element;
-    } 
-    else
-    {
-		$resultttt['@c']=$element;
-    }
-
-}
-unset($jjson['map']['_events']);
-$newLoginHistory = array();
-$newLoginHistory['@a'] = "1411053989";
-$newLoginHistory['@b'] = "example-city-3";
-
-$jjson['map']['_events']= $resultttt;
-$gameData = json_encode($jjson);
-//mi_info_log($jjson);
-}
-*/
-
-
-/*
-$jjson = json_encode($jjson);
-//mi_info_log($teet);
-mi_info_log("TOTALLL12");
-
-mi_info_log($jjson);
-*/
 			
 		$db = new PDO('sqlite:rmmv.sqlite');
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		switch ($action) {
+				case "getUserSession":	
+				// ñapa para probar desde local metiendo en session 
+				// un correo especifico
+				if ($_SERVER['DOCUMENT_ROOT']=='/opt/lampp/htdocs')
+				{
+					$_SESSION['alogin']="c@c";
+				}
+				
+				$array = array();
+				if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
+				{	
+					$array['_userName'] = "";
+					$array['_password'] = "";
+				}
+				else
+				{
+					$array['_userName'] = $_SESSION['alogin'];
+					$stmt = $dbh->query("SELECT password FROM ALUMNOS WHERE CORREO='".$_SESSION['alogin']."'");
+  					$fila = $stmt->fetch(PDO::FETCH_ASSOC);
+					$array['_password'] = $fila['password'];
+				}	
+				
+				$result = json_encode($array);
+				//$result = "333";
+				break;
 			case "save":
 				
 				// Look if guid contains @ -> Use userName and password!
 				if (strpos($guid, "@USERGAME@") !== false) {
-					$sql = "INSERT INTO savegames (data,gameName,gameVersion,userName,timestamp) VALUES ('".$gameData."','".$gameName."',".$gameVersion.",'".$userName."@".$password."',".$time.")";
+
+// borrar todas excepto la ultima
+$sql = "SELECT * FROM savegames WHERE gameName='".$gameName."' AND userName='".$userName."@".$password."' ORDER BY id DESC";
+
+		$select = $db->query($sql);
+		$rows = $select->fetchAll();
+		for ($i=1; $i < Count($rows); $i++) { 
+			$sql = "DELETE FROM savegames WHERE id=".$rows[$i]['id'];
+			$rowsDelete = $db->exec($sql);			
+		}
+// insertar la nueva, la idea es que haya 2, la ultima y la anterior de backup.
+		$sql = "INSERT INTO savegames (data,gameName,gameVersion,userName,timestamp) VALUES ('".$gameData."','".$gameName."',".$gameVersion.",'".$userName."@".$password."',".$time.")";
 				} else {
 					$sql = "INSERT INTO savegames (data,gameName,gameVersion,userName,timestamp) VALUES ('".$gameData."','".$gameName."',".$gameVersion.",'".$userName."',".$time.")";
 				};
@@ -253,7 +234,7 @@ mi_info_log($jjson);
 
 // INI COMPRUEBA EN DBMYSQL DE LOS CROMOS SI EXISTE EL USUARIO Y PASS
 
-include('../includes/config.php');
+
 $sql ="SELECT CORREO,password FROM ALUMNOS WHERE CORREO=:CORREO and password=:password";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':CORREO', $userName, PDO::PARAM_STR);

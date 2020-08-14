@@ -1,5 +1,4 @@
 <?php
-
 function getEstrellasPareja($aF,$nEstrellasPareja)
 {
   //var_dump($aF);

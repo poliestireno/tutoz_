@@ -5,11 +5,12 @@ include('includes/config.php');
 require_once("UTILS/dbutils.php");
 $msg="";
 if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
-	{	
-header('location:index.php');
+{	
+	header('location:index.php');
 }
 else{
 //var_export($_POST);
+//var_export($_SESSION);
 if(isset($_POST['submit']))
 {	
 	$porcentajesPPT="33,33,33|33,33,33|33,33,33";
