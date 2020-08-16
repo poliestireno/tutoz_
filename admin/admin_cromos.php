@@ -34,7 +34,7 @@ if (isset($_POST['alumnoCodSobre'])&&($_POST['alumnoCodSobre']!=''))
   	
     // notificamos al alumno el código de su sobre
 
-    mandarNotificacion($dbh,'Admin',$_POST['alumnoCodSobre'],' Tu código de sobre es '.$codigoEncriptado);
+    mandarNotificacion($dbh,'Admin',$_POST['alumnoCodSobre'],' Código del sobre conseguido: '.$codigoEncriptado);
       
     // log asignación de cromo
     $message ="Asignado a ".$_POST['alumnoCodSobre']." el código de sobre ".$codigoEncriptado." y cromo:".var_export($cromoGenerado, true);

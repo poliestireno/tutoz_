@@ -4,6 +4,7 @@ include('includes/config.php');
 require_once("UTILS/dbutils.php");
 if(isset($_POST['login']))
 {
+$_POST['username']=strtoupper($_POST['username']);
 $CORREO=$_POST['username'];
 $password=md5($_POST['password']);
 
@@ -19,7 +20,7 @@ $_SESSION['alogin']=$_POST['username'];
 echo "<script type='text/javascript'> document.location = 'profile.php'; </script>";
 } else{
   
-  echo "<script>alert('InvalID Details Or Account Not Confirmed');</script>";
+  echo "<script>alert('Datos erroneos');</script>";
 
 }
 

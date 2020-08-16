@@ -4,6 +4,7 @@ include('../includes/config.php');
 require_once("../UTILS/dbutils.php");
 if(isset($_POST['login']))
 {
+$_POST['username']=strtoupper($_POST['username']);
 $email=$_POST['username'];
 $password=md5($_POST['password']);
 //echo $password;

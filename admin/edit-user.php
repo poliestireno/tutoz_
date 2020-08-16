@@ -56,7 +56,7 @@ if(isset($_POST['submit']))
 	$query-> bindParam(':image', $image, PDO::PARAM_STR);
 	$query-> bindParam(':IDedit', $IDedit, PDO::PARAM_STR);
 	$query->execute();
-	$msg="Information Updated Successfully";
+	$msg="Información actualizada correctamente";
 }    
 ?>
 
@@ -131,7 +131,7 @@ if(isset($_POST['submit']))
 							<div class="col-md-12">
 								<div class="panel panel-default">
 									<div class="panel-heading">Edit Info</div>
-<?php if($msg){?><div class="succWrap"><strong>INFO: </strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+<?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>
 
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">

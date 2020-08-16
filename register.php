@@ -1,10 +1,11 @@
     <?php
 include('includes/config.php');
 require_once("UTILS/dbutils.php");
-if(isset($_POST['submit']))
+//var_export($_POST);
+if(isset($_POST['sel11']))
 {
 
-$CORREO=$_POST['CORREO'];
+$CORREO=strtoupper($_POST['CORREO']);
 if (!(existeCorreo($dbh,$CORREO)))
 {
     $file = $_FILES['image']['name'];
@@ -150,6 +151,44 @@ if (!(existeCorreo($dbh,$CORREO)))
 	<link rel="stylesheet" href="css/style.css">
     <script type="text/javascript">
 
+
+    function submitOk()
+    {
+            var extensions = new Array("jpg","jpeg");
+            var image_file = document.regform.image.value;
+            var image_length = document.regform.image.value.length;
+            var pos = image_file.lastIndexOf('.') + 1;
+            var ext = image_file.substring(pos, image_length);
+            var final_ext = ext.toLowerCase();
+            var extok=false;
+            for (i = 0; i < extensions.length; i++)
+            {
+                if(extensions[i] == final_ext)
+                {
+                    extok= true;               
+                }
+            }
+            if (!extok)
+            {
+                alert("Extensión del fichero de la imagen no valida (Utilizar jpg o jpeg)");
+                return;
+            }  
+        Swal.fire({
+        title: 'Datos correctos',
+        text: '¿El correo '+document.getElementById("coco").value+' y los demás datos suministrados son los correctos?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí'
+      }).then((result) => {
+        if (result.value) {
+          document.getElementById("regform").submit();
+        }
+      })
+
+    }
+
 	function valIDate()
         {
             var extensions = new Array("jpg","jpeg");
@@ -162,8 +201,7 @@ if (!(existeCorreo($dbh,$CORREO)))
             {
                 if(extensions[i] == final_ext)
                 {
-                return true;
-                
+                    return true;               
                 }
             }
             alert("Extensión del fichero de la imagen no valida (Utilizar jpg o jpeg)");
@@ -182,7 +220,7 @@ if (!(existeCorreo($dbh,$CORREO)))
 						<h1 class="text-center text-bold mt-2x">Registro</h1>
                         <div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
-                         <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" onSubmit="return valIDate();">
+                         <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" id="regform">
                             <div class="form-group">
                             <label class="col-sm-1 control-label">NOMBRE<span style="color:red">*</span></label>
                             <div class="col-sm-5">
@@ -190,7 +228,7 @@ if (!(existeCorreo($dbh,$CORREO)))
                             </div>
                             <label class="col-sm-1 control-label">CORREO<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="email" name="CORREO" class="form-control" required>
+                            <input id = "coco" type="email" name="CORREO" class="form-control" required>
                             </div>
                             </div>
 
@@ -259,7 +297,7 @@ if (!(existeCorreo($dbh,$CORREO)))
                             </div>
 
 								<br>
-                                <button class="btn btn-primary" name="submit" type="submit">Registrar</button>
+                                <a onclick="submitOk()" name="submit" class="btn btn-primary">Registrar</a>
                                 </form>
                                 <br>
                                 <br>
@@ -281,6 +319,6 @@ if (!(existeCorreo($dbh,$CORREO)))
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 </body>
 </html>

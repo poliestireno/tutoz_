@@ -24,9 +24,10 @@ if ($decrypted)
    $Datos = explode(',', $myString); 
    $idCromo=$Datos[0];
    $correo=$Datos[1];
+
    if ($correo!=htmlentities($_SESSION['alogin']))
    {
-   		$msg="Este sobre te pertenece, no lo puedes abrir";
+   		$msg="Este sobre no te pertenece, no lo puedes abrir";
    }
    else
    {

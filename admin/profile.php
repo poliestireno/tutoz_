@@ -105,7 +105,7 @@ if(isset($_POST['submit']))
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 <div class="form-group">
-<label class="col-sm-2 control-label">Username<span style="color:red">*</span></label>
+<label class="col-sm-2 control-label">Username (poner en mayúsculas)<span style="color:red">*</span></label>
 <div class="col-sm-4">
 <input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->username);?>">
 </div>
