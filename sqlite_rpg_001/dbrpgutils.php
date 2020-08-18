@@ -34,6 +34,12 @@ switch ($funcion) {
 	case 'modificarCalas':
 		echo modificarCalasJS();
 		break;
+	case 'getEventosRetosJugador':
+		echo getEventosRetosJugadorJS();
+		break;
+	case 'modificarEstadoReto':
+		echo modificarEstadoRetoJS();
+		break;
 	
 	default:
 		# code...
@@ -93,7 +99,33 @@ function getIDCompanerosMasPersonajes()
 	$result = json_encode($result);
 	return $result;
 }
+function getEventosRetosJugadorJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+	$result=array();
+	$listaTareas = getTareasFromAlumno($dbh,$correo);
+	foreach ($listaTareas as $tarea) 
+  	{
+  		if ($tarea['ID_SITIO']!=NULL)
+  		{
+  			$aux = array();
+  			$aux[]=getSitioFromID($dbh,$tarea['ID_SITIO'])['ID_MAP'];
+  			$aux[]=$tarea['POS_X'];
+  			$aux[]=$tarea['POS_Y'];
+  			$aux[]=$tarea['NOMBRE'];
+  			$aux[]=$tarea['LINK_DOCUMENTO'];
+  			$aux[]=$tarea['DESCRIPCION'];
+			$aux[]=$tarea['ID'];
 
+  			$result[]=$aux;
+  		}
+  	}
+	$result = json_encode($result);
+	return $result;
+}
+	 
 function iniciarPartidaPPTJS()
 {
 	global $dbh;
@@ -129,6 +161,19 @@ function mandarNotificacionJS()
 	if(!isset($_POST["param03"])) die("No param03 found");
 	$mensaje = $_POST["param03"];
 	mandarNotificacion($dbh,$remitente,$receptor,$mensaje);
+	return "";
+}
+
+function modificarEstadoRetoJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+	if(!isset($_POST["param02"])) die("No param02 found");
+	$idTarea = $_POST["param02"];
+	if(!isset($_POST["param03"])) die("No param03 found");
+	$estado = $_POST["param03"];
+	modificarEstadoReto($dbh,$correo,$idTarea,$estado);
 	return "";
 }
 function modificarCalasJS()

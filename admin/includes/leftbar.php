@@ -14,6 +14,8 @@
 
 			<li><a href="admin_cromos.php"><i class="fa fa-envelope"></i> &nbsp;Retos/Cromos</a>
 			</li>
+			<li><a href="crear_reto.php"><i class="fa fa-envelope"></i> &nbsp;Crear Reto</a>
+			</li>
 			<li><a href="admin_niveles.php"><i class="fa fa-envelope"></i> &nbsp;Niveles</a>
 			</li>
 			<li><a href="feedback.php"><i class="fa fa-envelope"></i> &nbsp;Feedback</a>

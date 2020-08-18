@@ -1,8 +1,7 @@
     <?php
 include('includes/config.php');
 require_once("UTILS/dbutils.php");
-//var_export($_POST);
-if(isset($_POST['sel11']))
+if(isset($_POST['submit']))
 {
 
 $CORREO=strtoupper($_POST['CORREO']);
@@ -22,7 +21,7 @@ if (!(existeCorreo($dbh,$CORREO)))
     //var_dump($_POST);
     if(move_uploaded_file($file_loc,$folder.$final_file))
     {
-    	$image=$final_file;
+        $image=$final_file;
     }
     $notitype='Cuenta creada: '.$_POST['name']." ".$_POST['APELLIDO1no']." ".$_POST['APELLIDO2'];
 
@@ -134,62 +133,24 @@ if (!(existeCorreo($dbh,$CORREO)))
 <html lang="en" class="no-js">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-	
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
-	<link rel="stylesheet" href="css/bootstrap-social.css">
-	<link rel="stylesheet" href="css/bootstrap-select.css">
-	<link rel="stylesheet" href="css/fileinput.min.css">
-	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
-	<link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-social.css">
+    <link rel="stylesheet" href="css/bootstrap-select.css">
+    <link rel="stylesheet" href="css/fileinput.min.css">
+    <link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
+    <link rel="stylesheet" href="css/style.css">
     <script type="text/javascript">
 
-
-    function submitOk()
-    {
-            var extensions = new Array("jpg","jpeg");
-            var image_file = document.regform.image.value;
-            var image_length = document.regform.image.value.length;
-            var pos = image_file.lastIndexOf('.') + 1;
-            var ext = image_file.substring(pos, image_length);
-            var final_ext = ext.toLowerCase();
-            var extok=false;
-            for (i = 0; i < extensions.length; i++)
-            {
-                if(extensions[i] == final_ext)
-                {
-                    extok= true;               
-                }
-            }
-            if (!extok)
-            {
-                alert("Extensión del fichero de la imagen no valida (Utilizar jpg o jpeg)");
-                return;
-            }  
-        Swal.fire({
-        title: 'Datos correctos',
-        text: '¿El correo '+document.getElementById("coco").value+' y los demás datos suministrados son los correctos?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí'
-      }).then((result) => {
-        if (result.value) {
-          document.getElementById("regform").submit();
-        }
-      })
-
-    }
-
-	function valIDate()
+    function valIDate()
         {
             var extensions = new Array("jpg","jpeg");
             var image_file = document.regform.image.value;
@@ -201,7 +162,8 @@ if (!(existeCorreo($dbh,$CORREO)))
             {
                 if(extensions[i] == final_ext)
                 {
-                    return true;               
+                return true;
+                
                 }
             }
             alert("Extensión del fichero de la imagen no valida (Utilizar jpg o jpeg)");
@@ -212,15 +174,15 @@ if (!(existeCorreo($dbh,$CORREO)))
 </head>
 
 <body>
-	<div class="login-page bk-img">
-		<div class="form-content">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<h1 class="text-center text-bold mt-2x">Registro</h1>
+    <div class="login-page bk-img">
+        <div class="form-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center text-bold mt-2x">Registro</h1>
                         <div class="hr-dashed"></div>
-						<div class="well row pt-2x pb-3x bk-light text-center">
-                         <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" id="regform">
+                        <div class="well row pt-2x pb-3x bk-light text-center">
+                         <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" onSubmit="return valIDate();">
                             <div class="form-group">
                             <label class="col-sm-1 control-label">NOMBRE<span style="color:red">*</span></label>
                             <div class="col-sm-5">
@@ -228,7 +190,7 @@ if (!(existeCorreo($dbh,$CORREO)))
                             </div>
                             <label class="col-sm-1 control-label">CORREO<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input id = "coco" type="email" name="CORREO" class="form-control" required>
+                            <input type="email" name="CORREO" class="form-control" required>
                             </div>
                             </div>
 
@@ -296,29 +258,29 @@ if (!(existeCorreo($dbh,$CORREO)))
                             </div>
                             </div>
 
-								<br>
-                                <a onclick="submitOk()" name="submit" class="btn btn-primary">Registrar</a>
+                                <br>
+                                <button class="btn btn-primary" name="submit" type="submit">Registrar</button>
                                 </form>
                                 <br>
                                 <br>
-								<p>¿Ya tienes cuenta? <a href="index.php" >Entra aquí</a></p>
-							</div>
-						</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<!-- Loading Scripts -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap-select.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.dataTables.min.js"></script>
-	<script src="js/dataTables.bootstrap.min.js"></script>
-	<script src="js/Chart.min.js"></script>
-	<script src="js/fileinput.js"></script>
-	<script src="js/chartData.js"></script>
-	<script src="js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+                                <p>¿Ya tienes cuenta? <a href="index.php" >Entra aquí</a></p>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Scripts -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-select.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap.min.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script src="js/fileinput.js"></script>
+    <script src="js/chartData.js"></script>
+    <script src="js/main.js"></script>
+
 </body>
 </html>

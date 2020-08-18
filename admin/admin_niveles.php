@@ -73,9 +73,6 @@ if (isset($_POST['actu_items']))
 </head>
 
 <body>
-<?php
-	
-?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar.php');?>

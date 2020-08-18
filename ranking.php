@@ -206,6 +206,7 @@ usort($aTotalAlumnos, "cmp");
   	 $contador=1;
 foreach ($aTotalAlumnos as $alum) 
  {
+
 		if ($_SESSION['alogin']==$alum['CORREO'])
 		{
 			echo '<tr>
@@ -255,15 +256,19 @@ foreach ($aTotalAlumnos as $alum)
   </thead>
 
 </table>
-<h3>Mis Retos conseguidos</h3>
+<h3>Mis Retos</h3>
 <table class="table table-striped w-auto table-bordered">
 
   <!--Table head-->
   <thead>
     <tr>
       <th>Reto</th>
-      <th>Estrellas</th>
-      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Estrellas conseguidas</th>
+      <th>Máximo estrellas</th>
+      <th>Fecha entrega</th>
+      <th>Fecha límite</th>
+      <!--th>Descripción</th-->
     </tr>
   </thead>
   <!--Table head-->
@@ -271,7 +276,7 @@ foreach ($aTotalAlumnos as $alum)
   <!--Table body-->
   <tbody>
   	<?php
-$aToRetos = getEstrellasRetosFromCorreo($dbh,$_SESSION['alogin']);
+/*$aToRetos = getEstrellasRetosFromCorreo($dbh,$_SESSION['alogin']);
 //var_dump($aToRetos);
 foreach ($aToRetos as $reto) 
 {
@@ -283,6 +288,26 @@ foreach ($aToRetos as $reto)
 	    echo '</tr>';
 }
 
+*/
+
+
+$aToRetos = getTareasFromAlumno($dbh,$_SESSION['alogin']);
+//var_dump($aToRetos);
+foreach ($aToRetos as $reto) 
+{
+
+		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$reto['ID']);
+		//var_export($datosAlumnoTarea);
+	  	echo '<tr class="table-info">';
+	      echo '<td>'.$reto['NOMBRE'].'</td>';
+	      echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
+echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'</td>';
+	      echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
+	      echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';
+	      echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
+	      //echo '<td>'.$reto['DESCRIPCION'].'</td>';
+	    echo '</tr>';
+}
 
 	 ?>
     

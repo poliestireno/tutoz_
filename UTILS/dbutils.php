@@ -92,16 +92,18 @@ function modificarEstrella($db,$IDAlumno,$IDAsignatura,$nEstrellas,$dia)
 }
 
 
-function insertarAlumnoTarea($db,$correo,$tareaidselect,$estrellasconseguidas)
+function insertarAlumnoTarea($db,$idAlumno,$tareaidselect,$estado, $estrellasconseguidas,$fecha)
 {
-  $sentencia= "INSERT INTO ALUMNOS_TAREAS (ID_ALUMNO, ID_TAREA, ESTRELLAS_CONSEGUIDAS)
-              VALUES ( :alumno, :tarea, :estrellas)";
+  $sentencia= "INSERT INTO ALUMNOS_TAREAS (ID_ALUMNO, ID_TAREA, ESTADO, ESTRELLAS_CONSEGUIDAS, FECHA)
+              VALUES ( :alumno, :tarea, :estado, :estrellas, :fecha)";
   try
   {
   $stmt = $db->prepare($sentencia);
-  $stmt->bindParam(':alumno',getAlumnoFromCorreo($db,$correo)['ID']);
+  $stmt->bindParam(':alumno',$idAlumno);
   $stmt->bindParam(':tarea',$tareaidselect);
+  $stmt->bindParam(':estado',$estado);
   $stmt->bindParam(':estrellas',$estrellasconseguidas);
+  $stmt->bindParam(':fecha',$fecha);
   $stmt->execute();
     }
 catch (PDOException $ex)
@@ -109,6 +111,7 @@ catch (PDOException $ex)
     echo "Error inserción estrella:".$ex->getMessage();
 }  
 }
+
 function insertarEstrella($db,$IDAlumno,$IDAsignatura,$nEstrellas,$dia)
 {
   $sentencia= "INSERT INTO ESTRELLAS ( DIA, ID_ALUMNO, ID_ASIGNATURA, ESTRELLAS)
@@ -126,6 +129,29 @@ catch (PDOException $ex)
 {
     echo "Error inserción estrella:".$ex->getMessage();
 }  
+}
+function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite)
+{
+  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y, DESCRIPCION,LINK_DOCUMENTO,FECHA_LIMITE)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y, :DESCRIPCION, :LINK_DOCUMENTO, :FECHA_LIMITE)";
+  try
+  {
+    $stmt = $db->prepare($sentencia);
+    $stmt->bindParam(':ID_ASIGNATURA',$asignatura);
+    $stmt->bindParam(':NOMBRE',$name);
+    $stmt->bindParam(':TOTAL_ESTRELLAS',$totalestrellas);
+    $stmt->bindParam(':ID_SITIO',$selSitios);
+    $stmt->bindParam(':POS_X',$posx);
+    $stmt->bindParam(':POS_Y',$posy);
+    $stmt->bindParam(':DESCRIPCION',$descrip);
+    $stmt->bindParam(':LINK_DOCUMENTO',$linkdocumento);
+    $stmt->bindParam(':FECHA_LIMITE',$fechalimite);
+    $stmt->execute();
+  }
+  catch (Exception $ex)
+  {
+      echo "Error insertarReto:".$ex->getMessage();
+  }  
 }
 
 
@@ -545,10 +571,25 @@ function getAsignaturaFromAsignaturaID($db,$IDAsignatura)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   echo "An Error occured! getAsignaturaFromAsignaturaID".$ex->getMessage();
   } 
   return $fila;
 }
+function getDatosAlumnoTarea($db,$correo,$idTarea)
+{
+  try 
+  {
+  $sql="SELECT * FROM ALUMNOS_TAREAS WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA = ".$idTarea;
+  $stmt = $db->query($sql);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! getDatosAlumnoTarea".$ex->getMessage();
+  } 
+  return $fila;
+}
+
+
 function getAsignaturasConCurso($db)
 {
     $vectorTotal = array();
@@ -559,6 +600,23 @@ function getAsignaturasConCurso($db)
     {
       $nombreCurso = getNombreCursoFromID($db,$fila['ID_CURSO']);
       $vectorTotal [] = $nombreCurso."*".$fila['NOMBRE']."--".$fila['ID'];
+    }
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en getAsignaturasConCurso:".$ex->getMessage();
+  }
+  return $vectorTotal;
+}
+function getSitios($db)
+{
+    $vectorTotal = array();
+  try
+  {
+    $stmt = $db->query("SELECT NOMBRE_VISUAL,CODIGO,ID FROM SITIOS");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila['NOMBRE_VISUAL']."*".$fila['CODIGO']."--".$fila['ID'];
     }
   }
   catch (PDOException $ex)
@@ -620,7 +678,7 @@ function getCursosGradoNivel($db)
   }
     return $vectorTotal;
   
-  //SELECT * FROM `ALUMNOS` WHERE `ID_CURSO`= (SELECT ID FROM `CURSOS` WHERE `GRADO`='DAM' AND `NIVEL`=2)
+  //SELECT * FROM ALUMNOS WHERE ID_CURSO= (SELECT ID FROM CURSOS WHERE GRADO='DAM' AND NIVEL=2)
 }
 function getFaltasAsignaturaClase($db,$diaPasado,$IDPasado)
 {
@@ -814,7 +872,17 @@ function getCromoFromID($db,$idCromo){
   } 
   return $fila;
 }
-
+function getSitioFromID($db,$idSitio){
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM SITIOS WHERE ID = ".$idSitio);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured getSitioFromID ! ".$ex->getMessage();
+  } 
+  return $fila;
+}
 function getTareasFromAlumno($db,$correo)
 {
   $alumno = getAlumnoFromCorreo($db,$correo);
@@ -1026,6 +1094,19 @@ function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! setNowUltimaFechaNotiGeneralAlumno ".$ex->getMessage();
+  }   
+}
+
+function modificarEstadoReto($db,$correo,$idTarea,$estado)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET ESTADO='".$estado."' WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA=".$idTarea;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarEstadoReto ".$ex->getMessage();
   }   
 }
 function cambiarNivelAlumno($db,$correo, $nivelReal)
