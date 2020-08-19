@@ -116,7 +116,7 @@ else
 							<div class="col-md-12">
 								<div class="panel panel-default">
 									<div class="panel-heading">ABRIR SOBRE</div>
-<?php if($msg){?><div class="succWrap"><strong>INFO: </strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+<?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>
 
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">

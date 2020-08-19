@@ -105,7 +105,7 @@ function getEventosRetosJugadorJS()
 	if(!isset($_POST["param01"])) die("No param01 found");
 	$correo = $_POST["param01"];
 	$result=array();
-	$listaTareas = getTareasFromAlumno($dbh,$correo);
+	$listaTareas = getTareasTotalesFromAlumno($dbh,$correo);
 	foreach ($listaTareas as $tarea) 
   	{
   		if ($tarea['ID_SITIO']!=NULL)

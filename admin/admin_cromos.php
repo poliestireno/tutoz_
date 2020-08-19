@@ -49,7 +49,9 @@ if (isset($_POST['alumnoCodSobre'])&&($_POST['alumnoCodSobre']!=''))
 }
 if (isset($_POST['alumnoTareaOk'])&&($_POST['alumnoTareaOk']!=''))
 {
-  insertarAlumnoTarea($dbh, $_POST['alumnoTareaOk'], $_POST['tareaidselect'], $_POST['estrellasconseguidas']);
+  modificarEstadoReto($dbh,$_POST['alumnoTareaOk'],$_POST['tareaidselect'],'corregido');
+  modificarEstrellasConseguidasReto($dbh,$_POST['alumnoTareaOk'],$_POST['tareaidselect'],$_POST['estrellasconseguidas']);
+
   $msg=" Actualizada tarea para el alumno";
 }
 
@@ -145,15 +147,17 @@ function managebuttonGO2(nombre,curso,correo)
         '<span class="label label-warning">Curso: '+curso+'</span>',
          showConfirmButton: false,
   html:
-        '<h3><span class="label label-primary">Nombre Tarea/Total estrellas:</span></h3>'+
+        '<h3><span class="label label-primary">[estado] Nombre Reto/Máximo estrellas:</span></h3>'+
         '<select  class="form-control" id="nombretarea" name="nombretarea">'+
         <?php 
         if (isset($_POST['nombreGO'])&&($_POST['nombreGO']!=''))
         {
             $tareasFA = getTareasFromAlumno($dbh,$_POST['correoGO']);
+            
             //var_dump($tareasFA);
             foreach ($tareasFA as $tareai) {
-              echo "'<option value=\"".$tareai['ID']."\">".$tareai['NOMBRE']."(".getAsignaturaFromAsignaturaID($dbh,$tareai['ID_ASIGNATURA'])['NOMBRE'].")/".$tareai['TOTAL_ESTRELLAS']."</option>'+";
+              $ttareaa = getTareaFromID($dbh,$tareai['ID_TAREA']);
+              echo "'<option value=\"".$tareai['ID_TAREA']."|".$tareai['ESTADO']."\">[".$tareai['ESTADO']."] ".$ttareaa['NOMBRE']."(".getAsignaturaFromAsignaturaID($dbh,$ttareaa['ID_ASIGNATURA'])['NOMBRE'].")/".$ttareaa['TOTAL_ESTRELLAS']."</option>'+";
             }
         }
         
@@ -189,20 +193,75 @@ function managebuttonGO2(nombre,curso,correo)
 
   function genTareaOKYSobre(correo_alumno,tareaidselect,estrellasconseguidas)
   {
-    document.getElementById("tareaidselect").value=tareaidselect;
+    var fields = tareaidselect.split('|');
+    var tareaid = fields[0];
+    var estado = fields[1];
+    
+    if (estado!='entregado')
+    {
+      Swal.fire({
+          title: '¿Seguro que quieres corregirlo y darle sobre?',
+          text: "No está en estado entregado",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, lo corrigo!'
+        }).then((result) => {
+          if (result.value) {
+      document.getElementById("tareaidselect").value=tareaid;
     document.getElementById("estrellasconseguidas").value=estrellasconseguidas;
     document.getElementById("alumnoTareaOk").value=correo_alumno;
     document.getElementById("alumnoCodSobre").value=correo_alumno;
     document.getElementById("form2").action="admin_cromos.php";
     document.getElementById("form2").submit(); 
+          }
+        });
+    }
+    else
+    {
+      document.getElementById("tareaidselect").value=tareaid;
+    document.getElementById("estrellasconseguidas").value=estrellasconseguidas;
+    document.getElementById("alumnoTareaOk").value=correo_alumno;
+    document.getElementById("alumnoCodSobre").value=correo_alumno;
+    document.getElementById("form2").action="admin_cromos.php";
+    document.getElementById("form2").submit(); 
+    }
   }
   function genTareaOk(correo_alumno,tareaidselect,estrellasconseguidas)
   {
-    document.getElementById("tareaidselect").value=tareaidselect;
+    var fields = tareaidselect.split('|');
+    var tareaid = fields[0];
+    var estado = fields[1];
+
+    if (estado!='entregado')
+    {
+      Swal.fire({
+          title: '¿Seguro que quieres corregirlo?',
+          text: "No está en estado entregado",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, lo corrigo!'
+        }).then((result) => {
+          if (result.value) {
+document.getElementById("tareaidselect").value=tareaid;
     document.getElementById("estrellasconseguidas").value=estrellasconseguidas;
     document.getElementById("alumnoTareaOk").value=correo_alumno;
     document.getElementById("form2").action="admin_cromos.php";
     document.getElementById("form2").submit(); 
+          }
+        });
+    }
+    else
+    {
+       document.getElementById("tareaidselect").value=tareaid;
+      document.getElementById("estrellasconseguidas").value=estrellasconseguidas;
+      document.getElementById("alumnoTareaOk").value=correo_alumno;
+      document.getElementById("form2").action="admin_cromos.php";
+      document.getElementById("form2").submit();      
+    }
   }
   function genCodigoSobre(correo_alumno)
   {

@@ -883,7 +883,50 @@ function getSitioFromID($db,$idSitio){
   } 
   return $fila;
 }
+
+function getTareasFromAlumnoEstado($db,$correo,$estado)
+{
+  $vectorTotal = array();
+  try
+  {
+
+    $stmt = $db->query
+    ("SELECT * FROM ALUMNOS_TAREAS WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ESTADO = '".$estado."'");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en getTareasFromAlumnoEstado:".$ex->getMessage();
+  }
+  return $vectorTotal;  
+}
 function getTareasFromAlumno($db,$correo)
+{
+  $vectorTotal = array();
+  try
+  {
+
+    $stmt = $db->query
+    ("SELECT * FROM ALUMNOS_TAREAS WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." ORDER BY ID DESC");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en getTareasFromAlumnoEstado:".$ex->getMessage();
+  }
+  return $vectorTotal;  
+}
+
+
+function getTareasTotalesFromAlumno($db,$correo)
 {
   $alumno = getAlumnoFromCorreo($db,$correo);
   $asignaturas = getAsignaturasFromCurso($db,$alumno['ID_CURSO']);
@@ -1011,6 +1054,28 @@ function esUsernameAdministrador($db,$userName)
   }
     return Count($vectorTotal)>0;  
 }
+
+
+
+function existeLugar($db,$filaSitio,$posx,$posy)
+{
+  $vectorTotal = array();
+  try
+  {
+     
+    $stmt = $db->query("SELECT * FROM TAREAS WHERE ID_SITIO = ".$filaSitio." AND POS_X=".$posx." AND POS_Y=".$posy);
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en existeLugar:".$ex->getMessage();
+  }
+    return Count($vectorTotal)>0;  
+}
 function existeCorreo($db,$CORREO)
 {
   $vectorTotal = array();
@@ -1082,6 +1147,18 @@ function getFantasma($db,$IDAsignatura,$dia)
   } 
   return $fila;
 }
+function getTareaFromID($db,$idTarea)
+{
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM TAREAS WHERE ID = ".$idTarea);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! getTareaFromID".$ex->getMessage();
+  } 
+  return $fila;
+}
    
 
 function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
@@ -1097,6 +1174,19 @@ function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
   }   
 }
 
+function modificarFechaEntregadoReto($db,$correo,$idTarea,$tsmp)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET FECHA='".$tsmp."' WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA=".$idTarea;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarFechaEntregadoReto ".$ex->getMessage();
+  } 
+  return $stmt->rowCount();
+}
 function modificarEstadoReto($db,$correo,$idTarea,$estado)
 {
   try 
@@ -1107,7 +1197,21 @@ function modificarEstadoReto($db,$correo,$idTarea,$estado)
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! modificarEstadoReto ".$ex->getMessage();
-  }   
+  } 
+  return $stmt->rowCount();
+}
+function modificarEstrellasConseguidasReto($db,$correo,$idTarea,$estrellasConseguidas)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET ESTRELLAS_CONSEGUIDAS=".$estrellasConseguidas." WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA=".$idTarea;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarEstrellasConseguidasReto ".$ex->getMessage();
+  } 
+  return $stmt->rowCount();
 }
 function cambiarNivelAlumno($db,$correo, $nivelReal)
 {

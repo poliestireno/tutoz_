@@ -117,7 +117,7 @@ if(isset($_POST['sel11']))
     function submitOk()
     {
   
-        Swal.fire({
+            Swal.fire({
         title: 'Datos correctos',
         text: '¿Son los datos correctos?',
         icon: 'warning',

@@ -266,7 +266,7 @@ foreach ($aTotalAlumnos as $alum)
       <th>Estado</th>
       <th>Estrellas conseguidas</th>
       <th>Máximo estrellas</th>
-      <th>Fecha entrega</th>
+      <th>Entregado en fecha</th>
       <th>Fecha límite</th>
       <!--th>Descripción</th-->
     </tr>
@@ -291,7 +291,7 @@ foreach ($aToRetos as $reto)
 */
 
 
-$aToRetos = getTareasFromAlumno($dbh,$_SESSION['alogin']);
+$aToRetos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin']);
 //var_dump($aToRetos);
 foreach ($aToRetos as $reto) 
 {
