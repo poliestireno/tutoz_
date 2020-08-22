@@ -298,6 +298,48 @@ function getNumeroSegundosAlumno($dbh,$correo)
   return $segundosApertura;
 }
   
+function manageUtilizacionEvento($dbh,$correoJugador,$idEvento)
+{
+  mi_info_log($correoJugador);
+  mi_info_log($idEvento);
+  $esJugable=1;
+  $idAlumno = getAlumnoFromCorreo($dbh,$correoJugador)['ID'];
+  $evento= getEventoFromID($dbh,$idEvento);
+  mi_info_log($evento);
+  $listaUtilizacionesHoyDB= $evento['LISTA_UTILIZACIONES_HOY'];
+  $listaUtilizacionesHoy = explode(",", $listaUtilizacionesHoyDB);
+  if ((Count($listaUtilizacionesHoy)>0)&&(date('Y-m-d')==$listaUtilizacionesHoy[0]))
+  {
+    //ya jugada?
+    $contUtils= 0;
+    for ($i=1; $i < Count($listaUtilizacionesHoy) ; $i++) 
+    {
+        if ($idAlumno==$listaUtilizacionesHoy[$i])
+        {
+          $contUtils++;
+        }
+    }
+    // no se permite más utilizaciones y no hace falta modificar.
+    if ($contUtils>=$evento['N_UTILIZACIONES_DIA'])
+    {
+      $esJugable=0;
+    }
+    else
+    { 
+      modificarListaUtilizacionesEvento($dbh,$idEvento,$listaUtilizacionesHoyDB.",".$idAlumno);
+    }
+        
+  }
+  else if ($evento['N_UTILIZACIONES_DIA']>0)
+  {
+    modificarListaUtilizacionesEvento($dbh,$idEvento,date('Y-m-d').",".$idAlumno);
+  }
+  else
+  {
+    $esJugable=0;
+  }
+  return $esJugable;
+}
 function iniciarPartidaPPT($dbh,$correoJugador,$correoPNJ)
 {
   $yajugada=0;

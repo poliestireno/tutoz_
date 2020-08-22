@@ -25,19 +25,40 @@ if(isset($_POST['submit']))
 	{
 		$pperson=-1;
 	}
+
+	// se genera lugar aleatorio para el sitio dado
+    $filaSitio = getSitioFromID($dbh,$_POST['localizacion']);
+    $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
+    $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+    $cont = 1000;
+    while (existeLugar($dbh,$filaSitio['ID'],$posx,$posy)) 
+    {
+        $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
+        $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+        $cont--;
+        if ($cont == 0)
+        {
+            $haySitio=false;
+            break;
+        }
+    }
+
+
 	modificarBot($dbh,$_SESSION['alogin'],
 		(!isset($_POST['saludo']))?"":$_POST['saludo'],
 		(!isset($_POST['palabra_clave']))?"":$_POST['palabra_clave'],
 		(!isset($_POST['movilidad']))?"1":$_POST['movilidad'],
 		(!isset($_POST['velocidad']))?"":$_POST['velocidad'],
-		(!isset($_POST['localizacion']))?"":$_POST['localizacion'],
 		(!isset($_POST['checkFantasma']))?"0":"1",
 		(!isset($_POST['checkSaltando']))?"0":"1",
 		$pperson,
 		$porcentajesPPT,
 		(!isset($_POST['sPostura1']))?"0":$_POST['sPostura1'],
 		(!isset($_POST['sPostura2']))?"0":$_POST['sPostura2'],
-		(!isset($_POST['sPostura3']))?"0":$_POST['sPostura3']
+		(!isset($_POST['sPostura3']))?"0":$_POST['sPostura3'],
+		$filaSitio['ID_MAP'],
+		$posx,
+		$posy
 		
 	);
 	$msg=" Información actualizada correctamente";
@@ -326,20 +347,37 @@ $getPropsAlummo['ppt1']=1;
 
 <div class="form-group">
 	<?php if ($getPropsAlummo['localizacion']==1) {?>
+
+
 	<label class="col-sm-2 control-label">Localización</label>
 	<div class="col-sm-4">
-	<select name="localizacion" class="form-control">
-		<option value="9" <?php echo (($bot['ID_MAPA']=="9")?" selected='selected' ":"")?>>
-		Patio
-		</option>
-		<option value="5" <?php echo (($bot['ID_MAPA']=="5")?" selected='selected' ":"")?>>
-		Pasillo principal
-		</option>
-	<option value="4" <?php echo (($bot['ID_MAPA']=="4")?" selected='selected' ":"")?>>
-		Clase puerta abajo 2ºB 
-		</option>
-	</select>
-	</div><?php } ?>
+	<select class="form-control" ID="sel11" name="localizacion">
+        <?php
+        $listaSitios= getSitios($dbh); 
+        foreach ($listaSitios as $sitio)
+        {
+            $pos = strrpos($sitio, "--");
+            $IDAs=substr($sitio,$pos+2,strlen($sitio));
+            $nombre = substr($sitio,0,$pos);
+            //$posAs= strrpos($nombre,"*");
+            //$nombre_sitio = substr($nombre,0,$posAs);
+            //echo 'idas:'.$IDAs;
+            echo "<option ".(($IDAs==getSitioFromMapID($dbh,$bot['ID_MAPA_INICIO'])['ID'])?" selected=selected ":"")."value='".$IDAs."'>".$nombre."</option>";
+        }
+        ?>
+    </select>
+	</div>
+
+
+
+
+
+
+
+
+
+
+<?php } ?>
 	<?php if ($getPropsAlummo['velocidad']==1) {?><?php } ?>
 </div>
 <div class="form-group">

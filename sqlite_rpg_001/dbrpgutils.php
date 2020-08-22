@@ -40,6 +40,12 @@ switch ($funcion) {
 	case 'modificarEstadoReto':
 		echo modificarEstadoRetoJS();
 		break;
+	case 'getEventosGeneralesJugador':
+		echo getEventosGeneralesJugadorJS();
+		break;
+	case 'manageUtilizacionEvento':
+		echo manageUtilizacionEventoJS();
+		break;
 	
 	default:
 		# code...
@@ -99,6 +105,21 @@ function getIDCompanerosMasPersonajes()
 	$result = json_encode($result);
 	return $result;
 }
+
+function getEventosGeneralesJugadorJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+	$result=array();
+	$listaEventos = getEventosGeneralesFromAlumno($dbh,$correo);
+	foreach ($listaEventos as $evento) 
+  	{
+  		$result[]=$evento;
+  	}
+	$result = json_encode($result);
+	return $result;
+}
 function getEventosRetosJugadorJS()
 {
 	global $dbh;
@@ -118,6 +139,9 @@ function getEventosRetosJugadorJS()
   			$aux[]=$tarea['LINK_DOCUMENTO'];
   			$aux[]=$tarea['DESCRIPCION'];
 			$aux[]=$tarea['ID'];
+			$aux[]=$tarea['VISIBLE'];
+			$aux[]=$tarea['NOMBRE_SPRITE'];
+			$aux[]=$tarea['INDICE_SPRITE'];
 
   			$result[]=$aux;
   		}
@@ -134,6 +158,15 @@ function iniciarPartidaPPTJS()
 	if(!isset($_POST["param02"])) die("No param02 found");
 	$correoPNJ = $_POST["param02"];	
 	return iniciarPartidaPPT($dbh,$correoJugador,$correoPNJ);
+}
+function manageUtilizacionEventoJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correoJugador = $_POST["param01"];
+	if(!isset($_POST["param02"])) die("No param02 found");
+	$idEvento = $_POST["param02"];	
+	return manageUtilizacionEvento($dbh,$correoJugador,$idEvento);
 }
 function getAlumnoFromIdJS()
 {

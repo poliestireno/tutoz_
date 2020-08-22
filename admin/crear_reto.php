@@ -18,10 +18,12 @@ if(isset($_POST['sel11']))
   $totalestrellas=$_POST['totalestrellas'];
   $descrip=$_POST['descrip'];
   $selSitios=$_POST['selSitios'];
+  $visible=$_POST['visible'];
   $fechalimite=$_POST['fechalimite'];
   $linkdocumento=$_POST['linkdocumento'];
   $posx=$_POST['posx'];
   $posy=$_POST['posy'];
+  $haySitio=true;
   if ($selSitios=='')
   {
     $selSitios=NULL;
@@ -34,6 +36,18 @@ if(isset($_POST['sel11']))
     $filaSitio = getSitioFromID($dbh,$selSitios);
     $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
     $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+    $cont = 1000;
+    while (existeLugar($dbh,$filaSitio['ID'],$posx,$posy)) 
+    {
+        $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
+        $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+        $cont--;
+        if ($cont == 0)
+        {
+            $haySitio=false;
+            break;
+        }
+    }
   }
   if ($linkdocumento=='')
   {
@@ -44,10 +58,11 @@ if(isset($_POST['sel11']))
     $fechalimite=NULL;
   }
 
-
+if ($haySitio)
+{
   $asignaturas = getAsignaturasFromCurso($dbh,$sel11);
   
-  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite);
+  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible);
   
     $lastInsertId = $dbh->lastInsertId();
     if($lastInsertId)
@@ -58,12 +73,23 @@ if(isset($_POST['sel11']))
         {
             insertarAlumnoTarea($dbh,$alumno['ID'],$lastInsertId,"no activado", NULL, NULL);
         }
+        // notificación general de creación de reto a la clase
+        $clase = getAsignaturasFromCurso($dbh,$curso['ID'])[0]['NOMBRE'];
+        $mensaje = "Se ha creado un nuevo reto de " .$totalestrellas. " estrellas llamado ".$name.", ¡A por él!";
+        
+        mandarNotificacion($dbh,'Admin',$clase,$mensaje);
         echo "<script type='text/javascript'>alert('Reto creado correctamente!');</script>";
     }
     else
     {
         echo "<script type='text/javascript'>alert('Error al crear el reto.');</script>";        
     }
+
+}
+else
+{
+    echo "<script type='text/javascript'>alert('Error, no hay hueco en ese sitio, prueba con otro');</script>";        
+}
     
 }
 
@@ -237,8 +263,17 @@ if(isset($_POST['sel11']))
     </select>
                 
                             </div>
+                                                        <label class="col-sm-1 control-label">VISIBLE<span style="color:red">*</span></label>
+                            <div class="col-sm-5">
+                                
+                                <select class="form-control" ID="sel11" name="visible">
+        <option value="1">VISIBLE</option>
+        <option value="0">INVISIBLE</option>
+    </select>
+                
+                            </div>
 
-                           <label>Si SITIO se deja vacio el reto no necesitará activarse por evento. Si POSICIÓN X o POSICIÓN Y se deja vacío genera un lugar aletorio (x,y)</label>
+                         
                              
 
                             
@@ -259,6 +294,9 @@ if(isset($_POST['sel11']))
 
                             </div>
 
+  <p>Si SITIO se deja vacío el reto no necesitará activarse por evento.</p>
+  <p> Si POSICIÓN X o POSICIÓN Y se deja vacío genera un lugar aletorio (x,y).</p>
+  <p> Para modificar el sprite/icono/imagen tocar directamente en DB. Por dedecto es: !Flame, 7</p>
 
 
 								<br>

@@ -130,10 +130,10 @@ catch (PDOException $ex)
     echo "Error inserción estrella:".$ex->getMessage();
 }  
 }
-function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite)
+function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible)
 {
-  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y, DESCRIPCION,LINK_DOCUMENTO,FECHA_LIMITE)
-              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y, :DESCRIPCION, :LINK_DOCUMENTO, :FECHA_LIMITE)";
+  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_LIMITE)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, :FECHA_LIMITE)";
   try
   {
     $stmt = $db->prepare($sentencia);
@@ -143,6 +143,7 @@ function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,
     $stmt->bindParam(':ID_SITIO',$selSitios);
     $stmt->bindParam(':POS_X',$posx);
     $stmt->bindParam(':POS_Y',$posy);
+    $stmt->bindParam(':VISIBLE',$visible);
     $stmt->bindParam(':DESCRIPCION',$descrip);
     $stmt->bindParam(':LINK_DOCUMENTO',$linkdocumento);
     $stmt->bindParam(':FECHA_LIMITE',$fechalimite);
@@ -204,9 +205,9 @@ function insertarActor($db,$PV, $PM, $PT, $CALAS)
         echo "Error inserción bot:".$ex->getMessage();
     }  
 }
-function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCIDAD,$ID_MAPA,$FANTASMA,$SALTANDO,$PERSONAJE,$PORCENT_PPT,$POSTURA1,$POSTURA2,$POSTURA3,$LISTA_JUGADAS_HOY_PTT)
+function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCIDAD,$FANTASMA,$SALTANDO,$PERSONAJE,$PORCENT_PPT,$POSTURA1,$POSTURA2,$POSTURA3,$LISTA_JUGADAS_HOY_PTT,$ID_MAPA_INICIO,$POS_X_INICIO,$POS_Y_INICIO)
 {
-  $sentencia= "INSERT INTO MIBOT(SALUDO,DESCRIPCION,PALABRA_CLAVE,MOVILIDAD,VELOCIDAD,ID_MAPA,FANTASMA,SALTANDO,PERSONAJE,PORCENT_PPT,POSTURA1,POSTURA2,POSTURA3,LISTA_JUGADAS_HOY_PTT) VALUES (:SALUDO,:DESCRIPCION,:PALABRA_CLAVE,:MOVILIDAD,:VELOCIDAD,:ID_MAPA,:FANTASMA,:SALTANDO,:PERSONAJE,:PORCENT_PPT,:POSTURA1,:POSTURA2,:POSTURA3,:LISTA_JUGADAS_HOY_PTT)";
+  $sentencia= "INSERT INTO MIBOT(SALUDO,DESCRIPCION,PALABRA_CLAVE,MOVILIDAD,VELOCIDAD,FANTASMA,SALTANDO,PERSONAJE,PORCENT_PPT,POSTURA1,POSTURA2,POSTURA3,LISTA_JUGADAS_HOY_PTT,ID_MAPA_INICIO,POS_X_INICIO,POS_Y_INICIO) VALUES (:SALUDO,:DESCRIPCION,:PALABRA_CLAVE,:MOVILIDAD,:VELOCIDAD,:FANTASMA,:SALTANDO,:PERSONAJE,:PORCENT_PPT,:POSTURA1,:POSTURA2,:POSTURA3,:LISTA_JUGADAS_HOY_PTT,:ID_MAPA_INICIO,:POS_X_INICIO,:POS_Y_INICIO)";
   //echo $sentencia;
   try
   {
@@ -216,7 +217,6 @@ function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCID
       $stmt->bindParam(':PALABRA_CLAVE',$PALABRA_CLAVE);
       $stmt->bindParam(':MOVILIDAD',$MOVILIDAD);
       $stmt->bindParam(':VELOCIDAD',$VELOCIDAD);
-      $stmt->bindParam(':ID_MAPA',$ID_MAPA);
       $stmt->bindParam(':FANTASMA',$FANTASMA);
       $stmt->bindParam(':SALTANDO',$SALTANDO);
       $stmt->bindParam(':PERSONAJE',$PERSONAJE);
@@ -225,6 +225,9 @@ function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCID
       $stmt->bindParam(':POSTURA2',$POSTURA2);
       $stmt->bindParam(':POSTURA3',$POSTURA3);
       $stmt->bindParam(':LISTA_JUGADAS_HOY_PTT',$LISTA_JUGADAS_HOY_PTT);
+      $stmt->bindParam(':ID_MAPA_INICIO',$ID_MAPA_INICIO);
+      $stmt->bindParam(':POS_X_INICIO',$POS_X_INICIO);
+      $stmt->bindParam(':POS_Y_INICIO',$POS_Y_INICIO);
       $stmt->execute();
     }
     catch (PDOException $ex)
@@ -621,7 +624,24 @@ function getSitios($db)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAsignaturasConCurso:".$ex->getMessage();
+    echo "Error en getSitios:".$ex->getMessage();
+  }
+  return $vectorTotal;
+}
+function getAllSitios($db)
+{
+    $vectorTotal = array();
+  try
+  {
+    $stmt = $db->query("SELECT * FROM SITIOS");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en getAllSitios:".$ex->getMessage();
   }
   return $vectorTotal;
 }
@@ -709,6 +729,18 @@ function getAlumnoFromID($db,$IDAlumno)
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! ".$ex->getMessage();
+  } 
+  return $fila;
+}
+function getEventoFromID($db,$IdE)
+{
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM EVENTOS WHERE ID=".$IdE);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! getEventoFromID".$ex->getMessage();
   } 
   return $fila;
 }
@@ -883,6 +915,17 @@ function getSitioFromID($db,$idSitio){
   } 
   return $fila;
 }
+function getSitioFromMapID($db,$idMap){
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM SITIOS WHERE ID_MAP = ".$idMap);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured getSitioFromMapID ! ".$ex->getMessage();
+  } 
+  return $fila;
+}
 
 function getTareasFromAlumnoEstado($db,$correo,$estado)
 {
@@ -945,7 +988,118 @@ function getTareasTotalesFromAlumno($db,$correo)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getTareasFromAlumno:".$ex->getMessage();
+    echo "Error en getTareasTotalesFromAlumno:".$ex->getMessage();
+  }
+  return $vectorTotal;  
+}
+
+function yaGeneradoLugarParaHoy($db,$idAlumno,$listaGenAleatoriosHoy)
+{
+  $yaJugada=0;
+  $aGenAleatoriosHoy = explode(",", $listaGenAleatoriosHoy);
+  
+  if ((Count($aGenAleatoriosHoy)>0)&&(date('Y-m-d')==$aGenAleatoriosHoy[0]))
+  {
+    //ya jugada?
+    for ($i=1; $i < Count($aGenAleatoriosHoy) ; $i++) 
+    {
+        $aAux = explode(":", $aGenAleatoriosHoy[$i]);
+        if ($idAlumno==$aAux[0])
+        {
+          return 2;
+        }
+    }
+  }
+  else
+  {
+    $yaJugada=1;
+  }
+  return $yaJugada;
+}
+
+function getEventosGeneralesFromAlumno($db,$correo)
+{
+  $alumno = getAlumnoFromCorreo($db,$correo);
+  $asignaturas = getAsignaturasFromCurso($db,$alumno['ID_CURSO']);
+  $vectorTotal = array();
+  try
+  {
+  foreach ($asignaturas as $asig) {
+    $stmt = $db->query("SELECT * FROM EVENTOS WHERE ID_ASIGNATURA = ".$asig['ID']);
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $idAlumno = getAlumnoFromCorreo($db,$correo)['ID'];
+      // se genera un lugar aleatorio entre todos los sitios
+      if ($fila['ID_SITIO']==NULL)
+      {
+        $yaGenerado = yaGeneradoLugarParaHoy($db,$idAlumno,$fila['LISTA_GEN_ALETORIAS_HOY']);
+        $listaGenerada=$fila['LISTA_GEN_ALETORIAS_HOY'];
+        // no existe lista para hoy
+        if ($yaGenerado==1)
+        {
+          $listaGenerada="".date('Y-m-d');
+        }
+        // no está generado para hoy
+        if ($yaGenerado<=1)
+        {
+
+        $aallSitios = getAllSitios($db);
+        $sitioElegido = $aallSitios[rand(0,Count($aallSitios)-1)];
+        $idMap = $sitioElegido['ID_MAP'];
+        $posx = rand($sitioElegido['INI_X'],$sitioElegido['MAX_X']);
+        $posy = rand($sitioElegido['INI_Y'],$sitioElegido['MAX_Y']);
+        $cont = 1000;
+        while (existeLugar($db,$sitioElegido['ID'],$posx,$posy)) 
+        {
+            $posx = rand($sitioElegido['INI_X'],$sitioElegido['MAX_X']);
+            $posy = rand($sitioElegido['INI_Y'],$sitioElegido['MAX_Y']);
+            $cont--;
+            if ($cont==0)
+            {
+              $cont = 1000;
+              $sitioElegido = $aallSitios[rand(0,Count($aallSitios)-1)];
+            }
+        };
+        $listaGenerada.=",".$idAlumno.":".$idMap."|".$posx."|".$posy;
+        modificarListaGenAleatoriasHoy($db,$fila['ID'], $listaGenerada);
+
+        }
+        $eventoModificado = getEventoFromID($db,$fila['ID']);
+        
+        $aGenAleatoriosHoy = explode(",", $eventoModificado['LISTA_GEN_ALETORIAS_HOY']);
+  
+        for ($i=1; $i < Count($aGenAleatoriosHoy) ; $i++) 
+        {
+            $aAux = explode(":", $aGenAleatoriosHoy[$i]);
+            if ($idAlumno==$aAux[0])
+            {
+              $aAux2 = explode("|", $aAux[1]);
+              $idMap=$aAux2[0];
+              $posx=$aAux2[1];
+              $posy=$aAux2[2];
+            }
+        }
+
+        $fila['ID_MAP'] =$idMap;
+        $fila['POS_X'] = $posx;
+        $fila['POS_Y'] = $posy;
+        
+
+      }
+      else
+      {
+        $sitio = getSitioFromID($db,$fila['ID_SITIO']);
+        $fila['ID_MAP'] = $sitio['ID_MAP'];        
+      }
+      $vectorTotal [] = $fila;
+    }
+  }
+     
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en getEventosGeneralesFromAlumno:".$ex->getMessage();
   }
   return $vectorTotal;  
 }
@@ -1074,7 +1228,37 @@ function existeLugar($db,$filaSitio,$posx,$posy)
   {
     echo "Error en existeLugar:".$ex->getMessage();
   }
-    return Count($vectorTotal)>0;  
+  $vectorTotal2 = array();
+  try
+  {
+     
+    $stmt = $db->query("SELECT * FROM EVENTOS WHERE ID_SITIO = ".$filaSitio." AND POS_X=".$posx." AND POS_Y=".$posy);
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal2 [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en existeLugar:".$ex->getMessage();
+  }
+  $vectorTotal3 = array();
+  try
+  {
+     
+    $stmt = $db->query("SELECT * FROM MIBOT WHERE ID_MAPA_INICIO = ".$filaSitio." AND POS_X_INICIO=".$posx." AND POS_Y_INICIO=".$posy);
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal3 [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    echo "Error en existeLugar:".$ex->getMessage();
+  }
+    return (Count($vectorTotal)+Count($vectorTotal2)+Count($vectorTotal3))>0;  
 }
 function existeCorreo($db,$CORREO)
 {
@@ -1174,6 +1358,32 @@ function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
   }   
 }
 
+function modificarComentarioReto($db,$correo,$idTarea,$comentario)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET COMENTARIO='".$comentario."' WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA=".$idTarea;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarComentarioReto ".$ex->getMessage();
+  } 
+  return $stmt->rowCount();
+}
+function modificarOtrosReto($db,$correo,$idTarea,$otros)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET OTROS='".$otros."' WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA=".$idTarea;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarOtrosReto ".$ex->getMessage();
+  } 
+  return $stmt->rowCount();
+}
 function modificarFechaEntregadoReto($db,$correo,$idTarea,$tsmp)
 {
   try 
@@ -1191,6 +1401,12 @@ function modificarEstadoReto($db,$correo,$idTarea,$estado)
 {
   try 
   {
+
+    $datosAT = getDatosAlumnoTarea($db,$correo,$idTarea);
+    if (($estado=='activado') && ($datosAT['ESTADO']!='no activado'))
+    {
+      return 0;
+    }
     $sql = "UPDATE ALUMNOS_TAREAS SET ESTADO='".$estado."' WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA=".$idTarea;
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -1235,6 +1451,30 @@ function modificarListaJugadasPPT($db,$id, $listajugadas)
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! modificarListaJugadasPPT ".$ex->getMessage();
+  }   
+}
+function modificarListaUtilizacionesEvento($db,$id, $nListaUtils)
+{
+  try 
+  {
+    $sql = "UPDATE EVENTOS SET LISTA_UTILIZACIONES_HOY='".$nListaUtils."' WHERE ID='".$id."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarUtilizacionesEvento ".$ex->getMessage();
+  }   
+}
+function modificarListaGenAleatoriasHoy($db,$id, $listajugadas)
+{
+  try 
+  {
+    $sql = "UPDATE EVENTOS SET LISTA_GEN_ALETORIAS_HOY='".$listajugadas."' WHERE ID='".$id."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarListaGenAleatoriasHoy ".$ex->getMessage();
   }   
 }
 function modificarOrdenAlbum($db,$correo, $ordentotal)
@@ -1365,14 +1605,15 @@ function modificarCalas($db,$correo,$cantidad)
    echo "An Error occured! modificarCalas ".$ex->getMessage();
   }   
 }
-function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$localizacion,$fantasma,$saltando,$personaje,$porcentajesPPT,$postura1,$postura2,$postura3)
+function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$fantasma,$saltando,$personaje,$porcentajesPPT,$postura1,$postura2,$postura3,$ID_MAPA_INICIO,$POS_X_INICIO,$POS_Y_INICIO)
 {
   try 
   {
   
     $setPersonaje=($personaje!=-1)?(",PERSONAJE=".$personaje):"";
 
-    $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."'".$setPersonaje.",POSTURA1=".$postura1.",POSTURA2=".$postura2.",POSTURA3=".$postura3.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",ID_MAPA=".$localizacion.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
+
+    $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."'".$setPersonaje.",POSTURA1=".$postura1.",POSTURA2=".$postura2.",POSTURA3=".$postura3.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",ID_MAPA_INICIO=".$ID_MAPA_INICIO.",POS_X_INICIO=".$POS_X_INICIO.",POS_Y_INICIO=".$POS_Y_INICIO.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
     //echo $sql;
     $stmt = $db->prepare($sql);
     $stmt->execute();
