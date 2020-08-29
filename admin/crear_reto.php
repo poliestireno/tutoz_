@@ -246,9 +246,8 @@ else
                             <div class="col-sm-5">
                                 
                                 <select class="form-control" ID="sel11" name="selSitios">
-        <option></option>
         <?php
-        $listaSitios= getSitios($dbh); 
+        $listaSitios= getSitiosVisibles($dbh); 
         foreach ($listaSitios as $sitio)
         {
             $pos = strrpos($sitio, "--");
@@ -294,7 +293,6 @@ else
 
                             </div>
 
-  <p>Si SITIO se deja vacío el reto no necesitará activarse por evento.</p>
   <p> Si POSICIÓN X o POSICIÓN Y se deja vacío genera un lugar aletorio (x,y).</p>
   <p> Para modificar el sprite/icono/imagen tocar directamente en DB. Por dedecto es: !Flame, 7</p>
 

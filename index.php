@@ -7,7 +7,6 @@ if(isset($_POST['login']))
 $_POST['username']=strtoupper($_POST['username']);
 $CORREO=$_POST['username'];
 $password=md5($_POST['password']);
-
 $sql ="SELECT CORREO,password FROM ALUMNOS WHERE CORREO=:CORREO and password=:password";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':CORREO', $CORREO, PDO::PARAM_STR);
@@ -17,6 +16,7 @@ $results=$query->fetchAll(PDO::FETCH_OBJ);
 if($query->rowCount() > 0)
 {
 $_SESSION['alogin']=$_POST['username'];
+modificarFechaUltimoLoginAlumno($dbh,$_SESSION['alogin'],date("Y-m-d H:i:s"));
 echo "<script type='text/javascript'> document.location = 'profile.php'; </script>";
 } else{
   

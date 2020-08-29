@@ -18,10 +18,11 @@ if(isset($_GET['del']) && isset($_GET['name']))
 $ID=$_GET['del'];
 $name=$_GET['name'];
 
-$sql = "delete from ALUMNOS WHERE ID=:ID";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':ID',$ID, PDO::PARAM_STR);
-$query -> execute();
+$alumno = getAlumnoFromID($dbh,$ID);
+borrarCromosNoPoseidosFromIdCreador($dbh,$ID);
+borrarAlumnoFromId($dbh,$ID);
+borrarBotFromId($dbh,$alumno['ID_MIBOT']);
+borrarActorFromId($dbh,$alumno['ID_MIACTOR']);
 
 $sql2 = "insert into deleteduser (email) values (:name)";
 $query2 = $dbh->prepare($sql2);
@@ -116,8 +117,10 @@ $msg="Datos borrados correctamente";
                                                 <th>Nombre</th>
                                                 <th>Apellido1</th>
                                                 <th>Apellido2</th>
-                                                <th>Correo</th>
                                                 <th>Curso</th>
+                                                <th>nivel</th>
+                                                <th>Correo</th>
+                                                <th>Último login</th>
 												<th>Acción</th>	
 										</tr>
 									</thead>
@@ -148,8 +151,11 @@ foreach($results as $result)
                                              <td><?php echo htmlentities($result->APELLIDO1);?></td>
                                             <td><?php echo htmlentities($result->APELLIDO2);?> 
                                             </td>
-                                            <td><?php echo htmlentities($result->CORREO);?></td>
- <td><?php echo htmlentities(getNombreCursoFromID($dbh,$result->ID_CURSO));?></td>
+                                            
+ <td><a  data-toggle="tooltip" title="Ver Ranking en otra ventana" href="admin_ranking.php?idc=<?php echo $result->ID_CURSO?>" target=”_blank”><?php echo htmlentities(getNombreCursoFromID($dbh,$result->ID_CURSO));?></a></td>
+ <td><?php echo htmlentities($result->NUMERO_NIVEL);?></td>
+ <td><?php echo htmlentities($result->CORREO);?></td>
+ <td><?php echo htmlentities($result->ULTIMA_FECHA_LOGIN);?></td>
 <td>
 <a href="edit-user.php?edit=<?php echo $result->ID;?>" onclick="return confirm('¿Quieres editar?');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 <a href="userlist.php?del=<?php echo $result->ID;?>&name=<?php echo htmlentities($result->CORREO);?>" onclick="return confirm('¿Quieres borrarlo?');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
@@ -174,6 +180,11 @@ foreach($results as $result)
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
 	<script type="text/javascript">
+
+		$('#zctb').DataTable( {
+    scrollY: 300,
+    paging: false
+} );
 				 $(document).ready(function () {          
 					setTimeout(function() {
 						$('.succWrap').slideUp("slow");

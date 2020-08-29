@@ -46,7 +46,9 @@ switch ($funcion) {
 	case 'manageUtilizacionEvento':
 		echo manageUtilizacionEventoJS();
 		break;
-	
+	case 'getSitioFromMapId':
+		echo getSitioFromMapIdJS();
+		break;
 	default:
 		# code...
 		break;
@@ -106,6 +108,15 @@ function getIDCompanerosMasPersonajes()
 	return $result;
 }
 
+function getSitioFromMapIdJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$mapId = $_POST["param01"];
+	$sitio = getSitioFromMapID($dbh,$mapId);
+	$result = json_encode($sitio);
+	return $result;
+}
 function getEventosGeneralesJugadorJS()
 {
 	global $dbh;
@@ -252,7 +263,10 @@ function getCromoAleatorioFromCorreoJS()
 
 	$cromo = $vectorCromos[random_int (0, Count($vectorCromos)-1 )];
 
-return "https://www.mtgcardmaker.com/mcmaker/createcard.php?name=". $cromo['name']."&color=". $cromo['color']."&mana_w=". $cromo['mana_w']."&picture=". substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture']."&cardtype=". $cromo['cardtype']."&rarity=". $cromo['rarity']."&cardtext=". $cromo['cardtext']."&power=". $cromo['power']."&toughness=". $cromo['toughness']."&artist=". $cromo['artist']."&bottom=". $cromo['bottom'];
+	$pathSinSqlite_rpg_001 = substr(url(),0,strrpos(url(), '/'));
+	$pathSinSqlite_rpg_001 = substr($pathSinSqlite_rpg_001,0,strrpos($pathSinSqlite_rpg_001, '/'));
+
+return "https://www.mtgcardmaker.com/mcmaker/createcard.php?name=". $cromo['name']."&color=". $cromo['color']."&mana_w=". $cromo['mana_w']."&picture=".$pathSinSqlite_rpg_001.'/imagesCromos/'.$cromo['picture']."&cardtype=". $cromo['cardtype']."&rarity=". $cromo['rarity']."&cardtext=". $cromo['cardtext']."&power=". $cromo['power']."&toughness=". $cromo['toughness']."&artist=". $cromo['artist']."&bottom=". $cromo['bottom'];
 }
 
 function getData()

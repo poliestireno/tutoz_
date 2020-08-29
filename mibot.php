@@ -27,6 +27,7 @@ if(isset($_POST['submit']))
 	}
 
 	// se genera lugar aleatorio para el sitio dado
+	$haySitio=true;
     $filaSitio = getSitioFromID($dbh,$_POST['localizacion']);
     $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
     $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
@@ -41,6 +42,25 @@ if(isset($_POST['submit']))
             $haySitio=false;
             break;
         }
+    }
+    // si no hay lugar posible en el sitio dado se pone en exteriores
+    if (!$haySitio)
+    {
+	    $filaSitio = getSitioFromID($dbh,9);
+	    $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
+	    $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+	    $cont = 1000;
+	    while (existeLugar($dbh,$filaSitio['ID'],$posx,$posy)) 
+	    {
+	        $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
+	        $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+	        $cont--;
+	        if ($cont == 0)
+	        {
+            	//$haySitio=false; siempre tiene que haber sitio en exteriores
+	        	break;
+	        }
+	    }
     }
 
 
@@ -353,7 +373,7 @@ $getPropsAlummo['ppt1']=1;
 	<div class="col-sm-4">
 	<select class="form-control" ID="sel11" name="localizacion">
         <?php
-        $listaSitios= getSitios($dbh); 
+        $listaSitios= getSitiosVisibles($dbh); 
         foreach ($listaSitios as $sitio)
         {
             $pos = strrpos($sitio, "--");

@@ -28,6 +28,9 @@ if (!(existeCorreo($dbh,$CORREO)))
     // se notifica al admin el registro de nuevo usuario
     mandarNotificacion($dbh,$CORREO,'Admin',$notitype);
 
+// para asignatura con cromos
+if (utilizaCromosCurso($dbh,$curso))
+{
     // de inicio colocamos el personaje y bot en exteriores id_map 9
         // se genera lugar aleatorio para el sitio dado
     $filaSitio = getSitioFromMapID($dbh,9);
@@ -41,7 +44,7 @@ if (!(existeCorreo($dbh,$CORREO)))
         $cont--;
         if ($cont == 0)
         {
-            $haySitio=false;
+            //$haySitio=false; siempre tiene que haber sitio en exteriores
             break;
         }
     }
@@ -53,7 +56,13 @@ if (!(existeCorreo($dbh,$CORREO)))
     // se inserta su actor (jugador) inicial
     insertarActor($dbh,500,100,0,50);
     $lastInsertIdActor = $dbh->lastInsertId();
-    
+}
+else
+{
+    $lastInsertIdBot = NULL;
+    $lastInsertIdActor = NULL;
+
+}    
     $sql ="INSERT INTO ALUMNOS(NOMBRE,CORREO, password, gender, APELLIDO1, APELLIDO2, image,ORDEN_ALBUM,ORDEN_COMBOS,ORDEN_CREADORES,ORDEN_REFERENCIAS_TOTAL,NUMERO_NIVEL,ULTIMA_FECHA_NOTI_GENERAL, ID_MIBOT,ID_MIACTOR,ID_CURSO) VALUES(:name, :CORREO, :password, :gender, :APELLIDO1no, :APELLIDO2, :image,'','','','',1,NULL, :IDMiBot,:IDActor,:IDCurso)";
     $query= $dbh -> prepare($sql);
     $query-> bindParam(':name', $name, PDO::PARAM_STR);
@@ -69,6 +78,9 @@ if (!(existeCorreo($dbh,$CORREO)))
     $query->execute();
     $lastInsertId = $dbh->lastInsertId();
 
+// para asignatura con cromos
+if (utilizaCromosCurso($dbh,$curso))
+{
     // insertamos cromos del alumno y le damos los cromos iniciales
 
     $nCromosIni = getAdminCromos($dbh)['N_CROMOS_INI'];
@@ -126,6 +138,11 @@ if (!(existeCorreo($dbh,$CORREO)))
     mandarNotificacion($dbh,'Admin',$CORREO,$notitype);
     
     $lastInsertId = $dbh->lastInsertId();
+}
+else
+{
+   mandarNotificacion($dbh,'Admin',$CORREO,'Registro correcto'); 
+}
     if($lastInsertId)
     {
     echo "<script type='text/javascript'>alert('Te has registrado correctamente!');</script>";

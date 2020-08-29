@@ -35,10 +35,10 @@ $chngpwd1 = $dbh->prepare($con);
 $chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
 $chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
 $chngpwd1->execute();
-$msg="Your Password succesfully changed";
+$msg="Contraseña cambiada!";
 }
 else {
-$error="Your current password is not valID.";	
+$error="Tu contraseña actual no es correcta.";	
 }
 }
 ?>
@@ -77,7 +77,7 @@ function valID()
 {
 if(document.chngpwd.newpassword.value!= document.chngpwd.confirmpassword.value)
 {
-alert("New Password and Confirm Password Field do not match  !!");
+alert("Las contraseñas para el cambio no coinciden!!");
 document.chngpwd.confirmpassword.focus();
 return false;
 }
@@ -116,20 +116,20 @@ return true;
 				<div class="row">
 					<div class="col-md-12">
 					
-						<h2 class="page-title">Change Password</h2>
+						<h2 class="page-title">Cambiar contraseña</h2>
 
 						<div class="row">
 							<div class="col-md-10">
 								<div class="panel panel-default">
-									<div class="panel-heading">Form fields</div>
+									<div class="panel-heading"></div>
 									<div class="panel-body">
 										<form method="post" name="chngpwd" class="form-horizontal" onSubmit="return valID();">
 										
 											
   	        	  <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap"><strong>INFO: </strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+				else if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>
 											<div class="form-group">
-												<label class="col-sm-4 control-label">Current Password</label>
+												<label class="col-sm-4 control-label">Contraseña actual</label>
 												<div class="col-sm-8">
 													<input type="password" class="form-control" name="password" ID="password" required>
 												</div>
@@ -137,7 +137,7 @@ return true;
 											<div class="hr-dashed"></div>
 											
 											<div class="form-group">
-												<label class="col-sm-4 control-label">New Password</label>
+												<label class="col-sm-4 control-label">Nueva contraseña</label>
 												<div class="col-sm-8">
 													<input type="password" class="form-control" name="newpassword" ID="newpassword" required>
 												</div>
@@ -145,7 +145,7 @@ return true;
 											<div class="hr-dashed"></div>
 
 											<div class="form-group">
-												<label class="col-sm-4 control-label">Confirm Password</label>
+												<label class="col-sm-4 control-label">Confirmar nueva contraseña</label>
 												<div class="col-sm-8">
 													<input type="password" class="form-control" name="confirmpassword" ID="confirmpassword" required>
 												</div>

@@ -15,15 +15,6 @@ if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION[
 header('location:index.php');
 }
 else{
-if(isset($_GET['del']))
-{
-$ID=$_GET['del'];
-$sql = "delete from ALUMNOS WHERE ID=:ID";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':ID',$ID, PDO::PARAM_STR);
-$query -> execute();
-$msg="Datos borrados correctamente";
-}
 
  ?>
 

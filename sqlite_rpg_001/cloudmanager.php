@@ -59,7 +59,7 @@ require_once("../UTILS/dbutils.php");
 				// un correo especifico
 				if ($_SERVER['DOCUMENT_ROOT']=='/opt/lampp/htdocs')
 				{
-					$_SESSION['alogin']="i@i";
+					$_SESSION['alogin']="I@I";
 				}
 				
 				$array = array();

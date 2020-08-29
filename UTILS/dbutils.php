@@ -236,6 +236,52 @@ function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCID
     }  
 }
 
+function borrarBotFromId($db,$idBot)
+{
+ try 
+  {
+   $sql = "DELETE FROM MIBOT WHERE ID=".$idBot;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! borrarBotFromId".$ex->getMessage();
+  } 
+}
+function borrarActorFromId($db,$idActor)
+{
+ try 
+  {
+   $sql = "DELETE FROM MIACTOR WHERE ID=".$idActor;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! borrarActorFromId".$ex->getMessage();
+  } 
+}
+function borrarAlumnoFromId($db,$idAlumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM ALUMNOS WHERE ID=".$idAlumno;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! borrarAlumnoFromId".$ex->getMessage();
+  } 
+}
+function borrarCromosNoPoseidosFromIdCreador($db,$idAlumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM CROMOS WHERE ID_CREADOR=".$idAlumno." AND 
+   (ID_POSEEDOR IS NULL OR ID_POSEEDOR=ID_CREADOR)";
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! borrarCromosNoPoseidosFromIdCreador".$ex->getMessage();
+  } 
+}
+
 function borrarFaltasAsignaturaDiaAlumno($db,$IDAsignatura,$dia,$alumno)
 {
  try 
@@ -611,12 +657,12 @@ function getAsignaturasConCurso($db)
   }
   return $vectorTotal;
 }
-function getSitios($db)
+function getSitiosVisibles($db)
 {
     $vectorTotal = array();
   try
   {
-    $stmt = $db->query("SELECT NOMBRE_VISUAL,CODIGO,ID FROM SITIOS");
+    $stmt = $db->query("SELECT NOMBRE_VISUAL,CODIGO,ID FROM SITIOS WHERE VISIBLE=1");
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $vectorTotal [] = $fila['NOMBRE_VISUAL']."*".$fila['CODIGO']."--".$fila['ID'];
@@ -624,16 +670,16 @@ function getSitios($db)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getSitios:".$ex->getMessage();
+    echo "Error en getSitiosVisibles:".$ex->getMessage();
   }
   return $vectorTotal;
 }
-function getAllSitios($db)
+function getAllSitiosVisibles($db)
 {
     $vectorTotal = array();
   try
   {
-    $stmt = $db->query("SELECT * FROM SITIOS");
+    $stmt = $db->query("SELECT * FROM SITIOS WHERE VISIBLE=1");
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $vectorTotal [] = $fila;
@@ -641,7 +687,7 @@ function getAllSitios($db)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAllSitios:".$ex->getMessage();
+    echo "Error en getAllSitiosVisibles:".$ex->getMessage();
   }
   return $vectorTotal;
 }
@@ -729,6 +775,18 @@ function getAlumnoFromID($db,$IDAlumno)
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! ".$ex->getMessage();
+  } 
+  return $fila;
+}
+function getConfAsignaturaFromID($db,$Id)
+{
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM CONF_ASIGNATURAS WHERE ID=".$Id);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! getConfAsignaturaFromID".$ex->getMessage();
   } 
   return $fila;
 }
@@ -841,8 +899,66 @@ function getCursosFromIDSet($db,$idSet)
     return $vectorTotal;
 }
 
+function utilizaCromosCurso($db,$curso)
+{
+  try 
+  {
+  // cogemos la primera asignatura del curso, en principio solo puede haber
+      // una asignatura por curso(clase).
+    $asignatura = getAsignaturasFromCurso($db,$curso)[0];
+    
+    $listaOpcionesMenu = explode(",", getConfAsignaturaFromID($db,$asignatura['ID_CONF_ASIGNATURAS'])['OPCIONES_MENU']);
+    if ((Count($listaOpcionesMenu)==0)||($listaOpcionesMenu[0]=='TODAS'))
+    {
+      return true;
+    }
+    else
+    {
+      for ($i=0; $i < Count($listaOpcionesMenu); $i++) 
+      { 
+        if ($listaOpcionesMenu[$i]=="Mi cromo")
+        {
+          return true;
+        }
+      }
+    }
+  } catch(PDOException $ex) 
+  {    
+    echo "An Error occured opcionMenuOk ! ".$ex->getMessage();
+  } 
+  return false;
 
+}
+function opcionMenuOk($db,$CORREO,$opcion)
+{
+  try 
+  {
+  // cogemos la primera asignatura del curso, en principio solo puede haber
+      // una asignatura por curso(clase).
+    $asignatura = getAsignaturasFromCurso($db,getAlumnoFromCorreo($db,$CORREO)['ID_CURSO'])[0];
+    
+    $listaOpcionesMenu = explode(",", getConfAsignaturaFromID($db,$asignatura['ID_CONF_ASIGNATURAS'])['OPCIONES_MENU']);
+    if ((Count($listaOpcionesMenu)==0)||($listaOpcionesMenu[0]=='TODAS'))
+    {
+      return true;
+    }
+    else
+    {
+      for ($i=0; $i < Count($listaOpcionesMenu); $i++) 
+      { 
+        if ($listaOpcionesMenu[$i]==$opcion)
+        {
+          return true;
+        }
+      }
+    }
+  } catch(PDOException $ex) 
+  {    
+    echo "An Error occured opcionMenuOk ! ".$ex->getMessage();
+  } 
+  return false;
 
+}
 function getAlumnoFromCorreo($db,$CORREO)
 {
   try 
@@ -1030,7 +1146,7 @@ function getEventosGeneralesFromAlumno($db,$correo)
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $idAlumno = getAlumnoFromCorreo($db,$correo)['ID'];
-      // se genera un lugar aleatorio entre todos los sitios
+      // se genera un lugar aleatorio entre todos los sitios visibles
       if ($fila['ID_SITIO']==NULL)
       {
         $yaGenerado = yaGeneradoLugarParaHoy($db,$idAlumno,$fila['LISTA_GEN_ALETORIAS_HOY']);
@@ -1044,7 +1160,7 @@ function getEventosGeneralesFromAlumno($db,$correo)
         if ($yaGenerado<=1)
         {
 
-        $aallSitios = getAllSitios($db);
+        $aallSitios = getAllSitiosVisibles($db);
         $sitioElegido = $aallSitios[rand(0,Count($aallSitios)-1)];
         $idMap = $sitioElegido['ID_MAP'];
         $posx = rand($sitioElegido['INI_X'],$sitioElegido['MAX_X']);
@@ -1279,6 +1395,8 @@ function existeCorreo($db,$CORREO)
   }
     return Count($vectorTotal)>0;  
 }
+
+
 function existeFantasma($db,$IDAsignatura,$dia)
 {
   $vectorTotal = array();
@@ -1371,6 +1489,20 @@ function modificarComentarioReto($db,$correo,$idTarea,$comentario)
   } 
   return $stmt->rowCount();
 }
+
+function modificarNumeroEntregasReto($db,$correo,$idTarea,$numeroEntregas)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET NUMERO_ENTREGAS=".$numeroEntregas."  WHERE ID_ALUMNO=".getAlumnoFromCorreo($db,$correo)['ID']." AND ID_TAREA=".$idTarea;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarNumeroEntregasReto ".$ex->getMessage();
+  } 
+  return $stmt->rowCount();
+}
 function modificarOtrosReto($db,$correo,$idTarea,$otros)
 {
   try 
@@ -1381,6 +1513,20 @@ function modificarOtrosReto($db,$correo,$idTarea,$otros)
   } catch(PDOException $ex) 
   {    
    echo "An Error occured! modificarOtrosReto ".$ex->getMessage();
+  } 
+  return $stmt->rowCount();
+}
+
+function modificarFechaUltimoLoginAlumno($db,$correo,$tsmp)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS SET ULTIMA_FECHA_LOGIN='".$tsmp."' WHERE ID=".getAlumnoFromCorreo($db,$correo)['ID'];
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! modificarFechaUltimoLoginAlumno ".$ex->getMessage();
   } 
   return $stmt->rowCount();
 }

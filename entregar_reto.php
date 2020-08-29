@@ -57,12 +57,13 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
     <?php
 //var_export($_POST);
 $idTarea = (isset($_GET['idt']))?$_GET['idt']:$_POST['idt'];
+$datosAT = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$idTarea);
 $ok=false;
 $nArchivos=0;
+$numeroEntregas=$datosAT['NUMERO_ENTREGAS']+1;
 $nombreReto = getTareaFromID($dbh,$idTarea)['NOMBRE'];
 if(isset($_POST['comentt']))
-{
-    $datosAT = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$idTarea);
+{    
     $alumno = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
     if ($datosAT['ESTADO']!='no activado')
     {
@@ -71,14 +72,20 @@ if(isset($_POST['comentt']))
         if (!file_exists($folder)) {
             mkdir($folder, 0777,true);
         }
+        $sListaArchivos = "";
+        $comma="";
+        $bHayArchivo=false;
 
         for ($i=1; $i < 6; $i++) 
         { 
             if ($_FILES['archivo'.$i]['name']!='')
             {
+                $bHayArchivo=true;
                 $file = $_FILES['archivo'.$i]['name'];
-                if(move_uploaded_file($_FILES['archivo'.$i]['tmp_name'],$folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2'].'__'.$file))
+                if(move_uploaded_file($_FILES['archivo'.$i]['tmp_name'],$folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2']."_".(($numeroEntregas<10)?"0":"").$numeroEntregas.'__'.$file))
                 {
+                    $sListaArchivos .= $comma . $file;
+                    $comma="\\n";
                     $ok=true;
                     $nArchivos++;
                 }
@@ -89,13 +96,20 @@ if(isset($_POST['comentt']))
                 }
             }
         }
+        if (!$bHayArchivo)
+        {
+           $ok=true; 
+        }
         if ($ok)
         {
+        file_put_contents($folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2']."_".(($numeroEntregas<10)?"0":"").$numeroEntregas.'__comentario.txt',$_POST['comentt']);
 modificarEstadoReto($dbh,$_SESSION['alogin'],$idTarea,"entregado");
 modificarFechaEntregadoReto($dbh,$_SESSION['alogin'],$idTarea,date("Y-m-d H:i:s"));
 modificarComentarioReto($dbh,$_SESSION['alogin'],$idTarea,$_POST['comentt']);
 modificarOtrosReto($dbh,$_SESSION['alogin'],$idTarea,"Archivos subidos:".$nArchivos);
-
+modificarNumeroEntregasReto($dbh,$_SESSION['alogin'],$idTarea,$numeroEntregas);
+$datosAT = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$idTarea);
+$numeroEntregas=$datosAT['NUMERO_ENTREGAS']+1;
         }
         
     }
@@ -125,8 +139,24 @@ function init()
             echo "Swal.fire('UFFF!','Hay problemas para la entrega...' ,'warning');";
         }
         else 
-        {            
-            echo "Swal.fire('GUAY!','Reto entregado correctamente!(Archivos subidos: ".$nArchivos.")' ,'success');";
+        {     
+           if (!$bHayArchivo)
+        {
+            echo 'var str="<h3>¡Reto entregado!</h3>";';
+         }
+         else
+        {
+        echo 'var str="<h3>¡Reto entregado!</h3> Archivos subidos:'.$nArchivos.'"+"\n"+"'.$sListaArchivos.'";';           
+        }
+echo "Swal.fire({
+  html: '<pre>' + str + '</pre>',
+  customClass: {
+    popup: 'format-pre'
+  }
+});";
+
+
+        //   echo "Swal.fire('GUAY!','Reto entregado correctamente! Archivos subidos: ".$nArchivos."(".$sListaArchivos.")' ,'success');";
         }
         
     }
@@ -158,7 +188,8 @@ function init()
 <body onload="init()">
 
 
-						<h1 class="text-center text-bold mt-2x">Entregar Reto <?php echo $nombreReto?></h1>
+						<h2 class="text-center text-bold mt-2x">Entregar Reto <?php echo $nombreReto?></h2>
+                        <h4 class="text-center text-bold mt-2x">(Entrega Número <?php echo $numeroEntregas?>)</h4>
                         <div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
                          <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" id="regform">
