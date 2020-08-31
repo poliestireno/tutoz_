@@ -282,6 +282,50 @@ function borrarCromosNoPoseidosFromIdCreador($db,$idAlumno)
   } 
 }
 
+function borrarFaltasAlumno($db,$alumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM FALTAS WHERE ID_ALUMNO =".$alumno;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! ".$ex->getMessage();
+  } 
+}
+function borrarAlumnoTarea($db,$alumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM ALUMNOS_TAREAS WHERE ID_ALUMNO =".$alumno;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! ".$ex->getMessage();
+  } 
+}
+function borrarNotificacionReceiver($db,$correoReceiver)
+{
+ try 
+  {
+   $sql = "DELETE FROM notification WHERE notireciver ='".$correoReceiver."'";
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! ".$ex->getMessage();
+  } 
+}
+function borrarEstrellasAlumno($db,$alumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM ESTRELLAS WHERE ID_ALUMNO =".$alumno;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   echo "An Error occured! ".$ex->getMessage();
+  } 
+}
 function borrarFaltasAsignaturaDiaAlumno($db,$IDAsignatura,$dia,$alumno)
 {
  try 

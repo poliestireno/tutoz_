@@ -82,6 +82,13 @@ require_once("cssutils.php");
 			</li>
 			<?php
 			}
+			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi QR"))
+			{
+			?>
+			<li><a href="miQR.php"><i class="fa fa-envelope"></i> &nbsp;Mi QR</a>
+			</li>
+			<?php
+			}
 			?>
 			</ul>
 			<p class="text-center" style="color:#ffffff; margin-top: 100px;">© Gilbert</p>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include('../includes/config.php');
 require_once("../UTILS/dbutils.php");
 $db=conectarDB();
 //var_dump($_POST);
@@ -8,6 +9,7 @@ $db=conectarDB();
 $textoMostrar="Error, asistencia no completada, pongase en contacto con el administrador, osea Gilbert";
 $decrypted = openssl_decrypt($_GET["cod"], "AES-128-ECB", "kgYYBOihH8/(ggG/)gKGB8/biLJLDJOIUD/(%&/UG(DF(/F%&(IGDF%(F)HFG=FD:_V:F_VBLVP?F=F)FKIF)))");
 //echo $decrypted;
+$esElegido=false;
 if ($decrypted)  
 {
   $myString = $decrypted;

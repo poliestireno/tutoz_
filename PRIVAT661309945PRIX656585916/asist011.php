@@ -260,6 +260,7 @@ else
             piar("No pertenece a esta clase. No pertenece a esta clase");
           }
           
+          sleep(2000);
           
         }
 
@@ -325,7 +326,13 @@ else
     })
   </script>
   <script>
-    
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+} 
     function HashTable(obj)
 {
     this.length = 0;

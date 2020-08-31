@@ -23,7 +23,7 @@ if (!(existeCorreo($dbh,$CORREO)))
     {
         $image=$final_file;
     }
-    $notitype='Cuenta creada: '.$_POST['name']." ".$_POST['APELLIDO1no']." ".$_POST['APELLIDO2'];
+    $notitype='Cuenta creada: '.$_POST['name']." ".$_POST['APELLIDO1no']." ".$_POST['APELLIDO2']. ' en curso '.getCursoFromCursoID($dbh,$curso)['NOMBRE'];
 
     // se notifica al admin el registro de nuevo usuario
     mandarNotificacion($dbh,$CORREO,'Admin',$notitype);

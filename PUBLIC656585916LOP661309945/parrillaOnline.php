@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <?php
+include('../includes/config.php');
 require_once("../UTILS/dbutils.php");
 session_start();
 $db=conectarDB();

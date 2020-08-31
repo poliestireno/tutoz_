@@ -23,6 +23,10 @@ borrarCromosNoPoseidosFromIdCreador($dbh,$ID);
 borrarAlumnoFromId($dbh,$ID);
 borrarBotFromId($dbh,$alumno['ID_MIBOT']);
 borrarActorFromId($dbh,$alumno['ID_MIACTOR']);
+borrarFaltasAlumno($dbh,$ID);
+borrarEstrellasAlumno($dbh,$ID);
+borrarAlumnoTarea($dbh,$ID);
+borrarNotificacionReceiver($dbh,$alumno['CORREO']);
 
 $sql2 = "insert into deleteduser (email) values (:name)";
 $query2 = $dbh->prepare($sql2);
