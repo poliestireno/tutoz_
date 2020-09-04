@@ -73,11 +73,11 @@ function getEstrellasGanas($dbh,$correo)
 }
 
 
-function getEstrellasRetos($dbh,$correo)
+function getEstrellasRetos($dbh,$correo,$examen)
 {
 
     $totalRetos = 0;
-  $aToRetos = getEstrellasRetosFromCorreo($dbh,$correo);
+  $aToRetos = getEstrellasRetosFromCorreo($dbh,$correo,$examen);
   foreach ($aToRetos as $ret) {
     $totalRetos += $ret['ESTRELLAS_CONSEGUIDAS'];
   }
@@ -207,11 +207,13 @@ function calcularEstrellasTotales($dbh,$correo)
   $aRe = getEstrellasCombinaciones($dbh,$correo);
   $estrellasCombinaciones=$aRe [0];
   $sEstrellas=$aRe [1];
-  $totalRetos = getEstrellasRetos($dbh,$correo);
+  $totalRetos = getEstrellasRetos($dbh,$correo,0);
+  $totalConcursos = getEstrellasRetos($dbh,$correo,1);
+
   $totalComportamiento =getEstrellasGanas($dbh,$correo);
   $totalCromos = $estrellasCromos+$estrellasCombinaciones;
-  $totalSuerte = 0;
-  return $totalRetos+$totalComportamiento+$totalCromos+$totalSuerte;
+  $totalSuerte = getEstrellasBonos($dbh,$correo);
+  return $totalRetos+$totalConcursos+$totalComportamiento+$totalCromos+$totalSuerte;
 }
 
 

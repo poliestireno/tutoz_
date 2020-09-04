@@ -122,7 +122,8 @@ $msg="Datos borrados correctamente";
                                                 <th>Apellido1</th>
                                                 <th>Apellido2</th>
                                                 <th>Curso</th>
-                                                <th>nivel</th>
+                                                <th>Nivel</th>
+                                                <th>Calas</th>
                                                 <th>Correo</th>
                                                 <th>Último login</th>
 												<th>Acción</th>	
@@ -158,9 +159,12 @@ foreach($results as $result)
                                             
  <td><a  data-toggle="tooltip" title="Ver Ranking en otra ventana" href="admin_ranking.php?idc=<?php echo $result->ID_CURSO?>" target=”_blank”><?php echo htmlentities(getNombreCursoFromID($dbh,$result->ID_CURSO));?></a></td>
  <td><?php echo htmlentities($result->NUMERO_NIVEL);?></td>
+ <td><?php echo htmlentities(getMiActorFromAlumnoID($dbh,$result->ID)['CALAS']);?></td>
  <td><?php echo htmlentities($result->CORREO);?></td>
  <td><?php echo htmlentities($result->ULTIMA_FECHA_LOGIN);?></td>
 <td>
+<a href="dar_calas.php?a=<?php echo $result->ID.'&c='.$result->ID_CURSO;?>" onclick="return confirm('¿Quieres modificar calas?');">&nbsp; <i class="fa fa-usd" style="color:orange"></i></a>&nbsp;&nbsp;
+<a href="dar_bono.php?a=<?php echo $result->ID.'&c='.$result->ID_CURSO;?>" onclick="return confirm('¿Quieres dar bono?');">&nbsp; <i class="fa fa-star"></i></a>&nbsp;&nbsp;
 <a href="edit-user.php?edit=<?php echo $result->ID;?>" onclick="return confirm('¿Quieres editar?');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 <a href="userlist.php?del=<?php echo $result->ID;?>&name=<?php echo htmlentities($result->CORREO);?>" onclick="return confirm('¿Quieres borrarlo?');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>

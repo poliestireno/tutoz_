@@ -1,4 +1,4 @@
-<?php
+    <?php
 session_start();
 //error_reporting(0);
 include('../includes/config.php');
@@ -24,6 +24,7 @@ if(isset($_POST['sel11']))
   $posx=$_POST['posx'];
   $posy=$_POST['posy'];
   $haySitio=true;
+  $sExamen = $_POST['sexamen'];
   if ($selSitios=='')
   {
     $selSitios=NULL;
@@ -60,9 +61,10 @@ if(isset($_POST['sel11']))
 
 if ($haySitio)
 {
+  //mi_info_log("HAY SITIO");
   $asignaturas = getAsignaturasFromCurso($dbh,$sel11);
   
-  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible);
+  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$sExamen);
   
     $lastInsertId = $dbh->lastInsertId();
     if($lastInsertId)
@@ -245,7 +247,7 @@ else
                                                         <label class="col-sm-1 control-label">SITIO<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                                 
-                                <select class="form-control" ID="sel11" name="selSitios">
+                                <select class="form-control" ID="sel11" name="selSitios"> 
         <?php
         $listaSitios= getSitiosVisibles($dbh); 
         foreach ($listaSitios as $sitio)
@@ -296,6 +298,21 @@ else
   <p> Si POSICIÓN X o POSICIÓN Y se deja vacío genera un lugar aletorio (x,y).</p>
   <p> Para modificar el sprite/icono/imagen tocar directamente en DB. Por dedecto es: !Flame, 7</p>
 
+                             <div class="form-group">
+                           
+<label class="col-sm-1 control-label">EXAMEN<span style="color:red">*</span></label>
+                            <div class="col-sm-5">
+                                
+<select class="form-control" ID="sexamen" name="sexamen">
+    <option value="0" selected="selected">NO</option>
+    <option value="1">SI</option>
+</select>
+                
+                            </div>
+
+
+
+                            </div>
 
 								<br>
 

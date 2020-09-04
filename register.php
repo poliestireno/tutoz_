@@ -150,7 +150,7 @@ else
     }
     else 
     {
-    $error="Something went wrong. Please try again";
+    $error="Error!";
     }
 
     }

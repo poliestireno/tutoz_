@@ -88,6 +88,7 @@ $_SESSION['contador']=$_SESSION['contador']-1;
       if (in_array($cont, $_SESSION['vElegidos'])){
         $pos = strrpos($alumno, "--");
         $idAlumno= substr($alumno,$pos+2);
+        insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena (".$dia.")");
         $listaElegidos.=$comma .  $idAlumno;
         $comma=",";
         $nombreAlum=substr($alumno,0,$pos);

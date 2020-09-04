@@ -22,7 +22,7 @@ function conectarDB()
   }
   catch (PDOException $ex)
   {
-      echo "Error conectar:".$ex->getMessage();
+      mi_info_log( "Error conectar:".$ex->getMessage());
   }  
 }
 
@@ -44,7 +44,7 @@ function hayEstrellasAsigDia($db, $IDAsig, $dia)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila['TOTAL']>0;
  
@@ -87,7 +87,7 @@ function modificarEstrella($db,$IDAlumno,$IDAsignatura,$nEstrellas,$dia)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 
@@ -108,7 +108,7 @@ function insertarAlumnoTarea($db,$idAlumno,$tareaidselect,$estado, $estrellascon
     }
 catch (PDOException $ex)
 {
-    echo "Error inserción estrella:".$ex->getMessage();
+    mi_info_log( "Error inserción estrella:".$ex->getMessage());
 }  
 }
 
@@ -127,13 +127,13 @@ function insertarEstrella($db,$IDAlumno,$IDAsignatura,$nEstrellas,$dia)
     }
 catch (PDOException $ex)
 {
-    echo "Error inserción estrella:".$ex->getMessage();
+    mi_info_log( "Error inserción estrella:".$ex->getMessage());
 }  
 }
-function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible)
+function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen)
 {
-  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_LIMITE)
-              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, :FECHA_LIMITE)";
+  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_LIMITE,EXAMEN)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, :FECHA_LIMITE,:EXAMEN)";
   try
   {
     $stmt = $db->prepare($sentencia);
@@ -147,11 +147,12 @@ function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,
     $stmt->bindParam(':DESCRIPCION',$descrip);
     $stmt->bindParam(':LINK_DOCUMENTO',$linkdocumento);
     $stmt->bindParam(':FECHA_LIMITE',$fechalimite);
+    $stmt->bindParam(':EXAMEN',$examen);
     $stmt->execute();
   }
   catch (Exception $ex)
   {
-      echo "Error insertarReto:".$ex->getMessage();
+      mi_info_log( "Error insertarReto:".$ex->getMessage());
   }  
 }
 
@@ -160,7 +161,7 @@ function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,
 function insertarCromo($db,$ID_CREADOR,$ID_POSEEDOR,$GENERADO, $setId, $name, $color, $mana_w, $picture, $cardtype, $rarity, $cardtext, $power, $toughness, $artist, $bottom)
 {
   $sentencia= "INSERT INTO CROMOS(ID_SET, ID_CREADOR, ID_POSEEDOR, GENERADO, name, color, mana_w, picture, cardtype, rarity, cardtext, power, toughness, artist, bottom) VALUES (:setId, :ID_CREADOR,:ID_POSEEDOR,:GENERADO, :name, :color, :mana_w, :picture, :cardtype, :rarity, :cardtext, :power, :toughness, :artist, :bottom)";
-  //echo $sentencia;
+  //mi_info_log( $sentencia;
   try
   {
       $stmt = $db->prepare($sentencia);
@@ -183,14 +184,14 @@ function insertarCromo($db,$ID_CREADOR,$ID_POSEEDOR,$GENERADO, $setId, $name, $c
     }
     catch (PDOException $ex)
     {
-        echo "Error inserción cromo:".$ex->getMessage();
+        mi_info_log( "Error inserción cromo:".$ex->getMessage());
     }  
 }
 
 function insertarActor($db,$PV, $PM, $PT, $CALAS)
 {
   $sentencia= "INSERT INTO MIACTOR(PV, PM, PT, CALAS) VALUES (:PV, :PM, :PT, :CALAS)";
-  //echo $sentencia;
+  //mi_info_log( $sentencia;
   try
   {
       $stmt = $db->prepare($sentencia);
@@ -202,13 +203,34 @@ function insertarActor($db,$PV, $PM, $PT, $CALAS)
     }
     catch (PDOException $ex)
     {
-        echo "Error inserción bot:".$ex->getMessage();
+        mi_info_log( "Error inserción bot:".$ex->getMessage());
     }  
 }
+function insertarBono($db,$idAlu,$idCur,$numeroEstrellas,$nombre)
+{
+     
+
+$sentencia= "INSERT INTO BONOS (ID_ALUMNO, ID_CURSO, NUM_ESTRELLAS,NOMBRE) VALUES (:ID_ALUMNO, :ID_CURSO, :NUM_ESTRELLAS, :NOMBRE)";
+  try
+  {
+      $stmt = $db->prepare($sentencia);
+      $stmt->bindParam(':ID_ALUMNO',$idAlu);
+      $stmt->bindParam(':ID_CURSO',$idCur);
+      $stmt->bindParam(':NUM_ESTRELLAS',$numeroEstrellas);
+      $stmt->bindParam(':NOMBRE',$nombre);
+      $stmt->execute();
+    }
+    catch (PDOException $ex)
+    {
+        mi_info_log( "Error inserción bot:".$ex->getMessage());
+    }  
+    mandarNotificacion($db,'Admin',getAlumnoFromID($db,$idAlu)['CORREO'],' Se te ha aplicado el bono {'.$nombre.'} con valor de '.$numeroEstrellas.' estrellas.');
+}
+
 function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCIDAD,$FANTASMA,$SALTANDO,$PERSONAJE,$PORCENT_PPT,$POSTURA1,$POSTURA2,$POSTURA3,$LISTA_JUGADAS_HOY_PTT,$ID_MAPA_INICIO,$POS_X_INICIO,$POS_Y_INICIO)
 {
   $sentencia= "INSERT INTO MIBOT(SALUDO,DESCRIPCION,PALABRA_CLAVE,MOVILIDAD,VELOCIDAD,FANTASMA,SALTANDO,PERSONAJE,PORCENT_PPT,POSTURA1,POSTURA2,POSTURA3,LISTA_JUGADAS_HOY_PTT,ID_MAPA_INICIO,POS_X_INICIO,POS_Y_INICIO) VALUES (:SALUDO,:DESCRIPCION,:PALABRA_CLAVE,:MOVILIDAD,:VELOCIDAD,:FANTASMA,:SALTANDO,:PERSONAJE,:PORCENT_PPT,:POSTURA1,:POSTURA2,:POSTURA3,:LISTA_JUGADAS_HOY_PTT,:ID_MAPA_INICIO,:POS_X_INICIO,:POS_Y_INICIO)";
-  //echo $sentencia;
+  //mi_info_log( $sentencia;
   try
   {
       $stmt = $db->prepare($sentencia);
@@ -232,7 +254,7 @@ function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCID
     }
     catch (PDOException $ex)
     {
-        echo "Error inserción bot:".$ex->getMessage();
+        mi_info_log( "Error inserción bot:".$ex->getMessage());
     }  
 }
 
@@ -244,7 +266,7 @@ function borrarBotFromId($db,$idBot)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! borrarBotFromId".$ex->getMessage();
+   mi_info_log( "An Error occured! borrarBotFromId".$ex->getMessage());
   } 
 }
 function borrarActorFromId($db,$idActor)
@@ -255,7 +277,7 @@ function borrarActorFromId($db,$idActor)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! borrarActorFromId".$ex->getMessage();
+   mi_info_log( "An Error occured! borrarActorFromId".$ex->getMessage());
   } 
 }
 function borrarAlumnoFromId($db,$idAlumno)
@@ -266,7 +288,7 @@ function borrarAlumnoFromId($db,$idAlumno)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! borrarAlumnoFromId".$ex->getMessage();
+   mi_info_log( "An Error occured! borrarAlumnoFromId".$ex->getMessage());
   } 
 }
 function borrarCromosNoPoseidosFromIdCreador($db,$idAlumno)
@@ -278,7 +300,7 @@ function borrarCromosNoPoseidosFromIdCreador($db,$idAlumno)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! borrarCromosNoPoseidosFromIdCreador".$ex->getMessage();
+   mi_info_log( "An Error occured! borrarCromosNoPoseidosFromIdCreador".$ex->getMessage());
   } 
 }
 
@@ -290,7 +312,7 @@ function borrarFaltasAlumno($db,$alumno)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function borrarAlumnoTarea($db,$alumno)
@@ -301,7 +323,7 @@ function borrarAlumnoTarea($db,$alumno)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function borrarNotificacionReceiver($db,$correoReceiver)
@@ -312,7 +334,7 @@ function borrarNotificacionReceiver($db,$correoReceiver)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function borrarEstrellasAlumno($db,$alumno)
@@ -323,7 +345,7 @@ function borrarEstrellasAlumno($db,$alumno)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function borrarFaltasAsignaturaDiaAlumno($db,$IDAsignatura,$dia,$alumno)
@@ -334,7 +356,7 @@ function borrarFaltasAsignaturaDiaAlumno($db,$IDAsignatura,$dia,$alumno)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function borrarFaltasAsignaturaDia($db,$IDAsignatura,$dia)
@@ -345,7 +367,7 @@ function borrarFaltasAsignaturaDia($db,$IDAsignatura,$dia)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function borrarFaltasAsignaturaDiaYFantasma($db,$IDAsignatura,$dia)
@@ -356,7 +378,7 @@ function borrarFaltasAsignaturaDiaYFantasma($db,$IDAsignatura,$dia)
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function insertarFalta($db,$IDAlumno,$IDAsignatura,$nSesiones,$dia)
@@ -377,7 +399,7 @@ function insertarFalta($db,$IDAlumno,$IDAsignatura,$nSesiones,$dia)
     }
 catch (PDOException $ex)
 {
-    echo "Error inserción falta:".$ex->getMessage();
+    mi_info_log( "Error inserción falta:".$ex->getMessage());
 }  
 }
 function insertarAlumno($db,$nombre,$apellIDo1,$apellIDo2,$IDCurso)
@@ -395,7 +417,7 @@ function insertarAlumno($db,$nombre,$apellIDo1,$apellIDo2,$IDCurso)
     }
 catch (PDOException $ex)
 {
-    echo "Error inserción alumno:".$ex->getMessage();
+    mi_info_log( "Error inserción alumno:".$ex->getMessage());
 }  
 }
 
@@ -413,7 +435,7 @@ function getAlumnosFaltones($db){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error inserción alumno:".$ex->getMessage();
+     mi_info_log( "Error inserción alumno:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -431,7 +453,7 @@ function getAlumnosInforme($db,$IDAsignatura){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error getAlumnosInforme:".$ex->getMessage();
+     mi_info_log( "Error getAlumnosInforme:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -444,7 +466,7 @@ function setNotificationsOff($db,$notireciver)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! cambiarNivelAlumno ".$ex->getMessage();
+   mi_info_log( "An Error occured! cambiarNivelAlumno ".$ex->getMessage());
   }   
 }
 
@@ -457,7 +479,7 @@ function getNotificationsGenerales($db,$notireciver,$fechaUltimaLeida){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error getNotificationsOff:".$ex->getMessage();
+     mi_info_log( "Error getNotificationsOff:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -470,7 +492,7 @@ function getNotificationsOff($db,$notireciver){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error getNotificationsOff:".$ex->getMessage();
+     mi_info_log( "Error getNotificationsOff:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -488,7 +510,7 @@ function getAlumnosInformeEstrellas($db,$IDAsignatura){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error getAlumnosInformeEstrellas:".$ex->getMessage();
+     mi_info_log( "Error getAlumnosInformeEstrellas:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -500,7 +522,7 @@ function getCursoFromCursoID($db,$idCurso){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -516,7 +538,7 @@ function getNivelFromNumeroNivel($db,$correo,$numeroNivel){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured in getNivelFromNumeroNivel ".$ex->getMessage();
+   mi_info_log( "An Error occured in getNivelFromNumeroNivel ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -542,10 +564,11 @@ function getAlumnosFromCursoID($db,$idCurso)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAlumnosFromCursoID:".$ex->getMessage();
+    mi_info_log( "Error en getAlumnosFromCursoID:".$ex->getMessage());
   }
     return $vectorTotal;
 }
+
 function getAlumnosGradoNivel($db,$grado,$nivel)
 {
   $vectorTotal = array();
@@ -560,7 +583,7 @@ function getAlumnosGradoNivel($db,$grado,$nivel)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAlumnosGradoNivel:".$ex->getMessage();
+    mi_info_log( "Error en getAlumnosGradoNivel:".$ex->getMessage());
   }
     return $vectorTotal;
 }
@@ -577,7 +600,7 @@ function getCromosDeAlbum($db,$correo)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getCromosDeAlbum:".$ex->getMessage();
+    mi_info_log( "Error en getCromosDeAlbum:".$ex->getMessage());
   }
     return $vectorTotal;
 }
@@ -595,7 +618,7 @@ function getCursosPersonajesFromCursoID($db,$idCurso)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getCursosPersonajesFromCursoID:".$ex->getMessage();
+    mi_info_log( "Error en getCursosPersonajesFromCursoID:".$ex->getMessage());
   }
     return $vectorTotal;
 }
@@ -627,7 +650,7 @@ function getAndSetRandomCromo($db,$setId)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAndSetRandomCromo:".$ex->getMessage();
+    mi_info_log( "Error en getAndSetRandomCromo:".$ex->getMessage());
   }
   return $cromoElegido;
 }
@@ -640,7 +663,7 @@ function getNumeroSesionesFromAsignatura($db,$IDAsignatura)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila['NSES'];
 }
@@ -652,22 +675,11 @@ function getNombreCursoFromID($db,$IDCurso)
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila['GRADO'].$fila['NIVEL'];
 }
-function getAsignaturaFromAsignaturaID($db,$IDAsignatura)
-{
-  try 
-  {
-  $stmt = $db->query("SELECT * FROM ASIGNATURAS WHERE ID=".$IDAsignatura);
-  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
-  } catch(PDOException $ex) 
-  {    
-   echo "An Error occured! getAsignaturaFromAsignaturaID".$ex->getMessage();
-  } 
-  return $fila;
-}
+
 function getDatosAlumnoTarea($db,$correo,$idTarea)
 {
   try 
@@ -677,7 +689,7 @@ function getDatosAlumnoTarea($db,$correo,$idTarea)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getDatosAlumnoTarea".$ex->getMessage();
+   mi_info_log( "An Error occured! getDatosAlumnoTarea".$ex->getMessage());
   } 
   return $fila;
 }
@@ -697,7 +709,7 @@ function getAsignaturasConCurso($db)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAsignaturasConCurso:".$ex->getMessage();
+    mi_info_log( "Error en getAsignaturasConCurso:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -714,7 +726,7 @@ function getSitiosVisibles($db)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getSitiosVisibles:".$ex->getMessage();
+    mi_info_log( "Error en getSitiosVisibles:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -731,7 +743,7 @@ function getAllSitiosVisibles($db)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAllSitiosVisibles:".$ex->getMessage();
+    mi_info_log( "Error en getAllSitiosVisibles:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -749,7 +761,7 @@ function getAsignaturasFromCurso($db,$id_curso)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getAsignaturasFromCurso:".$ex->getMessage();
+    mi_info_log( "Error en getAsignaturasFromCurso:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -767,7 +779,7 @@ function getNivelesFromCategoria($db,$nombre_categoria)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getNivelesFromCategoria:".$ex->getMessage();
+    mi_info_log( "Error en getNivelesFromCategoria:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -784,7 +796,7 @@ function getCursosGradoNivel($db)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getCursosGradoNivel:".$ex->getMessage();
+    mi_info_log( "Error en getCursosGradoNivel:".$ex->getMessage());
   }
     return $vectorTotal;
   
@@ -805,20 +817,21 @@ function getFaltasAsignaturaClase($db,$diaPasado,$IDPasado)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getFaltasAsignaturaClase:".$ex->getMessage();
+    mi_info_log( "Error en getFaltasAsignaturaClase:".$ex->getMessage());
   }
     return $vectorTotal;  
 }
 
 function getAlumnoFromID($db,$IDAlumno)
 {
+  $fila="";
   try 
   {
   $stmt = $db->query("SELECT * FROM ALUMNOS WHERE ID=".$IDAlumno);
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -830,7 +843,7 @@ function getConfAsignaturaFromID($db,$Id)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getConfAsignaturaFromID".$ex->getMessage();
+   mi_info_log( "An Error occured! getConfAsignaturaFromID".$ex->getMessage());
   } 
   return $fila;
 }
@@ -842,7 +855,7 @@ function getEventoFromID($db,$IdE)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getEventoFromID".$ex->getMessage();
+   mi_info_log( "An Error occured! getEventoFromID".$ex->getMessage());
   } 
   return $fila;
 }
@@ -854,7 +867,7 @@ function getMiBotFromAlumnoID($db,$IDAlumno)
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getMiBotFromAlumnoID ".$ex->getMessage();
+   mi_info_log( "An Error occured! getMiBotFromAlumnoID ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -866,7 +879,7 @@ function getMiActorFromAlumnoID($db,$IDAlumno)
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getMiActorFromAlumnoID ".$ex->getMessage();
+   mi_info_log( "An Error occured! getMiActorFromAlumnoID ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -878,7 +891,7 @@ function getAdminCromos($db)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -891,7 +904,7 @@ function getNumeroSesionesEstrellasFromAsignatura($db,$IDAsignatura){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila['NSES'];
 }
@@ -902,29 +915,12 @@ function getCursoFromAsignaturaID($db,$IDAsignatura){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila;
 }
 
 
-function getSetsCromos($db)
-{
-  $vectorTotal = array();
-  try
-  {     
-    $stmt = $db->query("SELECT * FROM SETS_CROMOS");   
-    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
-    {
-      $vectorTotal [] = $fila;
-    }
-  }
-  catch (PDOException $ex)
-  {
-    echo "Error en getSetsCromos:".$ex->getMessage();
-  }
-    return $vectorTotal;
-}
 function getCursosFromIDSet($db,$idSet)
 {
   $vectorTotal = array();
@@ -938,7 +934,7 @@ function getCursosFromIDSet($db,$idSet)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getCursosFromIDSet:".$ex->getMessage();
+    mi_info_log( "Error en getCursosFromIDSet:".$ex->getMessage());
   }
     return $vectorTotal;
 }
@@ -968,7 +964,7 @@ function utilizaCromosCurso($db,$curso)
     }
   } catch(PDOException $ex) 
   {    
-    echo "An Error occured opcionMenuOk ! ".$ex->getMessage();
+    mi_info_log( "An Error occured opcionMenuOk ! ".$ex->getMessage());
   } 
   return false;
 
@@ -998,11 +994,14 @@ function opcionMenuOk($db,$CORREO,$opcion)
     }
   } catch(PDOException $ex) 
   {    
-    echo "An Error occured opcionMenuOk ! ".$ex->getMessage();
+    mi_info_log( "An Error occured opcionMenuOk ! ".$ex->getMessage());
   } 
   return false;
 
 }
+
+
+
 function getAlumnoFromCorreo($db,$CORREO)
 {
   try 
@@ -1011,10 +1010,9 @@ function getAlumnoFromCorreo($db,$CORREO)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getAlumnoFromCorreo ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getAlumnoFromCorreo ! ".$ex->getMessage());
   } 
   return $fila;
-
 }
 
 
@@ -1026,7 +1024,7 @@ function getSetCromoFromIdCromo($db,$idCromo,$correo){
   modificarPoseedorCromo($db, getAlumnoFromCorreo($db,$correo)['ID'], $fila['ID']);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getCromo ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getCromo ! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1038,7 +1036,7 @@ function getCromo($db,$CORREO){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getCromo ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getCromo ! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1049,7 +1047,7 @@ function getBot($db,$CORREO){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getBot ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getBot ! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1060,7 +1058,7 @@ function getCromoFromID($db,$idCromo){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getCromoFromID ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getCromoFromID ! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1071,7 +1069,7 @@ function getSitioFromID($db,$idSitio){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getSitioFromID ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getSitioFromID ! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1082,11 +1080,34 @@ function getSitioFromMapID($db,$idMap){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getSitioFromMapID ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getSitioFromMapID ! ".$ex->getMessage());
   } 
   return $fila;
 }
-
+function getEstrellasBonos($db,$CORREO)
+{
+  $vectorTotal = array();
+  try
+  {
+    $alum = getAlumnoFromCorreo($db,$CORREO);
+    $stmt = $db->query
+    ("SELECT * FROM BONOS WHERE ID_ALUMNO=".$alum['ID']." AND ID_CURSO = ".$alum['ID_CURSO']);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getEstrellasBonos:".$ex->getMessage());
+  }
+  $totalEstrellas = 0;
+  foreach ($vectorTotal as $bono) {
+    $totalEstrellas+= $bono['NUM_ESTRELLAS'];
+  }
+  return $totalEstrellas;  
+}
 function getTareasFromAlumnoEstado($db,$correo,$estado)
 {
   $vectorTotal = array();
@@ -1103,7 +1124,28 @@ function getTareasFromAlumnoEstado($db,$correo,$estado)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getTareasFromAlumnoEstado:".$ex->getMessage();
+    mi_info_log( "Error en getTareasFromAlumnoEstado:".$ex->getMessage());
+  }
+  return $vectorTotal;  
+}
+function getBonusFromCorreo($db,$correo)
+{
+  $vectorTotal = array();
+  try
+  {
+
+    $alum = getAlumnoFromCorreo($db,$correo);
+    $stmt = $db->query
+    ("SELECT * FROM BONOS WHERE ID_ALUMNO=".$alum['ID']." AND ID_CURSO = ".$alum['ID_CURSO']);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getBonusFromCorreo:".$ex->getMessage());
   }
   return $vectorTotal;  
 }
@@ -1123,13 +1165,13 @@ function getTareasFromAlumno($db,$correo)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getTareasFromAlumnoEstado:".$ex->getMessage();
+    mi_info_log( "Error en getTareasFromAlumnoEstado:".$ex->getMessage());
   }
   return $vectorTotal;  
 }
 
 
-function getTareasTotalesFromAlumno($db,$correo)
+function getTareasTotalesFromAlumno($db,$correo,$examen)
 {
   $alumno = getAlumnoFromCorreo($db,$correo);
   $asignaturas = getAsignaturasFromCurso($db,$alumno['ID_CURSO']);
@@ -1137,7 +1179,7 @@ function getTareasTotalesFromAlumno($db,$correo)
   try
   {
   foreach ($asignaturas as $asig) {
-    $stmt = $db->query("SELECT * FROM TAREAS WHERE ID_ASIGNATURA = ".$asig['ID']);
+    $stmt = $db->query("SELECT * FROM TAREAS WHERE ID_ASIGNATURA = ".$asig['ID']." AND EXAMEN=".$examen);
    
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
@@ -1148,7 +1190,7 @@ function getTareasTotalesFromAlumno($db,$correo)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getTareasTotalesFromAlumno:".$ex->getMessage();
+    mi_info_log( "Error en getTareasTotalesFromAlumno:".$ex->getMessage());
   }
   return $vectorTotal;  
 }
@@ -1259,7 +1301,7 @@ function getEventosGeneralesFromAlumno($db,$correo)
   }
   catch (PDOException $ex)
   {
-    echo "Error en getEventosGeneralesFromAlumno:".$ex->getMessage();
+    mi_info_log( "Error en getEventosGeneralesFromAlumno:".$ex->getMessage());
   }
   return $vectorTotal;  
 }
@@ -1271,7 +1313,7 @@ function getSetCromosIdFromAlumno($db,$CORREO){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured getCromo ! ".$ex->getMessage();
+   mi_info_log( "An Error occured getCromo ! ".$ex->getMessage());
   } 
   return $fila['ID_SET'];
 }
@@ -1283,7 +1325,7 @@ function getNumeroTotalAlumnos($db){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila['TOTAL'];
 }
@@ -1295,7 +1337,7 @@ function getNumeroCromosTotalesFromIDSet($db,$idSet){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getNumeroCromosTotalesFromIDSet".$ex->getMessage();
+   mi_info_log( "An Error occured! getNumeroCromosTotalesFromIDSet".$ex->getMessage());
   } 
   return $fila['TOTAL'];
 }
@@ -1306,7 +1348,7 @@ function getNumeroCromosAbiertosFromIDSet($db,$idSet){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getNumeroCromosAbiertosFromIDSet".$ex->getMessage();
+   mi_info_log( "An Error occured! getNumeroCromosAbiertosFromIDSet".$ex->getMessage());
   } 
   return $fila['TOTAL'];
 }
@@ -1319,7 +1361,7 @@ function getNumeroCromosDisponiblesFromIDSet($db,$idSet){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getNumeroCromosSinAbrirFromIDSet".$ex->getMessage();
+   mi_info_log( "An Error occured! getNumeroCromosSinAbrirFromIDSet".$ex->getMessage());
   } 
   return $fila['TOTAL'];
 }
@@ -1330,7 +1372,7 @@ function getNumeroCromosSinAbrirFromIDSet($db,$idSet){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getNumeroCromosSinAbrirFromIDSet".$ex->getMessage();
+   mi_info_log( "An Error occured! getNumeroCromosSinAbrirFromIDSet".$ex->getMessage());
   } 
   return $fila['TOTAL'];
 }
@@ -1341,7 +1383,7 @@ function getNumeroAlumnosFromAsignaturaID($db,$IDAsignatura){
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila['TOTAL'];
 }
@@ -1364,7 +1406,7 @@ function esUsernameAdministrador($db,$userName)
   }
   catch (PDOException $ex)
   {
-    echo "Error en esUsernameAdministrador:".$ex->getMessage();
+    mi_info_log( "Error en esUsernameAdministrador:".$ex->getMessage());
   }
     return Count($vectorTotal)>0;  
 }
@@ -1386,7 +1428,7 @@ function existeLugar($db,$filaSitio,$posx,$posy)
   }
   catch (PDOException $ex)
   {
-    echo "Error en existeLugar:".$ex->getMessage();
+    mi_info_log( "Error en existeLugar:".$ex->getMessage());
   }
   $vectorTotal2 = array();
   try
@@ -1401,7 +1443,7 @@ function existeLugar($db,$filaSitio,$posx,$posy)
   }
   catch (PDOException $ex)
   {
-    echo "Error en existeLugar:".$ex->getMessage();
+    mi_info_log( "Error en existeLugar:".$ex->getMessage());
   }
   $vectorTotal3 = array();
   try
@@ -1416,7 +1458,7 @@ function existeLugar($db,$filaSitio,$posx,$posy)
   }
   catch (PDOException $ex)
   {
-    echo "Error en existeLugar:".$ex->getMessage();
+    mi_info_log( "Error en existeLugar:".$ex->getMessage());
   }
     return (Count($vectorTotal)+Count($vectorTotal2)+Count($vectorTotal3))>0;  
 }
@@ -1435,7 +1477,7 @@ function existeCorreo($db,$CORREO)
   }
   catch (PDOException $ex)
   {
-    echo "Error en existeCorreo:".$ex->getMessage();
+    mi_info_log( "Error en existeCorreo:".$ex->getMessage());
   }
     return Count($vectorTotal)>0;  
 }
@@ -1456,7 +1498,7 @@ function existeFantasma($db,$IDAsignatura,$dia)
   }
   catch (PDOException $ex)
   {
-    echo "Error en existeFantasma:".$ex->getMessage();
+    mi_info_log( "Error en existeFantasma:".$ex->getMessage());
   }
     return Count($vectorTotal)>0;  
 }
@@ -1476,7 +1518,7 @@ function existeFantasmaCreado($db,$IDAsignatura,$dia)
   }
   catch (PDOException $ex)
   {
-    echo "Error en existeFantasmaCreado:".$ex->getMessage();
+    mi_info_log( "Error en existeFantasmaCreado:".$ex->getMessage());
   }
     return Count($vectorTotal)>0;  
 }
@@ -1489,7 +1531,7 @@ function getFantasma($db,$IDAsignatura,$dia)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1501,7 +1543,7 @@ function getTareaFromID($db,$idTarea)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! getTareaFromID".$ex->getMessage();
+   mi_info_log( "An Error occured! getTareaFromID".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1516,7 +1558,7 @@ function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! setNowUltimaFechaNotiGeneralAlumno ".$ex->getMessage();
+   mi_info_log( "An Error occured! setNowUltimaFechaNotiGeneralAlumno ".$ex->getMessage());
   }   
 }
 
@@ -1529,7 +1571,7 @@ function modificarComentarioReto($db,$correo,$idTarea,$comentario)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarComentarioReto ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarComentarioReto ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -1543,7 +1585,7 @@ function modificarNumeroEntregasReto($db,$correo,$idTarea,$numeroEntregas)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarNumeroEntregasReto ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarNumeroEntregasReto ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -1556,7 +1598,7 @@ function modificarOtrosReto($db,$correo,$idTarea,$otros)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarOtrosReto ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarOtrosReto ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -1570,7 +1612,7 @@ function modificarFechaUltimoLoginAlumno($db,$correo,$tsmp)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarFechaUltimoLoginAlumno ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarFechaUltimoLoginAlumno ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -1583,7 +1625,7 @@ function modificarFechaEntregadoReto($db,$correo,$idTarea,$tsmp)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarFechaEntregadoReto ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarFechaEntregadoReto ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -1602,7 +1644,7 @@ function modificarEstadoReto($db,$correo,$idTarea,$estado)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarEstadoReto ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarEstadoReto ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -1615,7 +1657,7 @@ function modificarEstrellasConseguidasReto($db,$correo,$idTarea,$estrellasConseg
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarEstrellasConseguidasReto ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarEstrellasConseguidasReto ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -1628,7 +1670,7 @@ function cambiarNivelAlumno($db,$correo, $nivelReal)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! cambiarNivelAlumno ".$ex->getMessage();
+   mi_info_log( "An Error occured! cambiarNivelAlumno ".$ex->getMessage());
   }   
 }
 function modificarListaJugadasPPT($db,$id, $listajugadas)
@@ -1640,7 +1682,7 @@ function modificarListaJugadasPPT($db,$id, $listajugadas)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarListaJugadasPPT ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarListaJugadasPPT ".$ex->getMessage());
   }   
 }
 function modificarListaUtilizacionesEvento($db,$id, $nListaUtils)
@@ -1652,7 +1694,7 @@ function modificarListaUtilizacionesEvento($db,$id, $nListaUtils)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarUtilizacionesEvento ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarUtilizacionesEvento ".$ex->getMessage());
   }   
 }
 function modificarListaGenAleatoriasHoy($db,$id, $listajugadas)
@@ -1664,7 +1706,7 @@ function modificarListaGenAleatoriasHoy($db,$id, $listajugadas)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarListaGenAleatoriasHoy ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarListaGenAleatoriasHoy ".$ex->getMessage());
   }   
 }
 function modificarOrdenAlbum($db,$correo, $ordentotal)
@@ -1676,7 +1718,7 @@ function modificarOrdenAlbum($db,$correo, $ordentotal)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarOrdenAlbum ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarOrdenAlbum ".$ex->getMessage());
   }   
 }
 
@@ -1689,7 +1731,7 @@ function actualizarNivel($db,$categoria,$numNivel,$value)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! actualizarNivel ".$ex->getMessage();
+   mi_info_log( "An Error occured! actualizarNivel ".$ex->getMessage());
   }   
 }
 
@@ -1704,7 +1746,7 @@ function modificarOrdenCombos($db,$correo, $ordenCombos)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarOrdenCombos ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarOrdenCombos ".$ex->getMessage());
   }   
 }
 
@@ -1717,7 +1759,7 @@ function modificarOrdenReferenciasTotal($db,$correo, $ordenReferenciasTotal)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarOrdenReferenciasTotal ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarOrdenReferenciasTotal ".$ex->getMessage());
   }   
 }function modificarOrdenCreadores($db,$correo, $ordenCreadores)
 {
@@ -1728,7 +1770,7 @@ function modificarOrdenReferenciasTotal($db,$correo, $ordenReferenciasTotal)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarOrdenCreadores ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarOrdenCreadores ".$ex->getMessage());
   }   
 }
 function modificarGeneradoCromo($db,$gen, $idCromo)
@@ -1740,7 +1782,7 @@ function modificarGeneradoCromo($db,$gen, $idCromo)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarGeneradoCromo ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarGeneradoCromo ".$ex->getMessage());
   }   
 }
 
@@ -1753,7 +1795,7 @@ function modificarPoseedorCromo($db,$idAlumno, $idCromo)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarPoseedorCromo ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarPoseedorCromo ".$ex->getMessage());
   }   
 }
 
@@ -1767,7 +1809,7 @@ function modificarNEstrellasCromo($db,$correo,$nestrellas)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarNEstrellasCromo ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarNEstrellasCromo ".$ex->getMessage());
   }   
 }
 function modificarCromo($db,$correo, $nombre,$color,$nestrellas,$atributo,$tipocromo,$descripcion,$artista,$firma,$imagen)
@@ -1779,7 +1821,7 @@ function modificarCromo($db,$correo, $nombre,$color,$nestrellas,$atributo,$tipoc
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarCromo ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarCromo ".$ex->getMessage());
   }   
 }
 
@@ -1792,7 +1834,7 @@ function modificarCalas($db,$correo,$cantidad)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarCalas ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarCalas ".$ex->getMessage());
   }   
 }
 function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$fantasma,$saltando,$personaje,$porcentajesPPT,$postura1,$postura2,$postura3,$ID_MAPA_INICIO,$POS_X_INICIO,$POS_Y_INICIO)
@@ -1804,12 +1846,12 @@ function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,
 
 
     $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."'".$setPersonaje.",POSTURA1=".$postura1.",POSTURA2=".$postura2.",POSTURA3=".$postura3.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",ID_MAPA_INICIO=".$ID_MAPA_INICIO.",POS_X_INICIO=".$POS_X_INICIO.",POS_Y_INICIO=".$POS_Y_INICIO.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
-    //echo $sql;
+    //mi_info_log( $sql;
     $stmt = $db->prepare($sql);
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! modificarBot ".$ex->getMessage();
+   mi_info_log( "An Error occured! modificarBot ".$ex->getMessage());
   }   
 }
 function modificarCorreoAlumno($db,$IDAlumno,$correo)
@@ -1821,7 +1863,7 @@ function modificarCorreoAlumno($db,$IDAlumno,$correo)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   }   
 }
 
@@ -1834,7 +1876,7 @@ function modificarContEleg($db,$IDAsignatura,$dia,$valorInicial)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function modificarFantasma($db,$IDAsignatura,$dia,$nSesiones)
@@ -1846,7 +1888,7 @@ function modificarFantasma($db,$IDAsignatura,$dia,$nSesiones)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 
@@ -1859,7 +1901,7 @@ function insertarElegIDosEnFantasma($db,$IDAsignatura,$dia,$listaElegIDos)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
 function getElegIDosFromAsignaturaDia($db,$IDAsignatura,$dia)
@@ -1870,7 +1912,7 @@ function getElegIDosFromAsignaturaDia($db,$IDAsignatura,$dia)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return explode(",",$fila['ELEGIDOS']);
 }
@@ -1897,7 +1939,7 @@ function getCursosFaltones($db){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error inserción alumno:".$ex->getMessage();
+     mi_info_log( "Error inserción alumno:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -1908,7 +1950,7 @@ function getSesionesAsignaturaFromDiaSemana($db, $asignatura, $dia){
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
   catch(PDOException $ex){
-    echo "An Error occured! ".$ex->getMessage();
+    mi_info_log( "An Error occured! ".$ex->getMessage());
   }
   return $fila;
 }
@@ -1922,7 +1964,7 @@ function getSesionesAsignaturas($db){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error getSesionesAsignaturas:".$ex->getMessage();
+     mi_info_log( "Error getSesionesAsignaturas:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -1937,21 +1979,25 @@ function getEstrellasComportamientoFromCorreo($db,$correo){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error getEstrellasComportamientoFromCorreo:".$ex->getMessage();
+     mi_info_log( "Error getEstrellasComportamientoFromCorreo:".$ex->getMessage());
   }
   return $vectorTotal;
 }
-function getEstrellasRetosFromCorreo($db,$correo){
+function getEstrellasRetosFromCorreo($db,$correo,$examen){
   try{
     $vectorTotal = array();
     $stmt = $db->query
-    ("SELECT ID,ESTRELLAS_CONSEGUIDAS,FECHA, (SELECT NOMBRE FROM TAREAS WHERE TAREAS.ID = ALUMNOS_TAREAS.ID_TAREA) NOMBRE_TAREA , (SELECT TOTAL_ESTRELLAS FROM TAREAS WHERE TAREAS.ID = ALUMNOS_TAREAS.ID_TAREA) TOTAL_ESTRELLAS FROM ALUMNOS_TAREAS WHERE ID_ALUMNO = ".getAlumnoFromCorreo($db,$correo)['ID']." ORDER BY FECHA DESC");
+    ("SELECT ID,ID_TAREA,ESTRELLAS_CONSEGUIDAS,FECHA, (SELECT NOMBRE FROM TAREAS WHERE TAREAS.ID = ALUMNOS_TAREAS.ID_TAREA) NOMBRE_TAREA , (SELECT TOTAL_ESTRELLAS FROM TAREAS WHERE (TAREAS.ID = ALUMNOS_TAREAS.ID_TAREA)) TOTAL_ESTRELLAS FROM ALUMNOS_TAREAS WHERE ID_ALUMNO = ".getAlumnoFromCorreo($db,$correo)['ID']." ORDER BY FECHA DESC");
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
-      $vectorTotal [] = $fila;
+      $tarea = getTareaFromID($db,$fila['ID_TAREA']);
+      if ($tarea['EXAMEN']==$examen)
+      {
+        $vectorTotal [] = $fila;
+      }
     }
   }catch(PDOException $ex){
-     echo "Error getEstrellasRetosFromCorreo:".$ex->getMessage();
+     mi_info_log( "Error getEstrellasRetosFromCorreo:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -1967,56 +2013,66 @@ function buscarAlumnos($db, $filtro){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     echo "Error buscarAlumnos:".$ex->getMessage();
+     mi_info_log( "Error buscarAlumnos:".$ex->getMessage());
   }
   return $vectorTotal;
 }
 
 function getEstrellasFromAlumnoDiaAsignatura($db, $IDAlumno, $dia, $asignatura)  {
   try{
-    //echo "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
+    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("SELECT ESTRELLAS FROM ESTRELLAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno);
-    //echo "SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno;
+    //mi_info_log( "SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno;
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
   catch(PDOException $ex){
-    echo "An Error occured! ".$ex->getMessage();
+    mi_info_log( "An Error occured! ".$ex->getMessage());
   }
   return $fila['ESTRELLAS'];
 }
 function getFaltasFromAlumnoDiaAsignatura($db, $IDAlumno, $dia, $asignatura)  {
   try{
-    //echo "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
+    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno);
-    //echo "SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno;
+    //mi_info_log( "SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno;
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
   catch(PDOException $ex){
-    echo "An Error occured! ".$ex->getMessage();
+    mi_info_log( "An Error occured! ".$ex->getMessage());
   }
   return $fila['nFaltas'];
 }
 function getFaltasFromAlumnoID($db, $IDAlumno)  {
   try{
-    //echo "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
+    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno);
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
   catch(PDOException $ex){
-    echo "An Error occured! ".$ex->getMessage();
+    mi_info_log( "An Error occured! ".$ex->getMessage());
   }
   return $fila['nFaltas'];
 }
 function getEstrellasFromAlumnoID($db, $IDAlumno)  {
   try{
-    //echo "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
+    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("select IFNULL(sum(ESTRELLAS), 0) as nEs from ESTRELLAS where ID_ALUMNO = ".$IDAlumno);
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
   catch(PDOException $ex){
-    echo "An Error occured! ".$ex->getMessage();
+    mi_info_log( "An Error occured! ".$ex->getMessage());
   }
   return $fila['nEs'];
+}
+function getConfGeneral($db, $clave)  {
+  try{
+    $stmt = $db->query("select VALOR from CONF_GENERALES where CLAVE= '".$clave."'");
+    $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+  catch(PDOException $ex){
+    mi_info_log( "An Error occured! ".$ex->getMessage());
+  }
+  return $fila['VALOR'];
 }
 
 function getNombreCursoFromAlumno($db,$IDAlumno)
@@ -2028,7 +2084,7 @@ function getNombreCursoFromAlumno($db,$IDAlumno)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila['NOMBRE'];
 }
@@ -2044,7 +2100,7 @@ function getNumeroElegIDosPorIDAlumno($db,$IDAlumno){
     }
   } catch(PDOException $ex) 
   {    
-   echo "An Error occured! ".$ex->getMessage();
+   mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   $arrayElegIDos = array();
   foreach($vectorTotal as $elemento){
@@ -2125,8 +2181,8 @@ function BrioAlgoritmo($alumnos){
   $n = rand(1,$suma);
   
   for($i = 0; $i < Count($alumnos); $i++){
-    //echo "|".$rangos[$i][0]."|". $rangos[$i][1]."|<br>";
-    //echo $n;
+    //mi_info_log( "|".$rangos[$i][0]."|". $rangos[$i][1]."|<br>";
+    //mi_info_log( $n;
     if ($n < 1){
       $n++;  
     } 
@@ -2157,8 +2213,37 @@ function MarcoAntonioritmo($vIDsOcu){
 
 
 
+function getSetsCromos($db)
+{
+  $vectorTotal = array();
+  try
+  {     
+    $stmt = $db->query("SELECT * FROM SETS_CROMOS");   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getSetsCromos:".$ex->getMessage());
+  }
+    return $vectorTotal;
+}
 
-
+function getAsignaturaFromAsignaturaID($db,$IDAsignatura)
+{
+  $fila=NULL;
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM ASIGNATURAS WHERE ID=".$IDAsignatura);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! getAsignaturaFromAsignaturaID".$ex->getMessage());
+  } 
+  return $fila;
+}
 
 
 

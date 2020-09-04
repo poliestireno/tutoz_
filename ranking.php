@@ -113,10 +113,22 @@ if(isset($_POST['submit']))
       <th>Nombre</th>
       <th>Nivel</th>
       <th>Total Estrellas</th>
+      <?php
+
+$aToConcursos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],1);
+
+if (Count($aToConcursos)>0)
+{
+?>
+      <th>Concursos</th>
+ <?php
+}
+ ?>
       <th>Retos</th>
+
       <th>Ganas</th>
       <th>Cromos</th>
-      <th>Suerte</th>
+      <th>Bonus</th>
     </tr>
   </thead>
   <!--Table head-->
@@ -151,7 +163,10 @@ $sEstrellas=$aRe[1];
 
   // calculo retos
 
-$totalRetos = getEstrellasRetos($dbh,$alumno['CORREO']);
+$totalRetos = getEstrellasRetos($dbh,$alumno['CORREO'],0);
+//var_export($totalRetos);
+$totalConcursos = getEstrellasRetos($dbh,$alumno['CORREO'],1);
+//var_export($totalConcursos);
   // calculo de ganas
 
 
@@ -160,12 +175,13 @@ $totalComportamiento =getEstrellasGanas($dbh,$alumno['CORREO']);
 
 	  	
 	  	$totalCromos = $estrellasCromos+$estrellasCombinaciones;
-	  	$totalSuerte = 0;
-	  	$totalTotal = $totalRetos+$totalComportamiento+$totalCromos+$totalSuerte;
+	  	$totalSuerte = getEstrellasBonos($dbh,$alumno['CORREO']);
+	  	$totalTotal = $totalRetos+$totalConcursos+$totalComportamiento+$totalCromos+$totalSuerte;
 	  	
 		$arrayAlumno=array();
 		$arrayAlumno['Nombre']=$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'];
 		$arrayAlumno['Retos']=$totalRetos;
+		$arrayAlumno['Concursos']=$totalConcursos;
 		$arrayAlumno['Comportamiento']=$totalComportamiento;
 		$arrayAlumno['Cromos']=$totalCromos;
 		$arrayAlumno['Suerte']=$totalSuerte;
@@ -205,19 +221,17 @@ usort($aTotalAlumnos, "cmp");
 
   	 $contador=1;
 foreach ($aTotalAlumnos as $alum) 
- {
-
+ {	
 		if ($_SESSION['alogin']==$alum['CORREO'])
 		{
 			echo '<tr>
       <th></th>
       <th>Nombre</th>
       <th>Nivel</th>
-      <th>Total Estrellas</th>
-      <th>Retos</th>
+      <th>Total Estrellas</th>'.((Count($aToConcursos)>0)?'<th>Concursos</th>':'').'<th>Retos</th>
       <th>Ganas</th>
       <th>Cromos</th>
-      <th>Suerte</th>
+      <th>Bonus</th>
     </tr>';
 		}
 
@@ -227,6 +241,13 @@ foreach ($aTotalAlumnos as $alum)
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Nombre'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['NivelConSiguiente']:$alum['NivelSinSiguiente']).finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Total']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+
+if (Count($aToConcursos)>0)
+{
+	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Concursos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+}
+
+
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Retos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Cromos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
@@ -248,14 +269,78 @@ foreach ($aTotalAlumnos as $alum)
       <th>Nombre</th>
       <th>Nivel</th>
       <th>Total Estrellas</th>
+      <?php
+
+if (Count($aToConcursos)>0)
+{
+?>
+      <th>Concursos</th>
+ <?php
+}
+ ?>
       <th>Retos</th>
       <th>Ganas</th>
       <th>Cromos</th>
-      <th>Suerte</th>
+      <th>Bonus</th>
     </tr>
   </thead>
 
 </table>
+
+<?php
+
+
+if (Count($aToConcursos)>0)
+{
+?>
+
+<h3>Mis Concursos</h3>
+<table class="table table-striped w-auto table-bordered">
+
+  <!--Table head-->
+  <thead>
+    <tr>
+      <th>Concurso</th>
+      <th>Estado</th>
+      <th>Estrellas conseguidas</th>
+      <th>Máximo estrellas</th>
+      <th>Entregado en fecha</th>
+      <th>Fecha límite</th>
+      <!--th>Descripción</th-->
+    </tr>
+  </thead>
+  <!--Table head-->
+
+  <!--Table body-->
+  <tbody>
+  	<?php
+//var_dump($aToRetos);
+foreach ($aToConcursos as $reto) 
+{
+
+		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$reto['ID']);
+		//var_export($datosAlumnoTarea);
+	  	echo '<tr class="table-info">';
+	      echo '<td>'.$reto['NOMBRE'].'</td>';
+	      echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
+echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'</td>';
+	      echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
+	      echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';
+	      echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
+	      //echo '<td>'.$reto['DESCRIPCION'].'</td>';
+	    echo '</tr>';
+}
+
+	 ?>
+    
+  </tbody>
+  <!--Table body-->
+
+
+</table>
+<?php
+}
+?>
 <h3>Mis Retos</h3>
 <table class="table table-striped w-auto table-bordered">
 
@@ -276,22 +361,8 @@ foreach ($aTotalAlumnos as $alum)
   <!--Table body-->
   <tbody>
   	<?php
-/*$aToRetos = getEstrellasRetosFromCorreo($dbh,$_SESSION['alogin']);
-//var_dump($aToRetos);
-foreach ($aToRetos as $reto) 
-{
 
-	  	echo '<tr class="table-info">';
-	      echo '<td>'.$reto['NOMBRE_TAREA'].'</td>';
-	      echo '<td><b>'.$reto['ESTRELLAS_CONSEGUIDAS'].'</b>/'.$reto['TOTAL_ESTRELLAS'].'</td>';
-	      echo '<td>'.$reto['FECHA'].'</td>';
-	    echo '</tr>';
-}
-
-*/
-
-
-$aToRetos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin']);
+$aToRetos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],0);
 //var_dump($aToRetos);
 foreach ($aToRetos as $reto) 
 {
@@ -340,6 +411,39 @@ foreach ($aToCompor as $compor)
 	  	  echo '<td>'.$compor['NOMBRE_ASIGNATURA'].'</td>';
 	      echo '<td><b>'.$compor['ESTRELLAS'].'</b></td>';
 	      echo '<td>'.$compor['DIA'].'</td>';
+	    echo '</tr>';
+}
+
+
+	 ?>
+    
+  </tbody>
+  <!--Table body-->
+
+
+</table>
+<h3>Mis Bonus</h3>
+<table class="table table-striped w-auto table-bordered">
+
+  <!--Table head-->
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Estrellas</th>
+    </tr>
+  </thead>
+  <!--Table head-->
+
+  <!--Table body-->
+  <tbody>
+  	<?php
+$aToCompor = getBonusFromCorreo($dbh,$_SESSION['alogin']);	
+foreach ($aToCompor as $compor) 
+{
+
+	  	echo '<tr class="table-info">';
+	  	  echo '<td>'.$compor['NOMBRE'].'</td>';
+	      echo '<td><b>'.$compor['NUM_ESTRELLAS'].'</b></td>';
 	    echo '</tr>';
 }
 

@@ -76,10 +76,23 @@ header('location:index.php');
       <th>Nombre</th>
       <th>Nivel</th>
       <th>Total Estrellas</th>
+<?php
+$aAlumnosCurso = getAlumnosFromCursoID($dbh,$_GET['idc']);
+
+$aToConcursos = getTareasTotalesFromAlumno($dbh,$aAlumnosCurso[0]['CORREO'],1);
+
+if (Count($aToConcursos)>0)
+{
+?>
+      <th>Concursos</th>
+ <?php
+}
+ ?>
+
       <th>Retos</th>
       <th>Ganas</th>
       <th>Cromos</th>
-      <th>Suerte</th>
+      <th>Bonus</th>
     </tr>
   </thead>
   <!--Table head-->
@@ -87,7 +100,7 @@ header('location:index.php');
   <!--Table body-->
   <tbody>
     <?php
-     $aAlumnosCurso = getAlumnosFromCursoID($dbh,$_GET['idc']);
+     
      //var_dump($aAlumnosCurso);
 
      $aTotalAlumnos = array();
@@ -114,7 +127,8 @@ $sEstrellas=$aRe[1];
 
   // calculo retos
 
-$totalRetos = getEstrellasRetos($dbh,$alumno['CORREO']);
+$totalRetos = getEstrellasRetos($dbh,$alumno['CORREO'],0);
+$totalConcursos = getEstrellasRetos($dbh,$alumno['CORREO'],1);
   // calculo de ganas
 
 
@@ -123,12 +137,13 @@ $totalComportamiento =getEstrellasGanas($dbh,$alumno['CORREO']);
 
       
       $totalCromos = $estrellasCromos+$estrellasCombinaciones;
-      $totalSuerte = 0;
-      $totalTotal = $totalRetos+$totalComportamiento+$totalCromos+$totalSuerte;
+      $totalSuerte = getEstrellasBonos($dbh,$alumno['CORREO']);
+      $totalTotal = $totalRetos+$totalConcursos+$totalComportamiento+$totalCromos+$totalSuerte;
       
     $arrayAlumno=array();
     $arrayAlumno['Nombre']=$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'];
     $arrayAlumno['Retos']=$totalRetos;
+    $arrayAlumno['Concursos']=$totalConcursos;
     $arrayAlumno['Comportamiento']=$totalComportamiento;
     $arrayAlumno['Cromos']=$totalCromos;
     $arrayAlumno['Suerte']=$totalSuerte;
@@ -174,6 +189,7 @@ foreach ($aTotalAlumnos as $alum)
         echo '<td>'.$alum['Nombre'].'</td>';
         echo '<td>'.$alum['NivelSinSiguiente'].'</td>';
         echo '<td>'.$alum['Total'].'</td>';
+        echo '<td>'.$alum['Concursos'].'</td>';
         echo '<td>'.$alum['Retos'].'</td>';
         echo '<td>'.$alum['Comportamiento'].'</td>';
         echo '<td>'.$alum['Cromos'].'</td>';
@@ -195,10 +211,18 @@ foreach ($aTotalAlumnos as $alum)
       <th>Nombre</th>
       <th>Nivel</th>
       <th>Total Estrellas</th>
+<?php
+if (Count($aToConcursos)>0)
+{
+?>
+      <th>Concursos</th>
+ <?php
+}
+ ?>
       <th>Retos</th>
       <th>Ganas</th>
       <th>Cromos</th>
-      <th>Suerte</th>
+      <th>Bonus</th>
     </tr>
   </thead>
 

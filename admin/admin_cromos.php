@@ -8,12 +8,12 @@ $msg="";
 try
   {
 $sql = "SELECT username from admin;";
-		$query = $dbh -> prepare($sql);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
+    $query = $dbh -> prepare($sql);
+    $query->execute();
+    $result=$query->fetch(PDO::FETCH_OBJ);
 
 if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION['alogin']!=$result->username)))
-	{	
+  { 
 header('location:index.php');
 }
 else{
@@ -27,11 +27,11 @@ if (isset($_POST['alumnoCodSobre'])&&($_POST['alumnoCodSobre']!=''))
   $cromoGenerado = getAndSetRandomCromo($dbh,$setId);
   if ($cromoGenerado!=NULL)
   {
-  	$message = $cromoGenerado['ID'].",".$_POST['alumnoCodSobre'];
+    $message = $cromoGenerado['ID'].",".$_POST['alumnoCodSobre'];
     //echo "message:".$message;
-  	$codigoEncriptado = openssl_encrypt ($message,"AES-128-ECB","kgYYBOihH8/(ggG/)gKGB8/biLJLDJOIUD/(%&/UG(DF(/F%&(IGDF%(F)HFG=FD:_V:F_VBLVP?F=F)FKIF)))");
+    $codigoEncriptado = openssl_encrypt ($message,"AES-128-ECB","kgYYBOihH8/(ggG/)gKGB8/biLJLDJOIUD/(%&/UG(DF(/F%&(IGDF%(F)HFG=FD:_V:F_VBLVP?F=F)FKIF)))");
     //echo "codigo:".$codigoEncriptado;
-  	
+    
     // notificamos al alumno el código de su sobre
 
     mandarNotificacion($dbh,'Admin',$_POST['alumnoCodSobre'],' Código del sobre conseguido: '.$codigoEncriptado);
@@ -39,11 +39,11 @@ if (isset($_POST['alumnoCodSobre'])&&($_POST['alumnoCodSobre']!=''))
     // log asignación de cromo
     $message ="Asignado a ".$_POST['alumnoCodSobre']." el código de sobre ".$codigoEncriptado." y cromo:".var_export($cromoGenerado, true);
     mi_info_log($message);
- 	  
+    
   }
   else
   {
-  	$codigoEncriptado ='ERROR: Cromos no disponibles!!';
+    $codigoEncriptado ='ERROR: Cromos no disponibles!!';
   }
 
 }
@@ -56,29 +56,29 @@ if (isset($_POST['alumnoTareaOk'])&&($_POST['alumnoTareaOk']!=''))
 }
 
 if(isset($_POST['submit']))
-{	
+{ 
 
-	//var_dump($_POST);
-	//$CORREO=$_POST['CORREO'];
-	//$sql="UPDATE admin SET username=(:name), email=(:CORREO)";
-	$sql="UPDATE ADMIN_CROMOS SET N_CROMOS_INI=(:n_cromos_iniciales), N_CROMOS_PROPIOS=(:n_cromos_propios), NUM_SLOTS= (:nslots) ,  PAREJA=(:valorpareja),  DOBLEPAREJA=(:valordoblepareja),  TRIO=(:valortrio), CUARTETO=(:valorcuarteto),  ESCALERA3=(:valorescalera3),  ESCALERA4=(:valorescalera4),ESCALERASIMPLE3=(:valorescalerasimple3),  ESCALERASIMPLE4=(:valorescalerasimple4),  ESCALERA3_ESTRELLAS=(:valorescalera3_estrellas),  ESCALERA4_ESTRELLAS=(:valorescalera4_estrellas) ";
-	$query = $dbh->prepare($sql);
-	$query-> bindParam(':n_cromos_iniciales', $_POST['n_cromos_iniciales'], PDO::PARAM_STR);
-	$query-> bindParam(':n_cromos_propios', $_POST['n_cromos_propios'], PDO::PARAM_STR);
-	$query-> bindParam(':nslots', $_POST['NUM_SLOTS'], PDO::PARAM_STR);
+  //var_dump($_POST);
+  //$CORREO=$_POST['CORREO'];
+  //$sql="UPDATE admin SET username=(:name), email=(:CORREO)";
+  $sql="UPDATE ADMIN_CROMOS SET N_CROMOS_INI=(:n_cromos_iniciales), N_CROMOS_PROPIOS=(:n_cromos_propios), NUM_SLOTS= (:nslots) ,  PAREJA=(:valorpareja),  DOBLEPAREJA=(:valordoblepareja),  TRIO=(:valortrio), CUARTETO=(:valorcuarteto),  ESCALERA3=(:valorescalera3),  ESCALERA4=(:valorescalera4),ESCALERASIMPLE3=(:valorescalerasimple3),  ESCALERASIMPLE4=(:valorescalerasimple4),  ESCALERA3_ESTRELLAS=(:valorescalera3_estrellas),  ESCALERA4_ESTRELLAS=(:valorescalera4_estrellas) ";
+  $query = $dbh->prepare($sql);
+  $query-> bindParam(':n_cromos_iniciales', $_POST['n_cromos_iniciales'], PDO::PARAM_STR);
+  $query-> bindParam(':n_cromos_propios', $_POST['n_cromos_propios'], PDO::PARAM_STR);
+  $query-> bindParam(':nslots', $_POST['NUM_SLOTS'], PDO::PARAM_STR);
 
-	$query-> bindParam(':valorpareja', $_POST['valorpareja'], PDO::PARAM_STR);
-	$query-> bindParam(':valordoblepareja', $_POST['valordoblepareja'], PDO::PARAM_STR);
-	$query-> bindParam(':valortrio', $_POST['valortrio'], PDO::PARAM_STR);
-	$query-> bindParam(':valorcuarteto', $_POST['valorcuarteto'], PDO::PARAM_STR);
-	$query-> bindParam(':valorescalerasimple3', $_POST['valorescalerasimple3'], PDO::PARAM_STR);
+  $query-> bindParam(':valorpareja', $_POST['valorpareja'], PDO::PARAM_STR);
+  $query-> bindParam(':valordoblepareja', $_POST['valordoblepareja'], PDO::PARAM_STR);
+  $query-> bindParam(':valortrio', $_POST['valortrio'], PDO::PARAM_STR);
+  $query-> bindParam(':valorcuarteto', $_POST['valorcuarteto'], PDO::PARAM_STR);
+  $query-> bindParam(':valorescalerasimple3', $_POST['valorescalerasimple3'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalerasimple4', $_POST['valorescalerasimple4'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera3', $_POST['valorescalera3'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera4', $_POST['valorescalera4'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera3_estrellas', $_POST['valorescalera3_estrellas'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera4_estrellas', $_POST['valorescalera4_estrellas'], PDO::PARAM_STR);
   $query->execute();
-	$msg="Información actualizada correctamente";
+  $msg="Información actualizada correctamente";
 }    
 ?>
 
@@ -86,50 +86,50 @@ if(isset($_POST['submit']))
 <html lang="en" class="no-js">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<meta name="theme-color" content="#3e454c">
-	
-	<title>Gestionar Cromos</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="theme-color" content="#3e454c">
+  
+  <title>Gestionar Cromos</title>
 
-	<!-- Font awesome -->
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<!-- Sandstone Bootstrap CSS -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<!-- Bootstrap Datatables -->
-	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
-	<!-- Bootstrap social button library -->
-	<link rel="stylesheet" href="css/bootstrap-social.css">
-	<!-- Bootstrap select -->
-	<link rel="stylesheet" href="css/bootstrap-select.css">
-	<!-- Bootstrap file input -->
-	<link rel="stylesheet" href="css/fileinput.min.css">
-	<!-- Awesome Bootstrap checkbox -->
-	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
-	<!-- Admin Stye -->
-	<link rel="stylesheet" href="css/style.css">
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <!-- Sandstone Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- Bootstrap Datatables -->
+  <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
+  <!-- Bootstrap social button library -->
+  <link rel="stylesheet" href="css/bootstrap-social.css">
+  <!-- Bootstrap select -->
+  <link rel="stylesheet" href="css/bootstrap-select.css">
+  <!-- Bootstrap file input -->
+  <link rel="stylesheet" href="css/fileinput.min.css">
+  <!-- Awesome Bootstrap checkbox -->
+  <link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
+  <!-- Admin Stye -->
+  <link rel="stylesheet" href="css/style.css">
 
-	<style>
-	.errorWrap {
+  <style>
+  .errorWrap {
     padding: 10px;
     margin: 0 0 20px 0;
-	background: #dd3d36;
-	color:#fff;
+  background: #dd3d36;
+  color:#fff;
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 .succWrap{
     padding: 10px;
     margin: 0 0 20px 0;
-	background: #5cb85c;
-	color:#fff;
+  background: #5cb85c;
+  color:#fff;
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-		</style>
+    </style>
 <script type="text/javascript">
 function managebuttonGO(nombre,curso,correo) 
 {
@@ -277,7 +277,7 @@ document.getElementById("tareaidselect").value=tareaid;
     
     let content = e;
     if (e instanceof HTMLElement) {
-    		content = e.innerHTML;
+        content = e.innerHTML;
     }
     
     tempItem.setAttribute('value',content);
@@ -298,21 +298,21 @@ if (isset($_POST['correoGO'])&&($_POST['correoGO']!=''))
 }
 ?>>
 <?php
-		$sql = "SELECT * from ADMIN_CROMOS LIMIT 1;";
-		$query = $dbh -> prepare($sql);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
+    $sql = "SELECT * from ADMIN_CROMOS LIMIT 1;";
+    $query = $dbh -> prepare($sql);
+    $query->execute();
+    $result=$query->fetch(PDO::FETCH_OBJ);
+    $cnt=1; 
 ?>
-	<?php include('includes/header.php');?>
-	<div class="ts-main-content">
-	<?php include('includes/leftbar.php');?>
-		<div class="content-wrapper">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-12">
-						<h3 class="page-title">Gestión Cromos</h3>
-						<div class="row">
+  <?php include('includes/header.php');?>
+  <div class="ts-main-content">
+  <?php include('includes/leftbar.php');?>
+    <div class="content-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <h3 class="page-title">Gestión Cromos</h3>
+            <div class="row">
 
                 <div class="col-md-12">
                 <div class="panel panel-default">
@@ -521,33 +521,33 @@ foreach ($setsCromos as $seti) {
                 </div>              
 
 
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-	<!-- Loading Scripts -->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <!-- Loading Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap-select.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.dataTables.min.js"></script>
-	<script src="js/dataTables.bootstrap.min.js"></script>
-	<script src="js/Chart.min.js"></script>
-	<script src="js/fileinput.js"></script>
-	<script src="js/chartData.js"></script>
-	<script src="js/main.js"></script>
-	<script type="text/javascript">
-				 $(document).ready(function () {          
-					setTimeout(function() {
-						$('.succWrap').slideUp("slow");
-					}, 3000);
-					});
-	</script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap-select.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.dataTables.min.js"></script>
+  <script src="js/dataTables.bootstrap.min.js"></script>
+  <script src="js/Chart.min.js"></script>
+  <script src="js/fileinput.js"></script>
+  <script src="js/chartData.js"></script>
+  <script src="js/main.js"></script>
+  <script type="text/javascript">
+         $(document).ready(function () {          
+          setTimeout(function() {
+            $('.succWrap').slideUp("slow");
+          }, 3000);
+          });
+  </script>
 </body>
 </html>
 <?php } 
