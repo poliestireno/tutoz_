@@ -410,4 +410,53 @@ function getPropsVisiblesCromo($dbh,$correo)
   return $aProps;
 
 }
+function getPropsVisiblesBot($dbh,$correo)
+{
+  $aProps = [
+      "saludo" => 0,
+      "palabra_clave" => 0,
+      "movilidad" => 0,
+      "velocidad_1" => 0,
+      "velocidad_2" => 0,
+      "saltando" => 0,
+      "fantasma" => 0,
+      "localizacion" => 0,
+      "personajes" => 0,
+      "ppt1" => 0
+  ];
+  $alumno = getAlumnoFromCorreo($dbh,$correo);
+  $nivelAlumno = $alumno['NUMERO_NIVEL'];
+  if ($nivelAlumno>=1)
+  {
+    $aProps['saludo']=1;
+    $aProps['palabra_clave']=1;    
+  }
+  if ($nivelAlumno>=2)
+  {
+    $aProps['movilidad']=1;   
+  }
+  if ($nivelAlumno>=3)
+  {
+    $aProps['velocidad_1']=1;   
+    $aProps['personajes']=1;   
+  }
+  if ($nivelAlumno>=4)
+  {
+    $aProps['saltando']=1;   
+    $aProps['ppt1']=1;   
+  }
+  if ($nivelAlumno>=5)
+  {
+    $aProps['localizacion']=1;   
+  }
+  if ($nivelAlumno>=6)
+  {
+    $aProps['fantasma']=1;   
+    $aProps['velocidad_2']=1;   
+  }
+
+  
+  return $aProps;
+
+}
 ?>

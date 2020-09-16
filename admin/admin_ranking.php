@@ -3,10 +3,33 @@ session_start();
 //error_reporting(0);
 include('../includes/config.php');
 require_once("../UTILS/dbutils.php");
+$msg="";
 if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 	{	
 header('location:index.php');
 }
+else{
+
+$idCur="";
+if (isset($_GET['idc']))
+{
+  $idCur=$_GET['idc'];
+}
+else
+{
+  $idCur=$_POST['idCursoHid'];
+}
+
+if (isset($_POST['texto']))
+{
+  $clase = getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE'];        
+        mandarNotificacion($dbh,'Admin',$clase,$_POST['texto']);
+  $msg="Notificación enviada correctamente correctamente";
+  
+}
+
+
+
  
 ?>
 
@@ -58,14 +81,56 @@ header('location:index.php');
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 		</style>
+<script type="text/javascript">
+  function managebuttonB()
+  {
+      document.getElementById("form2").action="admin_ranking.php";
+      document.getElementById("form2").submit(); 
+  }
 
+</script>
 
 </head>
 
 <body>
 
-<h3>Ranking de curso/clase (<?php echo getCursoFromCursoID($dbh,$_GET['idc'])['NOMBRE']?>/<?php 
-  echo getAsignaturasFromCurso($dbh,$_GET['idc'])[0]['NOMBRE']?>)</h3>
+
+                <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">Enviar Notificación a todo <?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
+  echo getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']?></div>
+<?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>
+  <form id="form2" method="post" action="admin_cromos.php">
+      <input type='hidden' name='idCursoHid' id='idCursoHid' value='<?php echo $idCur?>'/>
+    <br/>
+
+<div class="form-group">
+<div class="col-sm-12">
+<input type="text" name="texto" maxlength = "120" class="form-control" required value="">
+</div>
+</div>
+
+<div class="form-group">
+<div class="col-sm-12">
+</div>
+<div class="col-sm-12">
+</div>
+<div class="col-sm-12">
+</div>
+</div>
+    <div class="form-group col-md-4">
+      <a onclick="managebuttonB()"  class="btn btn-danger btn-outline btn-wrap-text">Enviar Notificación</a>
+    </div>
+    <br/><br/><br/>
+  
+  </form>
+               </div>
+                </div>
+
+
+
+<h3>Ranking de curso/clase (<?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
+  echo getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']?>)</h3>
 
 <table class="table table-striped w-auto table-bordered">
 
@@ -77,7 +142,7 @@ header('location:index.php');
       <th>Nivel</th>
       <th>Total Estrellas</th>
 <?php
-$aAlumnosCurso = getAlumnosFromCursoID($dbh,$_GET['idc']);
+$aAlumnosCurso = getAlumnosFromCursoID($dbh,$idCur);
 
 $aToConcursos = getTareasTotalesFromAlumno($dbh,$aAlumnosCurso[0]['CORREO'],1);
 
@@ -251,3 +316,7 @@ if (Count($aToConcursos)>0)
 
 </body>
 </html>
+<?php 
+
+} 
+?>

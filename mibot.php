@@ -25,28 +25,34 @@ if(isset($_POST['submit']))
 	{
 		$pperson=-1;
 	}
-
-	// se genera lugar aleatorio para el sitio dado
 	$haySitio=true;
-    $filaSitio = getSitioFromID($dbh,$_POST['localizacion']);
-    $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
-    $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
-    $cont = 1000;
-    while (existeLugar($dbh,$filaSitio['ID'],$posx,$posy)) 
-    {
-        $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
-        $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
-        $cont--;
-        if ($cont == 0)
-        {
-            $haySitio=false;
-            break;
-        }
-    }
+	if (isset($_POST['localizacion']))
+	{
+		// se genera lugar aleatorio para el sitio dado
+	    $filaSitio = getSitioFromID($dbh,$_POST['localizacion']);
+	    $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
+	    $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+	    $cont = 1000;
+	    while (existeLugar($dbh,$filaSitio['ID'],$posx,$posy)) 
+	    {
+	        $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
+	        $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
+	        $cont--;
+	        if ($cont == 0)
+	        {
+	            $haySitio=false;
+	            break;
+	        }
+	    }
+	}
+	else
+	{
+		$haySitio=false;
+	}
     // si no hay lugar posible en el sitio dado se pone en exteriores
     if (!$haySitio)
     {
-	    $filaSitio = getSitioFromID($dbh,9);
+	    $filaSitio = getSitioFromMapID($dbh,9);
 	    $posx = rand($filaSitio['INI_X'],$filaSitio['MAX_X']);
 	    $posy = rand($filaSitio['INI_Y'],$filaSitio['MAX_Y']);
 	    $cont = 1000;
@@ -68,7 +74,7 @@ if(isset($_POST['submit']))
 		(!isset($_POST['saludo']))?"":$_POST['saludo'],
 		(!isset($_POST['palabra_clave']))?"":$_POST['palabra_clave'],
 		(!isset($_POST['movilidad']))?"1":$_POST['movilidad'],
-		(!isset($_POST['velocidad']))?"":$_POST['velocidad'],
+		(!isset($_POST['velocidad']))?"3":$_POST['velocidad'],
 		(!isset($_POST['checkFantasma']))?"0":"1",
 		(!isset($_POST['checkSaltando']))?"0":"1",
 		$pperson,
@@ -296,16 +302,17 @@ if(isset($_POST['submit']))
 
 
 <?php
-//$getPropsAlummo =  getPropsVisiblesbot($dbh,$_SESSION['alogin']);
-$getPropsAlummo['saludo']=1;
+$getPropsAlummo =  getPropsVisiblesbot($dbh,$_SESSION['alogin']);
+/*$getPropsAlummo['saludo']=1;
 $getPropsAlummo['palabra_clave']=1;
 $getPropsAlummo['movilidad']=1;
-$getPropsAlummo['velocidad']=1;
+$getPropsAlummo['velocidad_1']=1;
+$getPropsAlummo['velocidad_2']=1;
 $getPropsAlummo['saltando']=1;
 $getPropsAlummo['fantasma']=1;
 $getPropsAlummo['localizacion']=1;
 $getPropsAlummo['personajes']=1;
-$getPropsAlummo['ppt1']=1;
+$getPropsAlummo['ppt1']=1;*/
 ?>
 <div class="form-group">
 	<?php if ($getPropsAlummo['saludo']==1) {?>
@@ -339,7 +346,7 @@ $getPropsAlummo['ppt1']=1;
 		</option>
 	</select>
 	</div><?php } ?>
-	<?php if ($getPropsAlummo['velocidad']==1) {?>
+	<?php if (($getPropsAlummo['velocidad_1']==1)||($getPropsAlummo['velocidad_2']==1)) {?>
 	<label class="col-sm-2 control-label">Velocidad</label>
 	<div class="col-sm-4">
 	<select name="velocidad" class="form-control">
@@ -355,12 +362,14 @@ $getPropsAlummo['ppt1']=1;
 		<option value="4" <?php echo (($bot['VELOCIDAD']=="4")?" selected='selected' ":"")?>>
 		Humano
 		</option>
+<?php if ($getPropsAlummo['velocidad_2']==1) {?>
 		<option value="5" <?php echo (($bot['VELOCIDAD']=="5")?" selected='selected' ":"")?>>
-		Rádido
+		Usain Bolt
 		</option>
 		<option value="6" <?php echo (($bot['VELOCIDAD']=="6")?" selected='selected' ":"")?>>
-		Rapidiiisimo
+		Supersónico
 		</option>
+<?php } ?>
 	</select>
 	</div><?php } ?>
 </div>
@@ -398,7 +407,6 @@ $getPropsAlummo['ppt1']=1;
 
 
 <?php } ?>
-	<?php if ($getPropsAlummo['velocidad']==1) {?><?php } ?>
 </div>
 <div class="form-group">
 	<?php if ($getPropsAlummo['saltando']==1) {?>
@@ -476,6 +484,7 @@ $getPropsAlummo['ppt1']=1;
 
 <div class="form-group">
 	<?php if ($getPropsAlummo['ppt1']==1) {?>
+	<h3>Estrategia Piedra Papel Tijera</h3>
 	<label class="col-sm-2 control-label">Reglas postura 1</label>
 	<div class="col-sm-4">
 	<select name="sPostura1" class="form-control">
@@ -671,6 +680,8 @@ PIEDRA:<div id="slider13" class="slider3"></div>
 	<script type="text/javascript">
 	function manageSubmit()
 	{ 
+	if (document.getElementById('slider1-val'))
+	{
 		document.getElementById('slider1-valh').value=document.getElementById("slider1-val").innerHTML;
 		document.getElementById('slider2-valh').value=document.getElementById("slider2-val").innerHTML;
 		document.getElementById('slider3-valh').value=document.getElementById("slider3-val").innerHTML;
@@ -682,12 +693,17 @@ PIEDRA:<div id="slider13" class="slider3"></div>
 		document.getElementById('slider1-valh3').value=document.getElementById("slider1-val3").innerHTML;
 		document.getElementById('slider2-valh3').value=document.getElementById("slider2-val3").innerHTML;
 		document.getElementById('slider3-valh3').value=document.getElementById("slider3-val3").innerHTML;
+
+	}
+
 	}
 	function cargaInicial()
 	{ 
+	if (document.getElementById('slider1-val'))
+	{
 		<?php
 		$datosAll = explode('|', htmlentities($bot['PORCENT_PPT']));
-		if (Count($datosAll)<3)
+		if ((Count($datosAll)<3)||($datosAll[0]==',,'))
 		{
 			$datos = array();
 			$datos[]='33';$datos[]='33';$datos[]='33';
@@ -703,10 +719,9 @@ PIEDRA:<div id="slider13" class="slider3"></div>
 			$datos3 = explode(',', $datosAll[2]);
 		}
 		?>
-
-	document.getElementById("slider1-val").innerHTML=<?php echo $datos[0]?>;
-	document.getElementById("slider2-val").innerHTML=<?php echo $datos[1]?>;
-	document.getElementById("slider3-val").innerHTML=<?php echo $datos[2]?>;
+	document.getElementById("slider1-val").innerHTML=<?php echo (($datos[0]=='')?'\'\'':$datos[0])?>;
+	document.getElementById("slider2-val").innerHTML=<?php echo (($datos[1]=='')?'\'\'':$datos[1])?>;
+	document.getElementById("slider3-val").innerHTML=<?php echo (($datos[2]=='')?'\'\'':$datos[2])?>;
 	var allSliders = $(".slider");
     var arr = [<?php echo $datos[0]?>,<?php echo $datos[1]?>,<?php echo $datos[2]?>];
     var ii =0;
@@ -715,9 +730,9 @@ PIEDRA:<div id="slider13" class="slider3"></div>
         ii++;
     });
 
-	document.getElementById("slider1-val2").innerHTML=<?php echo $datos2[0]?>;
-	document.getElementById("slider2-val2").innerHTML=<?php echo $datos2[1]?>;
-	document.getElementById("slider3-val2").innerHTML=<?php echo $datos2[2]?>;
+	document.getElementById("slider1-val2").innerHTML=<?php echo (($datos2[0]=='')?'\'\'':$datos2[0])?>;
+	document.getElementById("slider2-val2").innerHTML=<?php echo (($datos2[1]=='')?'\'\'':$datos2[1])?>;
+	document.getElementById("slider3-val2").innerHTML=<?php echo (($datos2[2]=='')?'\'\'':$datos2[2])?>;
 	var allSliders2 = $(".slider2");
     var arr = [<?php echo $datos2[0]?>,<?php echo $datos2[1]?>,<?php echo $datos2[2]?>];
     var ii =0;
@@ -726,9 +741,9 @@ PIEDRA:<div id="slider13" class="slider3"></div>
         ii++;
     });
 
-	document.getElementById("slider1-val3").innerHTML=<?php echo $datos3[0]?>;
-	document.getElementById("slider2-val3").innerHTML=<?php echo $datos3[1]?>;
-	document.getElementById("slider3-val3").innerHTML=<?php echo $datos3[2]?>;
+	document.getElementById("slider1-val3").innerHTML=<?php echo (($datos3[0]=='')?'\'\'':$datos3[0])?>;
+	document.getElementById("slider2-val3").innerHTML=<?php echo (($datos3[1]=='')?'\'\'':$datos3[1])?>;
+	document.getElementById("slider3-val3").innerHTML=<?php echo (($datos3[2]=='')?'\'\'':$datos3[2])?>;
 	var allSliders3 = $(".slider3");
     var arr = [<?php echo $datos3[0]?>,<?php echo $datos3[1]?>,<?php echo $datos3[2]?>];
     var ii =0;
@@ -738,7 +753,7 @@ PIEDRA:<div id="slider13" class="slider3"></div>
     });
 
 
-
+ }
 	}
 
 

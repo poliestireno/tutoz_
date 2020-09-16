@@ -74,7 +74,7 @@ $vectorOrdenCombos = explode(",", $ordenCombosDB);
   display: inline-flex;
   flex-direction: row;
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 1150px;
   margin: 10px;
   height: 100vh;
 }
@@ -89,8 +89,8 @@ body > * {
 
 .image-thumbnail {
    cursor: all-scroll;
-   width: 179px;
-   height: 250px;
+   width: 225px;
+   height: 315px;
    background-size: cover;
    background-repeat: no-repeat;
    margin: 5px;
@@ -112,8 +112,8 @@ body > * {
 .image-thumbnail-dragging {
    position: absolute;
    cursor: all-scroll;
-   width: 179px;
-   height: 250px;
+   width: 225px;
+   height: 315px;
    background-size: cover;
    background-repeat: no-repeat;
    margin: 5px;
@@ -197,16 +197,16 @@ body > * {
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 </head>
-<body>
+<body onload="init()">
   <form id="form2" method="post" action="profile.php">
     <input type='hidden' name='ordentotal' id='ordentotal'/>
     <input type='hidden' name='creatorstotal' id='creatorstotal'/>
     <input type='hidden' name='ordenreferenciastotal' id='ordenreferenciastotal'/>
 
-<div style="margin: 10px">
+<div class="form-group" style="margin: 10px">
 <a onclick="managebuttonDash()"  class="btn btn-danger btn-outline btn-wrap-text">Volver</a>
 <?php
-echo '<span class="label label-danger">PREMIOS</span>';
+echo '<br/><span class="label label-danger">PREMIOS</span>';
 echo '<span class="label label-primary">PAREJA</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['PAREJA'].'</span>';
 echo '<span class="label label-primary">DOBLE PAREJA</span>';
@@ -219,7 +219,7 @@ echo '<span class="label label-primary">ESCALERA(3)(referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERASIMPLE3'].'</span>';
 echo '<span class="label label-primary">ESCALERA(4)(referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERASIMPLE4'].'</span>';
-echo '<span class="label label-primary">ESCALERA COLOR(3)(referencia)</span>';
+echo '<br/><span class="label label-primary">ESCALERA COLOR(3)(referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA3'].'</span>';
 echo '<span class="label label-primary">ESCALERA COLOR(4)(referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA4'].'</span>';
@@ -387,14 +387,12 @@ foreach ($vectorOrdenado as $cromo)
 
 style="background-image: url('https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities(substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo $cromo['cardtype'];?>&rarity=<?php echo $cromo['rarity'];?>&cardtext=<?php echo $cromo['cardtext'];?>&power=<?php echo $cromo['power'];?>&toughness=<?php echo $cromo['toughness'];?>&artist=<?php echo $cromo['artist'];?>&bottom=<?php echo $cromo['bottom'];?>')"
 
-     onmousemove="move(event)"
-     ontouchmove="move(event)"
+
 
      onmousedown="moveStart(event)"
-     ontouchstart="moveStart(event)"
+
 
      onmouseup="moveEnd()"
-     ontouchend="moveEnd()"
    >
 </div>
 <?php 
@@ -413,14 +411,10 @@ style="background-image: url('https://www.mtgcardmaker.com/mcmaker/createcard.ph
 
 style="background-color: black"
 
-     onmousemove="move(event)"
-     ontouchmove="move(event)"
 
      onmousedown="moveStart(event)"
-     ontouchstart="moveStart(event)"
-
+ 
      onmouseup="moveEnd()"
-     ontouchend="moveEnd()"
    >
 </div>
 <?php 
@@ -492,13 +486,23 @@ $cont = $cont + 1;
    */
   let placingElement;
   let movingElement;
-
+  let placingElement2;
+  let movingElement2;
+  let estado;
+  function init() 
+  {
+      estado=0;
+      //alert(estado);
+  }
   /**
    * move: This callback is invoked when the move starts (touchmove / mousemove)
    * @function move
    * @param { Event } event - Fired event
    */
   function move(event) {
+/*//console.log('move:'+event);
+//console.log('placingElement:'+placingElement);
+//console.log('movingElement:'+movingElement);
      // If there's an moving element
      if(movingElement && placingElement) {
         // grab the location of touch
@@ -508,15 +512,18 @@ $cont = $cont + 1;
         const x = (eventLocation.pageX - (movingElement.offsetWidth / 2)) + 'px';
         const y = (eventLocation.pageY - (movingElement.offsetHeight / 2)) + 'px';
         movingElement.style.transform = `translate(${x}, ${y})`;
-
+        console.log('move x:'+x);
+        console.log('move y:'+y);
         // get the element being hovered (you need a class / localName / id to indentify it)
         const target = document.elementsFromPoint(eventLocation.clientX, eventLocation.clientY).find(element => Array.from(element.classList).includes('image-thumbnail'));
 
         // If there's a target then place the node
         if(target) {
+            console.log('hay target:'+target);
            placeNode(placingElement, target)
         }
      }
+     */
   }
 
   /**
@@ -525,6 +532,19 @@ $cont = $cont + 1;
    * @param { Event } event - Fired event
    */
   function moveStart(event) {
+    var mover = 0;
+    if (estado==0)
+    {
+      estado = 1;
+    }
+    else
+    {
+      mover =1;
+      estado = 0;
+    }
+//console.log('moveStart:'+event);
+    if (estado == 1)
+    {
      // If there's an moving element
      if(!movingElement && !placingElement && Array.from(event.target.classList).includes('image-thumbnail')) {
         // Event Location
@@ -542,7 +562,34 @@ $cont = $cont + 1;
         const y = (eventLocation.pageY - (movingElement.offsetHeight / 2)) + 'px';
         movingElement.style.willChange = 'transform';
         movingElement.style.transform = `translate(${x}, ${y})`;
+        //console.log('x:'+x);
+        //console.log('y:'+y);
      }
+   }
+   else
+   {
+
+    // cogemos y movemos
+     if(!movingElement2 && !placingElement2 && Array.from(event.target.classList).includes('image-thumbnail')) {
+        // Event Location
+        const eventLocation = event.targetTouches && event.targetTouches[0] || event;
+        // Define the global states
+        movingElement2 = event.target.cloneNode();
+        placingElement2 = event.target;
+        // Attach Visual Translate
+        document.body.appendChild(movingElement2);
+
+        // assign box new coordinates based on the touch.
+        movingElement.classList = ['image-thumbnail-dragging'];
+        // assign box new coordinates based on the touch.
+        const x = (eventLocation.pageX - (movingElement2.offsetWidth / 2)) + 'px';
+        const y = (eventLocation.pageY - (movingElement2.offsetHeight / 2)) + 'px';
+        movingElement2.style.willChange = 'transform';
+        movingElement2.style.transform = `translate(${x}, ${y})`;
+        placeNode (placingElement, placingElement2);
+   }
+ }
+
   }
 
   /**
@@ -550,12 +597,23 @@ $cont = $cont + 1;
    * @function moveEnd
    */
   function moveEnd() {
+//console.log('moveEnd:');
+if (estado == 0)
+{
      // Remove Moving element and clean placing element
      if (movingElement) {
         document.body.removeChild(movingElement);
      }
+     if (movingElement2) {
+        document.body.removeChild(movingElement2);
+     }
      movingElement = null;
      placingElement = null;
+     movingElement2 = null;
+     placingElement2 = null;
+     //alert(estado);
+  }
+  
   }
 
   /**
@@ -565,6 +623,7 @@ $cont = $cont + 1;
    * @param { Node } nextNode - Element in reference to place the element (before / after)
    */
   function placeNode (firstNode, nextNode) {
+//console.log('placeNode:firstNode:'+firstNode+' nextNode:'+nextNode);
      if (isBefore(firstNode, nextNode)) {
         nextNode.parentNode.insertBefore(firstNode, nextNode);
      }
@@ -580,6 +639,9 @@ $cont = $cont + 1;
    * @param { Node } nextNode - Element targeted
    */
   function isBefore(firstNode, nextNode) {
+//console.log('isBefore:firstNode:'+firstNode+' nextNode:'+nextNode);
+//console.log('placingElement:'+placingElement);
+//console.log('movingElement:'+movingElement);
      let sibling = firstNode.previousSibling;
      while(sibling) {
         if(sibling === nextNode) {

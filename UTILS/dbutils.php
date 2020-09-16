@@ -28,12 +28,19 @@ function conectarDB()
 
 function mandarNotificacion($db,$remitente,$receptor,$mensaje)
 {
+ try
+  {
 $sqlnoti="insert into notification (notiuser,notireciver,notitype,readit) values (:notiuser,:notireciver,:notitype,0)";
     $querynoti = $db->prepare($sqlnoti);
     $querynoti-> bindParam(':notiuser', $remitente, PDO::PARAM_STR);
     $querynoti-> bindParam(':notireciver',$receptor, PDO::PARAM_STR);
     $querynoti-> bindParam(':notitype', $mensaje, PDO::PARAM_STR);
-    $querynoti->execute();    
+    $querynoti->execute();  
+     }
+  catch (PDOException $ex)
+  {
+      mi_info_log( "Error conectar:".$ex->getMessage());
+  }  
 } 
 
 function hayEstrellasAsigDia($db, $IDAsig, $dia)
@@ -289,6 +296,18 @@ function borrarAlumnoFromId($db,$idAlumno)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! borrarAlumnoFromId".$ex->getMessage());
+  } 
+}
+
+function borrarBonosFromAlumnoId ($db,$idAlumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM BONOS WHERE ID_ALUMNO=".$IDAlumno;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarBonosFromAlumnoId".$ex->getMessage());
   } 
 }
 function borrarCromosNoPoseidosFromIdCreador($db,$idAlumno)
@@ -964,7 +983,7 @@ function utilizaCromosCurso($db,$curso)
     }
   } catch(PDOException $ex) 
   {    
-    mi_info_log( "An Error occured opcionMenuOk ! ".$ex->getMessage());
+    mi_info_log( "An Error occured utilizaCromosCurso ! ".$ex->getMessage());
   } 
   return false;
 
@@ -1846,7 +1865,7 @@ function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,
 
 
     $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."'".$setPersonaje.",POSTURA1=".$postura1.",POSTURA2=".$postura2.",POSTURA3=".$postura3.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",ID_MAPA_INICIO=".$ID_MAPA_INICIO.",POS_X_INICIO=".$POS_X_INICIO.",POS_Y_INICIO=".$POS_Y_INICIO.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
-    //mi_info_log( $sql;
+    //mi_info_log( $sql);
     $stmt = $db->prepare($sql);
     $stmt->execute();
   } catch(PDOException $ex) 

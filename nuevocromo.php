@@ -65,7 +65,7 @@ else{
 
 <body>
 <?php
-var_dump($_SESSION);
+//var_dump($_SESSION);
 $cromo = getSetCromoFromIdCromo($dbh,$_SESSION['idCromo'],$_SESSION['alogin']);
 
 ?>

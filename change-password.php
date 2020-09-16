@@ -35,7 +35,7 @@ $chngpwd1->execute();
 $msg="Contraseña cambiada!";
 }
 else {
-$error="Tu contraseña actual no es correcta ".$password.":".$username;	
+$error="Tu contraseña actual no es correcta ";	
 }
 }
 ?>

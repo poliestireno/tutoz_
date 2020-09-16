@@ -1,7 +1,17 @@
-﻿ <?php 
+ <?php 
  
 //Pongo 15 minutos para que expire la sesión en inactivo.
 $expireAfter = 15;
+
+//var_export($_SESSION);
+
+if ((isset($_SESSION['alogin']))&&($_SESSION['alogin']=='ADMIN'))
+{
+    $expireAfter = 2880;// 2 días en administrador
+}
+
+//  var_export($expireAfter);
+
 
 $fin = false;
 //Check to see if our "last action" session
@@ -29,6 +39,8 @@ if(isset($_SESSION['last_action'])){
 //Assign the current timestamp as the user's
 //latest activity
 $_SESSION['last_action'] = time();
+
+
 
 if (!$fin)
 {

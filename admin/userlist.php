@@ -20,6 +20,7 @@ $name=$_GET['name'];
 
 $alumno = getAlumnoFromID($dbh,$ID);
 borrarCromosNoPoseidosFromIdCreador($dbh,$ID);
+borrarBonosFromAlumnoId($dbh,$ID);
 borrarAlumnoFromId($dbh,$ID);
 borrarBotFromId($dbh,$alumno['ID_MIBOT']);
 borrarActorFromId($dbh,$alumno['ID_MIACTOR']);
@@ -165,6 +166,7 @@ foreach($results as $result)
 <td>
 <a href="dar_calas.php?a=<?php echo $result->ID.'&c='.$result->ID_CURSO;?>" onclick="return confirm('¿Quieres modificar calas?');">&nbsp; <i class="fa fa-usd" style="color:orange"></i></a>&nbsp;&nbsp;
 <a href="dar_bono.php?a=<?php echo $result->ID.'&c='.$result->ID_CURSO;?>" onclick="return confirm('¿Quieres dar bono?');">&nbsp; <i class="fa fa-star"></i></a>&nbsp;&nbsp;
+<a href="enviar_notificacion.php?a=<?php echo $result->ID.'&c='.$result->ID_CURSO;?>" onclick="return confirm('¿Quieres enviar notificación?');">&nbsp; <i class="fa fa-envelope"></i></a>&nbsp;&nbsp;
 <a href="edit-user.php?edit=<?php echo $result->ID;?>" onclick="return confirm('¿Quieres editar?');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 <a href="userlist.php?del=<?php echo $result->ID;?>&name=<?php echo htmlentities($result->CORREO);?>" onclick="return confirm('¿Quieres borrarlo?');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>

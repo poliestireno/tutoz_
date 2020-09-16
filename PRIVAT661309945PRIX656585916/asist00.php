@@ -341,14 +341,7 @@ function setSesiones()
   <div class="form-group">
   <a onclick="managebutton()"  class="btn btn-danger btn-outline btn-wrap-text">Go!</a>
   </div>
-  </form>
-
-
-
-
-
-
-  <span class="label label-danger">NÚMERO ALUMNOS</span><br/>
+ <span class="label label-danger">NÚMERO ALUMNOS</span><br/>
   <span class="label label-primary">TOTAL</span>
   <span class="label label-warning"><?php echo getNumeroTotalAlumnos($db);?></span><br/>
   <?php  foreach ($listaCursos as $curso)
@@ -398,7 +391,14 @@ function setSesiones()
   
   
   ?>
-  
+  </form>
+
+
+
+
+
+
+   
 
 <br/><a onclick="managebuttonDash()"  class="btn btn-danger btn-outline btn-wrap-text">Dashboard</a><br/>
 </body>
