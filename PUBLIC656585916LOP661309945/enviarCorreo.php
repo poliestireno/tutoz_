@@ -13,7 +13,7 @@ if ($_POST["nuevoCorreo"]=="1")
 $message = $_POST["alumnoSel"].",".$_POST["sel11"].",".$_POST["nSesiones"].",".$_POST["datepicker"];
 $codigoEncriptado = openssl_encrypt ($message,"AES-128-ECB","kgYYBOihH8/(ggG/)gKGB8/biLJLDJOIUD/(%&/UG(DF(/F%&(IGDF%(F)HFG=FD:_V:F_VBLVP?F=F)FKIF)))");
 $message = "Pulsa en el siguiente enlace para terminar el proceso de asistencia online\n
-https://magicomagico.com/SalleZ/PUBLIC656585916LOP661309945/gaok.php?cod=".urlencode($codigoEncriptado);
+https://magicomagico.com/TutoZ/PUBLIC656585916LOP661309945/gaok.php?cod=".urlencode($codigoEncriptado);
 //echo $message;
 $posGuion = strrpos($_POST["sel11"], "--");
 $clase=substr($_POST["sel11"],0,$posGuion);

@@ -5,7 +5,7 @@ $config = array('debug' => true , 'app_dir'=> "../", 'error_page'=>'error500.htm
 
 
 // Un fichero log por mes
-ini_set('error_log', $_SERVER['DOCUMENT_ROOT'].'/SalleZ/logs/php_log_' .date('Y-m') .'.log');
+ini_set('error_log', $_SERVER['DOCUMENT_ROOT'].'/TutoZ/logs/php_log_' .date('Y-m') .'.log');
 
 //echo ini_get('error_log');
 

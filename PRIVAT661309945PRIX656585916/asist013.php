@@ -26,7 +26,7 @@ if  (isset($_POST['a13']))
   $idAs=substr($_POST["sel11"],$posGuion+2,strlen($_POST["sel11"]));
   $textoCodigo= "Código generado para ".$clase. ", número sesiones ".$_POST["ssesiones"]." y día ".$_POST["datepicker"];
   $codigoEncriptado = openssl_encrypt ($_POST["sel11"].",".$_POST["ssesiones"].",".$_POST["datepicker"],"AES-128-ECB","kgYYBOihH8/(ggG/)gKGB8/biLJLDJOIUD/(%&/UG(DF(/F%&(IGDF%(F)HFG=FD:_V:F_VBLVP?F=F)FKIF)))");
-  $codigoEncriptadoUrl="https://magicomagico.com/SalleZ/PUBLIC656585916LOP661309945/parrillaOnline.php?cod=".urlencode($codigoEncriptado);
+  $codigoEncriptadoUrl="https://magicomagico.com/TutoZ/PUBLIC656585916LOP661309945/parrillaOnline.php?cod=".urlencode($codigoEncriptado);
   borrarFaltasAsignaturaDiaYFantasma($db,$idAs,$_POST["datepicker"]);
   insertarFalta($db,-1,$idAs,$_POST["ssesiones"],$_POST["datepicker"]);
   insertMasivoFaltasAsigDia($db,$_POST["ssesiones"],$idAs, $_POST["datepicker"],$grado,$nivel);  

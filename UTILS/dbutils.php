@@ -303,7 +303,7 @@ function borrarBonosFromAlumnoId ($db,$idAlumno)
 {
  try 
   {
-   $sql = "DELETE FROM BONOS WHERE ID_ALUMNO=".$IDAlumno;
+   $sql = "DELETE FROM BONOS WHERE ID_ALUMNO=".$idAlumno;
    $db->exec($sql);
   } catch(PDOException $ex) 
   {    
