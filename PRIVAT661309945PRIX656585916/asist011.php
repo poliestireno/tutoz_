@@ -19,6 +19,7 @@ $db=conectarDB();
 
 $tiposBotones = array( "btn btn-primary", "btn btn-success", "btn btn-warning", "btn btn-info");
 $alumnos1 = array();
+
 if (isset($_POST['alumnoSel']) && ($_POST['alumnoSel']==-1))
 {
   if ($_SESSION['contador']>1)
@@ -239,6 +240,7 @@ else
           var nombrePos = h.getItem(result.text);
           var nombrePos2 = h2.getItem(result.text);
           if(typeof nombrePos !== "undefined") {
+            console.log(nombrePos);
             var pos = nombrePos.substr(nombrePos.indexOf('--')+2);
             var nombre =nombrePos.substr(0,nombrePos.indexOf('--'));
             var elegg = false;
@@ -302,6 +304,7 @@ else
           if (videoInputDevices.length > 1) {
             selectedDeviceId = videoInputDevices[0].deviceId        
           }
+            sleep(3000);
             //alert("elegido:"+selectedDeviceId);
             decodeContinuously(codeReader, selectedDeviceId);
             console.log(`Started decode from camera with id ${selectedDeviceId}`)
@@ -515,7 +518,7 @@ function managebuttonInsert2()
   }
   });
 } 
-       
+var aTextosDichos= [];  
 function managebutton(texto,alSel,elegido,tam_alumnos)
 {
   var liHide = document.querySelectorAll("[id^=aa_]");
@@ -574,11 +577,16 @@ function textToSpeech() {
     }
 	}
 	// speak
-	window.speechSynthesis.speak(utter); 
+if (aTextosDichos.indexOf(utter.text) == -1)
+  {
+    window.speechSynthesis.speak(utter); 
+    aTextosDichos.push(utter.text);   
+  }
 }
 }
 function piar(texto)
 {
+
   // list of languages is probably not loaded, wait for it
   if(window.speechSynthesis.getVoices().length == 0) {
 	  window.speechSynthesis.addEventListener('voiceschanged', function() {
@@ -616,8 +624,11 @@ function textToSpeech() {
 		//alert('Speech has finished');
     
 	}
-	// speak
-	window.speechSynthesis.speak(utter); 
+if (aTextosDichos.indexOf(utter.text) == -1)
+  {
+    window.speechSynthesis.speak(utter); 
+    aTextosDichos.push(utter.text);   
+  }
 }
    }
   </script>

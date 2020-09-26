@@ -83,12 +83,22 @@ $_SESSION['contador']=$_SESSION['contador']-1;
   $text = "";
   $listaElegidos="";
   $comma="";
+  //var_export($_SESSION);
     foreach($_SESSION['vAlumnos2'] as $alumno)
     {
+      
       if (in_array($cont, $_SESSION['vElegidos'])){
         $pos = strrpos($alumno, "--");
         $idAlumno= substr($alumno,$pos+2);
-        insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena (".$dia.")");
+ 
+        $confAsig = getConfAsignaturaFromID($db,getAsignaturasFromCurso($db,getAlumnoFromId($db,$idAlumno)['ID_CURSO'])[0]['ID_CONF_ASIGNATURAS'])['NOMBRE'];
+        //echo('confAsig:'.$confAsig);
+        //mi_info_log('confAsig:'.$confAsig);
+
+        if ($confAsig!='MENU_SIMPLON')
+        {
+          insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena (".$dia.")");
+        }
         $listaElegidos.=$comma .  $idAlumno;
         $comma=",";
         $nombreAlum=substr($alumno,0,$pos);

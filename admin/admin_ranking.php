@@ -254,7 +254,11 @@ foreach ($aTotalAlumnos as $alum)
         echo '<td>'.$alum['Nombre'].'</td>';
         echo '<td>'.$alum['NivelSinSiguiente'].'</td>';
         echo '<td>'.$alum['Total'].'</td>';
+
+if (Count($aToConcursos)>0)
+{
         echo '<td>'.$alum['Concursos'].'</td>';
+}       
         echo '<td>'.$alum['Retos'].'</td>';
         echo '<td>'.$alum['Comportamiento'].'</td>';
         echo '<td>'.$alum['Cromos'].'</td>';

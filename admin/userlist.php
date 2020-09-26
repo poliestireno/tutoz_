@@ -22,8 +22,15 @@ $alumno = getAlumnoFromID($dbh,$ID);
 borrarCromosNoPoseidosFromIdCreador($dbh,$ID);
 borrarBonosFromAlumnoId($dbh,$ID);
 borrarAlumnoFromId($dbh,$ID);
-borrarBotFromId($dbh,$alumno['ID_MIBOT']);
-borrarActorFromId($dbh,$alumno['ID_MIACTOR']);
+if (($alumno['ID_MIBOT']!=NULL)&&($alumno['ID_MIBOT']!=""))
+{
+	borrarBotFromId($dbh,$alumno['ID_MIBOT']);	
+}
+
+if (($alumno['ID_MIACTOR']!=NULL)&&($alumno['ID_MIACTOR']!=""))
+{
+	borrarActorFromId($dbh,$alumno['ID_MIACTOR']);
+}
 borrarFaltasAlumno($dbh,$ID);
 borrarEstrellasAlumno($dbh,$ID);
 borrarAlumnoTarea($dbh,$ID);
