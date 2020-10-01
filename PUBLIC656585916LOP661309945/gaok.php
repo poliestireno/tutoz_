@@ -53,7 +53,12 @@ if ($decrypted)
     {
       $sEsPrimero=",";
     }
-    insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena (".$datepicker.")");
+    $confAsig = getConfAsignaturaFromID($db,getAsignaturasFromCurso($db,getAlumnoFromId($db,$idAlumno)['ID_CURSO'])[0]['ID_CONF_ASIGNATURAS'])['NOMBRE'];
+
+    if ($confAsig!='MENU_SIMPLON')
+    {    
+      insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena (".$datepicker.")");
+    }
     $lElegidos=$lElegidos.$sEsPrimero.$idAlumno;
     insertarElegidosEnFantasma($db,$idAsignatura,$datepicker,$lElegidos);
   }

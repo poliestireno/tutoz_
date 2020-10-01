@@ -304,7 +304,7 @@ else
           if (videoInputDevices.length > 1) {
             selectedDeviceId = videoInputDevices[0].deviceId        
           }
-            sleep(3000);
+            sleep(2000);
             //alert("elegido:"+selectedDeviceId);
             decodeContinuously(codeReader, selectedDeviceId);
             console.log(`Started decode from camera with id ${selectedDeviceId}`)
