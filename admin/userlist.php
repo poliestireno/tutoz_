@@ -129,6 +129,7 @@ $msg="Datos borrados correctamente";
                                                 <th>Nombre</th>
                                                 <th>Apellido1</th>
                                                 <th>Apellido2</th>
+                                                <th>ID</th>
                                                 <th>Curso</th>
                                                 <th>Nivel</th>
                                                 <th>Calas</th>
@@ -158,13 +159,15 @@ foreach($results as $result)
 
 	?>	
 										<tr>
+
 											<td><?php echo htmlentities($cnt);?></td>
 											<td><img src="../images/<?php echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>
+                                            
                                             <td><?php echo htmlentities($result->NOMBRE);?></td>
                                              <td><?php echo htmlentities($result->APELLIDO1);?></td>
                                             <td><?php echo htmlentities($result->APELLIDO2);?> 
                                             </td>
-                                            
+                                            <td><?php echo htmlentities($result->ID);?></td>
  <td><a  data-toggle="tooltip" title="Ver Ranking en otra ventana" href="admin_ranking.php?idc=<?php echo $result->ID_CURSO?>" target=”_blank”><?php echo htmlentities(getNombreCursoFromID($dbh,$result->ID_CURSO));?></a></td>
  <td><?php echo htmlentities($result->NUMERO_NIVEL);?></td>
  <td><?php echo htmlentities(getMiActorFromAlumnoID($dbh,$result->ID)['CALAS']);?></td>
