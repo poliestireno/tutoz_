@@ -606,6 +606,23 @@ function getAlumnosGradoNivel($db,$grado,$nivel)
   }
     return $vectorTotal;
 }
+function getConfGenerales($db)
+{
+  $vectorTotal = array();
+  try
+  {     
+    $stmt = $db->query("SELECT * FROM CONF_GENERALES");   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getConfGenerales:".$ex->getMessage());
+  }
+    return $vectorTotal;
+}
 function getCromosDeAlbum($db,$correo)
 {
   $vectorTotal = array();
@@ -1632,6 +1649,19 @@ function modificarFechaUltimoLoginAlumno($db,$correo,$tsmp)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarFechaUltimoLoginAlumno ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarConfGeneral($db,$clave,$valor)
+{
+  try 
+  {
+    $sql = "UPDATE CONF_GENERALES SET VALOR='".$valor."' WHERE CLAVE='".$clave."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarConfGeneral ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }

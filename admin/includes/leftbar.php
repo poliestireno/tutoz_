@@ -18,6 +18,8 @@
 			</li>
 			<li><a href="admin_niveles.php"><i class="fa fa-envelope"></i> &nbsp;Niveles</a>
 			</li>
+			<li><a href="conf_generales.php"><i class="fa fa-envelope"></i> &nbsp;Conf generales</a>
+			</li>
 			<li><a href="feedback.php"><i class="fa fa-envelope"></i> &nbsp;Feedback</a>
 			</li>
 			<li><a href="notification.php"><i class="fa fa-bell"></i> &nbsp;Notificaciones <sup style="color:red">*</sup></a>

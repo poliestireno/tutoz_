@@ -68,7 +68,9 @@ echo "<script type='text/javascript'> document.location = 'profile.php'; </scrip
 									<button class="btn btn-primary btn-block" name="login" type="submit">LOGIN</button>
 								</form>
 								<br>
+		<?php if (getConfGeneral($dbh, "ABIERTO_REGISTRO")==1){?>
 								<p>¿No tienes cuenta? <a href="register.php" >Registrate</a></p>
+		<?php }?>
 							</div>
 						</div>
 					</div>
