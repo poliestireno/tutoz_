@@ -92,8 +92,6 @@ $_SESSION['contador']=$_SESSION['contador']-1;
         $idAlumno= substr($alumno,$pos+2);
  
         $confAsig = getConfAsignaturaFromID($db,getAsignaturasFromCurso($db,getAlumnoFromId($db,$idAlumno)['ID_CURSO'])[0]['ID_CONF_ASIGNATURAS'])['NOMBRE'];
-        //echo('confAsig:'.$confAsig);
-        //mi_info_log('confAsig:'.$confAsig);
 
         if ($confAsig!='MENU_SIMPLON')
         {

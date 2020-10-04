@@ -110,7 +110,7 @@ $aCromosAlbum= explode(',', $ordenAlbumDB);
   //echo Count($aCreators);
 if (Count($aCreators)>1)
 {
-  for ($i=0; $i < (Count($aCreators)/4); $i++) 
+  for ($i=0; $i < getAdminCromos($dbh)['NUM_SLOTS']; $i++) 
   { 
     $estreAux=0;
     $aAux = array();
@@ -145,7 +145,7 @@ $aAuxCromos[]=($aCromosAlbum[(3)+$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[(3
     {
       $filaI = $_POST['selfila_'.($i+1)];
     }
-    if ($filaI==NULL)
+    if (($filaI==NULL)&& (Count($vectorOrdenCombosAnt)>$i))
     {
       $filaI = $vectorOrdenCombosAnt[$i];
     }

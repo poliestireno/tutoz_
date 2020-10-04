@@ -461,16 +461,23 @@ $cont = $cont + 1;
       ordenreferenciastotal="";
       creatorsTotal="";
      // estrellasCromosTotal=0;
+      numSlots = <?php echo $numSelect?>;
+      contCromos = numSlots * 4;
       $('[id^=kko]').each(function() 
       {
+        if (contCromos>0)
+        {
         //alert(this.dataset.creador+","+this.dataset.estrellas+","+this.dataset.orden+","+this.dataset.idcromo);
         ordenTotal+=comma+this.dataset.idcromo;
         ordenreferenciastotal+=comma+this.dataset.orden;
         creatorsTotal+=comma+this.dataset.creador;
        // estrellasCromosTotal+=(this.dataset.estrellas==-1)?0:parseInt(this.dataset.estrellas);
         comma=",";
+        contCromos=contCromos-1;
+        //console.log('c:'+contCromos); 
+        }
       });
-     // alert(estrellasCromosTotal);
+      //alert();
       document.getElementById("creatorstotal").value=creatorsTotal;
       document.getElementById("ordentotal").value=ordenTotal;
       document.getElementById("ordenreferenciastotal").value=ordenreferenciastotal;

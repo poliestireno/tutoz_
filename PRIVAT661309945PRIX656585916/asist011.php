@@ -304,7 +304,7 @@ else
           if (videoInputDevices.length > 1) {
             selectedDeviceId = videoInputDevices[0].deviceId        
           }
-            sleep(2000);
+            sleep(1000);
             //alert("elegido:"+selectedDeviceId);
             decodeContinuously(codeReader, selectedDeviceId);
             console.log(`Started decode from camera with id ${selectedDeviceId}`)
@@ -458,7 +458,12 @@ function sleep(milliseconds) {
     
     
     
-      function managebuttonInsert() 
+function playTambores() 
+{
+  var audio = new Audio('jumanji.mp3');
+  audio.play();
+}      
+function managebuttonInsert() 
 {      
        const { value: formValues } =  Swal.fire({
   title: '¿Insertar <?php echo count($_SESSION['vAlumnos'])?> falta<?php echo (count($_SESSION['vAlumnos'])>1)?"s":""?>?',
@@ -713,6 +718,7 @@ for($i = 0; $i < $arrlength+2; $i++)
     $posAs= strrpos($nombre,"*");
     $clase = substr($nombre,$posAs+1,strlen($nombre));
     echo '<a id="bb_'.$i.'" btn-outline btn-wrap-text style="font-size: 20px; height: 20px" onclick="managebuttonInsert()" class="btn btn-dark"> '.substr($_SESSION["dia"],5,strlen($_SESSION["dia"])).",".$_SESSION["nSesiones"].",".$clase.' </a>';      
+    echo '<a id="bb_'.($i+1).'" btn-outline btn-wrap-text style="font-size: 20px; height: 20px" onclick="playTambores()" class="btn btn-warning">Jumanji</a>';      
   }
   else
   {
