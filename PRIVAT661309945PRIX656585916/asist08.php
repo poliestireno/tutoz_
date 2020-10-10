@@ -90,6 +90,11 @@ if (!hayEstrellasAsigDia($db, $_SESSION["idAsignatura"], $_SESSION["dia"]))
     foreach ($listaAlumnos as $alumno)
     {
       $auxLista[] = $alumno['NOMBRE']." ". $alumno['APELLIDO1']."--".$alumno['ID'];
+      if (getFaltasFromAlumnoDiaAsignatura($db, $alumno['ID'], $_SESSION["dia"], $_SESSION["idAsignatura"])>0)
+      {
+        $numEstrellasSiFalta = getConfGeneral($db, "NUMERO_ESTRELLAS_SI_FALTA");
+modificarEstrella($db,$alumno['ID'],$_SESSION["idAsignatura"],$numEstrellasSiFalta,$_SESSION["dia"]);        
+      }
     }
     $_SESSION['vAlumnos'] = $auxLista ;
     sort($_SESSION['vAlumnos']);

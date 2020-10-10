@@ -298,6 +298,104 @@ if (Count($aToConcursos)>0)
 </table>
 
 
+
+<h3>Concursos</h3>
+<table class="table table-striped w-auto table-bordered">
+
+  <!--Table head-->
+  <thead>
+    <tr>
+      <th>Reto</th>
+      <th>Máximo estrellas</th>
+      <th>Fecha límite</th>
+      <th>Descripción</th>
+      <th>Documento</th>
+    </tr>
+  </thead>
+  <!--Table head-->
+
+  <!--Table body-->
+  <tbody>
+    <?php
+
+$aToRetos = getTareasTotalesFromCurso($dbh,$idCur);
+//var_dump($aToRetos);
+foreach ($aToRetos as $reto) 
+{
+    if ($reto['EXAMEN']==1)
+    {
+      echo '<tr class="table-info">';
+      ?>
+      <td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="admin_detalle_reto.php?idr=<?php echo $reto['ID']?>" target=”_blank”><?php echo $reto['NOMBRE'];?></a></td>
+       <?php
+        echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
+        echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
+        echo '<td>'.$reto['DESCRIPCION'].'</td>';
+        echo '<td>'.(($reto['LINK_DOCUMENTO']==NULL)?'-':$reto['LINK_DOCUMENTO']).'</td>';
+      echo '</tr>';
+    }
+}
+
+   ?>
+    
+  </tbody>
+  <!--Table body-->
+
+
+</table>
+<h3>Retos</h3>
+<table class="table table-striped w-auto table-bordered">
+
+  <!--Table head-->
+  <thead>
+    <tr>
+      <th>Reto</th>
+      <th>Máximo estrellas</th>
+      <th>Fecha límite</th>
+      <th>Descripción</th>
+      <th>Documento</th>
+    </tr>
+  </thead>
+  <!--Table head-->
+
+  <!--Table body-->
+  <tbody>
+    <?php
+//var_dump($aToRetos);
+foreach ($aToRetos as $reto) 
+{
+    if ($reto['EXAMEN']!=1)
+    {
+      echo '<tr class="table-info">';
+
+?>
+<td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="admin_detalle_reto.php?idr=<?php echo $reto['ID']?>" target=”_blank”><?php echo $reto['NOMBRE'];?></a></td>
+<?php
+        echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
+        echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
+        echo '<td>'.$reto['DESCRIPCION'].'</td>';
+        echo '<td>'.(($reto['LINK_DOCUMENTO']==NULL)?'-':$reto['LINK_DOCUMENTO']).'</td>';
+      echo '</tr>';
+    }
+}
+
+   ?>
+    
+  </tbody>
+  <!--Table body-->
+
+
+</table>
+
+
+
+
+
+
+
+
+
+
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>

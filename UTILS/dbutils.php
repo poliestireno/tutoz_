@@ -440,6 +440,19 @@ catch (PDOException $ex)
 }  
 }
 
+function getAlumnosFromAsignaturaID($db,$IDAsignatura){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM ALUMNOS WHERE ID_CURSO=(SELECT ID_CURSO FROM ASIGNATURAS WHERE ID=".$IDAsignatura.")");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getAlumnosFromAsignaturaID:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
 
 function getAlumnosFaltones($db){
   $vectorTotal = array();
@@ -454,10 +467,11 @@ function getAlumnosFaltones($db){
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     mi_info_log( "Error inserción alumno:".$ex->getMessage());
+     mi_info_log( "Error getAlumnosFaltones:".$ex->getMessage());
   }
   return $vectorTotal;
 }
+
 function getAlumnosInforme($db,$IDAsignatura){
   $vectorTotal = array();
   try{
@@ -1207,6 +1221,27 @@ function getTareasFromAlumno($db,$correo)
 }
 
 
+function getTareasTotalesFromCurso($db,$idCurso)
+{
+  $asignaturas = getAsignaturasFromCurso($db,$idCurso);
+  $vectorTotal = array();
+  try
+  {
+  foreach ($asignaturas as $asig) {
+    $stmt = $db->query("SELECT * FROM TAREAS WHERE ID_ASIGNATURA = ".$asig['ID']);
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }    
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getTareasTotalesFromCurso:".$ex->getMessage());
+  }
+  return $vectorTotal;  
+}
 function getTareasTotalesFromAlumno($db,$correo,$examen)
 {
   $alumno = getAlumnoFromCorreo($db,$correo);
@@ -1221,8 +1256,7 @@ function getTareasTotalesFromAlumno($db,$correo,$examen)
     {
       $vectorTotal [] = $fila;
     }
-  }
-     
+  }    
   }
   catch (PDOException $ex)
   {
@@ -1423,6 +1457,7 @@ function getNumeroAlumnosFromAsignaturaID($db,$IDAsignatura){
   } 
   return $fila['TOTAL'];
 }
+
 
 
 
