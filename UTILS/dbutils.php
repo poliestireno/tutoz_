@@ -453,6 +453,20 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   }
   return $vectorTotal;
 }
+function getFantasmasFromAsignaturaID($db,$IDAsignatura){
+  $vectorTotal = array();
+
+  try{
+    $stmt = $db->query("SELECT * FROM FALTAS WHERE ID_ASIGNATURA=".$IDAsignatura." AND ID_ALUMNO=-1 ORDER BY DIA DESC");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getFantasmasFromAsignaturaID:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
 
 
 function getPreguntasTotal($db){

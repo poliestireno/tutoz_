@@ -181,6 +181,68 @@ else{
     }
   }
   ?>
+  <span class="label label-danger">INFORME ELEGIDOS</span>
+  <br/><br/>
+ 
+  <?php 
+  $arrayFantamas = getFantasmasFromAsignaturaID($db,$idAsignatura);
+  $arrayTotalElegidos = array();
+  
+  foreach ($arrayFantamas as $fantasma) 
+  {    
+    echo '<p><span class="label label-warning">'.$fantasma['DIA'].'</span>';
+    $vectorElegidos = explode(",", $fantasma['ELEGIDOS']);
+    if ($vectorElegidos[0]!='')
+    {
+      $cont2=1;
+      for ($i=0; (($i < Count($vectorElegidos))&&($i<3)); $i++) 
+      { 
+        if (!array_key_exists($vectorElegidos[$i], $arrayTotalElegidos)) 
+        {
+          $arrayTotalElegidos[$vectorElegidos[$i]]=0;
+        }
+        $arrayTotalElegidos[$vectorElegidos[$i]]=$arrayTotalElegidos[$vectorElegidos[$i]]+1;
+        $alumno = getAlumnoFromID($db,$vectorElegidos[$i]);
+        //var_export($alumno);
+      echo '<span class="label label-primary">'.$cont2.' '.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].'</span>';
+      $cont2=$cont2+1;
+      }
+    }
+  echo '</p>';
+  }
+  
+  $groups = array();
+  foreach ($arrayTotalElegidos as $k => $v) {
+    $groups[$v][] = $k;
+  }
+  krsort($groups);
+  $sorted = array();
+  foreach ($groups as $value => $group) {
+    foreach ($group as $key) {
+        $sorted[$key] = $value;
+    }
+  }
+  echo '<br/><p><span class="label label-danger">RANKING ELEGIDOS</span>
+  </p>';
+  $cont=1;
+  $contIAnt=0;
+  foreach ($sorted as $alumId => $contI ) 
+  {
+    if ($contIAnt>$contI)
+    {
+      $cont=$cont+1;     
+    }
+    $contIAnt=$contI;
+    $alumno = getAlumnoFromID($db,$alumId);
+    echo '<p><span class="label label-primary">'.$cont.' '.$alumno["NOMBRE"].' '.$alumno["APELLIDO1"].'</span>';
+    echo '<span class="label label-success">'.$contI.'</span></p>';
+  }
+
+
+
+
+
+  ?>
   </form>
 </body>
 </html>
