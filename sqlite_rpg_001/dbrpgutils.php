@@ -13,6 +13,9 @@ switch ($funcion) {
 	case 'getCompaneros':
 		echo getCompaneros();
 		break;
+	case 'getPregunta':
+		echo getPregunta();
+		break;
 	case 'getIDCompaneros':
 		echo getIDCompanerosMasPersonajes();
 		break;
@@ -61,6 +64,23 @@ switch ($funcion) {
 
 }
 
+function getPregunta()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+	$idCurso = getAlumnoFromCorreo($dbh,$correo)['ID_CURSO'];
+	$idAsignatura = getAsignaturasFromCurso($dbh,$idCurso)[0]['ID'];
+	$aPreguntas = getPreguntasFromAsignaturaID($dbh,$idAsignatura);
+	if (Count($aPreguntas)==0)
+	{
+		$aPreguntas = getPreguntasTotal($dbh);
+	}
+	$randomPre = rand(0,Count($aPreguntas)-1);
+
+	$result = json_encode($aPreguntas[$randomPre]);
+	return $result;
+}
 function getCompaneros()
 {
 	global $dbh;

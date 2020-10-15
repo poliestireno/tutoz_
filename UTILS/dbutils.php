@@ -454,6 +454,34 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   return $vectorTotal;
 }
 
+
+function getPreguntasTotal($db){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM PREGUNTAS");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getPreguntasTotal  :".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getPreguntasFromAsignaturaID($db,$IDAsignatura){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM PREGUNTAS WHERE ID_ASIGNATURA=".$IDAsignatura);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getPreguntasFromAsignaturaID:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+
 function getAlumnosFaltones($db){
   $vectorTotal = array();
   try{

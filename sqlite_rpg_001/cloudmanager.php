@@ -245,6 +245,10 @@ if($query->rowCount() == 0)
 {
 	$array['gameMode'] = -2; // usuario no permitido
 }
+if (!opcionMenuOk($dbh,$userName,"Jugar"))
+{
+	$array['gameMode'] = -2; // usuario no permitido
+}
 
 // FIN COMPRUEBA EN DBMYSQL DE LOS CROMOS SI EXISTE EL USUARIO Y PASS
 

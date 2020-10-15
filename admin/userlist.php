@@ -133,6 +133,7 @@ $msg="Datos borrados correctamente";
                                                 <th>Curso</th>
                                                 <th>Nivel</th>
                                                 <th>Calas</th>
+                                                <th>nº cromos</th>
                                                 <th>Correo</th>
                                                 <th>Último login</th>
 												<th>Acción</th>	
@@ -171,6 +172,8 @@ foreach($results as $result)
  <td><a  data-toggle="tooltip" title="Ver Ranking en otra ventana" href="admin_ranking.php?idc=<?php echo $result->ID_CURSO?>" target=”_blank”><?php echo htmlentities(getNombreCursoFromID($dbh,$result->ID_CURSO));?></a></td>
  <td><?php echo htmlentities($result->NUMERO_NIVEL);?></td>
  <td><?php echo htmlentities(getMiActorFromAlumnoID($dbh,$result->ID)['CALAS']);?></td>
+ <td><?php echo Count(getCromosDeAlbum($dbh,$result->CORREO));?></td>
+ 
  <td><?php echo htmlentities($result->CORREO);?></td>
  <td><?php echo htmlentities($result->ULTIMA_FECHA_LOGIN);?></td>
 <td>
