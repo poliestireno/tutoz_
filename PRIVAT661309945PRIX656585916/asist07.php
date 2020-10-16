@@ -235,7 +235,12 @@ else{
     $contIAnt=$contI;
     $alumno = getAlumnoFromID($db,$alumId);
     echo '<p><span class="label label-primary">'.$cont.' '.$alumno["NOMBRE"].' '.$alumno["APELLIDO1"].'</span>';
-    echo '<span class="label label-success">'.$contI.'</span></p>';
+    echo '<span class="label label-success">'.$contI.'</span>';
+    if (Count($arrayFantamas)>0)
+    {
+      echo '<span class="label label-warning">'.number_format(($contI*100)/Count($arrayFantamas),2).'%</span>';
+    }
+    echo '</p>';
   }
 
 
