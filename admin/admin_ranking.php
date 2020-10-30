@@ -251,7 +251,12 @@ foreach ($aTotalAlumnos as $alum)
  {
       echo '<tr class="table-info">';
         echo '<th scope="row">'.$contador.'</th>';
-        echo '<td>'.$alum['Nombre'].'</td>';
+
+
+
+
+
+        echo '<td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="../ranking.php?l='. $alum['CORREO'].'" target=”_blank”>'.$alum['Nombre'].'</a></td>';
         echo '<td>'.$alum['NivelSinSiguiente'].'</td>';
         echo '<td>'.$alum['Total'].'</td>';
 

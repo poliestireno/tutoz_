@@ -8,8 +8,13 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 header('location:index.php');
 }
 else{
+$loginAux = $_SESSION['alogin'];
+if (isset($_GET['l']))
+{
+	$loginAux =$_GET['l'];
+}
 
-$confAsig = getConfAsignaturaFromID($dbh,getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID_CURSO'])[0]['ID_CONF_ASIGNATURAS'])['NOMBRE'];
+$confAsig = getConfAsignaturaFromID($dbh,getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['ID_CONF_ASIGNATURAS'])['NOMBRE'];
 //echo $confAsig;
 	
 if(isset($_POST['submit']))
@@ -98,14 +103,55 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-	
+if (isset($_GET['l']))
+{
+	$cromo = getCromo($dbh,$_GET['l']);
+function url(){
+  return sprintf(
+    "%s://%s%s",
+    isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+    $_SERVER['SERVER_NAME'],
+    $_SERVER['REQUEST_URI']
+  );
+}
+
 ?>
-	<?php include('includes/header.php');?>
+<div class="form-group">
+	<div class="col-sm-3">
+	</div>
+<div class="col-sm-3 text-center">
+		<img src="https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities(substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo $cromo['cardtype'];?>&rarity=<?php echo $cromo['rarity'];?>&cardtext=<?php echo $cromo['cardtext'];?>&power=&toughness=<?php echo $cromo['toughness'];?>&artist=<?php echo $cromo['artist'];?>&bottom=<?php echo $cromo['bottom'];?>" style="width:250px; border-radius:5%; margin:10px;">
+	</div>
+	<div class="col-sm-3">
+	</div>
+</div>
+
+<?php
+}
+?>
+	<?php if (!isset($_GET['l'])) include('includes/header.php');?>
 	<div class="ts-main-content">
-	<?php include('includes/leftbar.php');?>
+	<?php if (!isset($_GET['l'])) include('includes/leftbar.php');?>
+
 		<div class="content-wrapper">
+<?php
+if (!isset($_GET['l']))
+{
+?>
 <h3>Ranking de mi clase (<?php 
-	echo getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID_CURSO'])[0]['NOMBRE']?>)</h3>
+	echo getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['NOMBRE']?>)</h3>
+<?php
+}
+else
+{
+	?>
+	<h3><?php 
+	$alu =  getAlumnoFromCorreo($dbh,$loginAux);
+	echo $alu['NOMBRE']." ".$alu['APELLIDO1']." ".$alu['APELLIDO2']?></h3>
+<?php
+}
+?>
+
 <!--Table-->
 <table class="table table-striped w-auto table-bordered">
 
@@ -119,7 +165,7 @@ if(isset($_POST['submit']))
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
 
-$aToConcursos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],1);
+$aToConcursos = getTareasTotalesFromAlumno($dbh,$loginAux,1);
 
 if (Count($aToConcursos)>0)
 {
@@ -137,7 +183,7 @@ else if ($confAsig!='MENU_BASICA')
       <th>Nivel</th>
       <?php
 
-$aToConcursos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],1);
+$aToConcursos = getTareasTotalesFromAlumno($dbh,$loginAux,1);
 
 if (Count($aToConcursos)>0)
 {
@@ -163,7 +209,7 @@ if (Count($aToConcursos)>0)
   <!--Table body-->
   <tbody>
   	<?php
-  	 $aAlumnosCurso = getAlumnosCompanerosCursoFromCorreo($dbh,$_SESSION['alogin']);
+  	 $aAlumnosCurso = getAlumnosCompanerosCursoFromCorreo($dbh,$loginAux);
   	 //var_dump($aAlumnosCurso);
 
   	 $aTotalAlumnos = array();
@@ -249,7 +295,7 @@ usort($aTotalAlumnos, "cmp");
   	 $contador=1;
 foreach ($aTotalAlumnos as $alum) 
  {	
-		if ($_SESSION['alogin']==$alum['CORREO'])
+		if ($loginAux==$alum['CORREO'])
 		{
 			echo '<tr>
       <th></th>
@@ -273,34 +319,34 @@ else if ($confAsig!='MENU_BASICA')
 
 	  	echo '<tr class="table-info">';
 	      echo '<th scope="row">'.$contador.'</th>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).$alum['Nombre'].finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Total']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).$alum['Nombre'].finNegrita($loginAux, $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Total']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
 if (Count($aToConcursos)>0)
 {
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Concursos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Concursos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 }
 
 
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Retos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Retos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 }
 else if ($confAsig!='MENU_BASICA')
 {      
 
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['NivelConSiguiente']:$alum['NivelSinSiguiente']).finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['NivelConSiguiente']:$alum['NivelSinSiguiente']).finNegrita($loginAux, $alum['CORREO']).'</td>';
 
 if (Count($aToConcursos)>0)
 {
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Concursos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Concursos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 }
 
 
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Retos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Cromos']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($_SESSION['alogin'], $alum['CORREO']).(($_SESSION['alogin']==$alum['CORREO'])?$alum['Suerte']:'').finNegrita($_SESSION['alogin'], $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Retos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Cromos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Suerte']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 }
 
 	    echo '</tr>';
@@ -323,7 +369,7 @@ if (Count($aToConcursos)>0)
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
 
-$aToConcursos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],1);
+$aToConcursos = getTareasTotalesFromAlumno($dbh,$loginAux,1);
 
 if (Count($aToConcursos)>0)
 {
@@ -340,7 +386,7 @@ else if ($confAsig!='MENU_BASICA')
       <th>Nivel</th>
       <?php
 
-$aToConcursos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],1);
+$aToConcursos = getTareasTotalesFromAlumno($dbh,$loginAux,1);
 
 if (Count($aToConcursos)>0)
 {
@@ -397,7 +443,7 @@ if (Count($aToConcursos)>0)
 foreach ($aToConcursos as $reto) 
 {
 
-		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$reto['ID']);
+		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$reto['ID']);
 		//var_export($datosAlumnoTarea);
 	  	echo '<tr class="table-info">';
 	      echo '<td>'.$reto['NOMBRE'].'</td>';
@@ -444,12 +490,12 @@ if ($confAsig!='MENU_BASICA')
   <tbody>
   	<?php
 
-$aToRetos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],0);
+$aToRetos = getTareasTotalesFromAlumno($dbh,$loginAux,0);
 //var_dump($aToRetos);
 foreach ($aToRetos as $reto) 
 {
 
-		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$reto['ID']);
+		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$reto['ID']);
 		//var_export($datosAlumnoTarea);
 	  	echo '<tr class="table-info">';
 	      echo '<td>'.$reto['NOMBRE'].'</td>';
@@ -469,7 +515,7 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
 
 
 </table>
-<h3>Mis Ganas</h3>
+<h3>Mis Ganas (0..4)</h3>
 <?php
 }
 ?>
@@ -488,7 +534,7 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
   <!--Table body-->
   <tbody>
   	<?php
-$aToCompor = getEstrellasComportamientoFromCorreo($dbh,$_SESSION['alogin']);	
+$aToCompor = getEstrellasComportamientoFromCorreo($dbh,$loginAux);	
 foreach ($aToCompor as $compor) 
 {
 
@@ -526,7 +572,7 @@ if (($confAsig!='MENU_BASICA')&&($confAsig!='MENU_SIMPLON_RETOS'))
   <!--Table body-->
   <tbody>
   	<?php
-$aToCompor = getBonusFromCorreo($dbh,$_SESSION['alogin']);	
+$aToCompor = getBonusFromCorreo($dbh,$loginAux);	
 foreach ($aToCompor as $compor) 
 {
 
