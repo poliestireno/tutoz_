@@ -118,6 +118,28 @@ catch (PDOException $ex)
     mi_info_log( "Error inserción estrella:".$ex->getMessage());
 }  
 }
+function insertarAlumnosClan($db,$idClan,$aAlumnos)
+{
+  $sentencia= "INSERT INTO ALUMNOS_CLANES (ID_ALUMNO, ID_CLAN, DESCRIPCION)
+              VALUES ( :ID_ALUMNO, :ID_CLAN, :DESCRIPCION)";
+  foreach ($aAlumnos as $idAlumno) 
+  {
+    try
+      {
+          mi_info_log( "id-al".$idAlumno);
+          $des = "id Alumno:".$idAlumno." id Clan".$idClan;
+          $stmt = $db->prepare($sentencia);
+          $stmt->bindParam(':ID_ALUMNO',$idAlumno);
+          $stmt->bindParam(':ID_CLAN',$idClan);
+          $stmt->bindParam(':DESCRIPCION',$des);
+          $stmt->execute();
+        }
+    catch (PDOException $ex)
+    {
+        mi_info_log( "Error insertarAlumnosClan:".$ex->getMessage());
+    }  
+  }
+}
 
 function insertarEstrella($db,$IDAlumno,$IDAsignatura,$nEstrellas,$dia)
 {
@@ -274,6 +296,30 @@ function borrarBotFromId($db,$idBot)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! borrarBotFromId".$ex->getMessage());
+  } 
+}
+
+function borrarAlumnosClanFromClanId($db,$id)
+{
+ try 
+  {
+   $sql = "DELETE FROM ALUMNOS_CLANES WHERE ID_CLAN=".$id;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarAlumnosClanFromClanId".$ex->getMessage());
+  } 
+}
+
+function borrarClanFromId($db,$id)
+{
+ try 
+  {
+   $sql = "DELETE FROM CLANES WHERE ID=".$id;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarClanFromId".$ex->getMessage());
   } 
 }
 function borrarActorFromId($db,$idActor)
@@ -439,7 +485,24 @@ catch (PDOException $ex)
     mi_info_log( "Error inserción alumno:".$ex->getMessage());
 }  
 }
-
+function insertarClan($db,$nombre,$imagen,$descripcion)
+{
+  $sentencia= "INSERT INTO CLANES ( NOMBRE, IMAGEN, DESCRIPCION)
+              VALUES ( :NOMBRE, :IMAGEN, :DESCRIPCION)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':NOMBRE',$nombre);
+  $stmt->bindParam(':IMAGEN',$imagen);
+  $stmt->bindParam(':DESCRIPCION',$descripcion);
+  $stmt->execute();
+    }
+catch (PDOException $ex)
+{
+    mi_info_log( "Error insertarClan:".$ex->getMessage());
+}  
+return $db->lastInsertId();
+}
 function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   $vectorTotal = array();
   try{
@@ -1094,6 +1157,28 @@ function opcionMenuOk($db,$CORREO,$opcion)
 
 
 
+function getClanFromCorreo($db,$CORREO)
+{
+  try 
+  {
+
+    $idAlumno = getAlumnoFromCorreo($db,$CORREO)['ID'];
+    $stmt = $db->query("SELECT ID_CLAN FROM ALUMNOS_CLANES WHERE ID_ALUMNO=".$idAlumno." LIMIT 1");
+    $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($fila=='')
+    {
+      return NULL;
+    }
+    $idClan = $fila['ID_CLAN'];
+    $stmt = $db->query("SELECT * FROM CLANES WHERE ID=".$idClan." LIMIT 1");
+    $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured getClanFromCorreo ! ".$ex->getMessage());
+  } 
+
+  return $fila;
+}
 function getAlumnoFromCorreo($db,$CORREO)
 {
   try 
@@ -1594,6 +1679,25 @@ function existeCorreo($db,$CORREO)
   }
     return Count($vectorTotal)>0;  
 }
+function existeAlumnoId($db,$id)
+{
+  $vectorTotal = array();
+  try
+  {
+     
+    $stmt = $db->query("SELECT * FROM ALUMNOS WHERE ID = ".$id);
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en existeAlumnoId:".$ex->getMessage());
+  }
+    return Count($vectorTotal)>0;  
+}
 
 
 function existeFantasma($db,$IDAsignatura,$dia)
@@ -1739,6 +1843,19 @@ function modificarConfGeneral($db,$clave,$valor)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarConfGeneral ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarClan($db,$idClan,$nombre,$imagen,$descripcion)
+{
+  try 
+  {
+    $sql = "UPDATE CLANES SET NOMBRE='".$nombre."',IMAGEN='".$imagen."', DESCRIPCION='".$descripcion."' WHERE ID=".$idClan;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarClan ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -2093,6 +2210,39 @@ function getSesionesAsignaturas($db){
      mi_info_log( "Error getSesionesAsignaturas:".$ex->getMessage());
   }
   return $vectorTotal;
+}
+function getAlumnosClan($db,$clanId){
+  try{
+    $vectorTotal = array();
+    $stmt = $db->query
+    ("select * from ALUMNOS_CLANES where ID_CLAN=".$clanId);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getAlumnosClan:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function existeAlgunAlumnoFueraDeIdClan($db,$idClan,$aAlumnos)
+{
+    
+  try{
+    $vectorTotal = array();
+    mi_info_log( "queryyy:"."select * from ALUMNOS_CLANES where ID_CLAN<>".$idClan." AND ID_ALUMNO IN (".implode (", ", $aAlumnos).")");
+
+    
+    $stmt = $db->query
+    ("select * from ALUMNOS_CLANES where ID_CLAN<>".$idClan." AND ID_ALUMNO IN (".implode (", ", $aAlumnos).")");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getAlumnosClan:".$ex->getMessage());
+  }
+  return (Count($vectorTotal)==0)?NULL:implode (", ", $aAlumnos);
 }
 
 function getEstrellasComportamientoFromCorreo($db,$correo){

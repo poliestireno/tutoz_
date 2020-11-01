@@ -13,6 +13,13 @@ require_once("cssutils.php");
 				</li>
 			<?php
 			}
+			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi Clan"))
+			{
+			?>
+				<li><a href="clan.php"><i class="fa fa-user"></i> &nbsp;Mi Clan</a>
+				</li>
+			<?php
+			}
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi cromo"))
 			{
 			?>
