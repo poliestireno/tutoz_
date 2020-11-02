@@ -298,7 +298,17 @@ function borrarBotFromId($db,$idBot)
    mi_info_log( "An Error occured! borrarBotFromId".$ex->getMessage());
   } 
 }
-
+function borrarAlumnoFromClanId($db,$idAlumno,$idClan)
+{
+ try 
+  {
+   $sql = "DELETE FROM ALUMNOS_CLANES WHERE ID_CLAN=".$idClan." AND ID_ALUMNO=".$idAlumno;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarAlumnoFromClanId".$ex->getMessage());
+  } 
+}
 function borrarAlumnosClanFromClanId($db,$id)
 {
  try 

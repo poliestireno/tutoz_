@@ -12,7 +12,25 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 }
 else{
 	
-if(isset($_POST['submit2']))
+if(isset($_POST['submit3']))
+{
+	$CORREO = $_SESSION['alogin'];
+	$result=getClanFromCorreo($dbh,$CORREO);
+	if ($result!=NULL)
+	{
+		borrarAlumnoFromClanId($dbh,getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID'],$result['ID']);
+		$aIntegrantes = getAlumnosClan($dbh,$result['ID']);
+		$msg = "Saliste del clan!";
+		if (Count($aIntegrantes)==0)
+		{
+			borrarClanFromId($dbh,$result['ID']);
+			$msg = "Saliste del clan y se borró el clan!";
+		}		
+		
+	}
+	
+}	
+else if(isset($_POST['submit2']))
 {
 	$CORREO = $_SESSION['alogin'];
 	$result=getClanFromCorreo($dbh,$CORREO);
@@ -128,6 +146,18 @@ else if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/style.css">
 
 	<style>
+
+@font-face {
+  font-family: 'Oli2';
+  src: 
+  	url('fonts/OlivettiType2.ttf') format('woff'), 
+	url('fonts/OlivettiType2.ttf') format('truetype');
+}
+
+.Oli2	 {
+    font-family: 'Oli2';
+    text-align: center;
+}
 	.errorWrap {
     padding: 10px;
     margin: 0 0 20px 0;
@@ -170,9 +200,11 @@ else if(isset($_POST['submit']))
 
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
+<h1 class="Oli2"><?php echo htmlentities(($result==NULL)?'':$result['NOMBRE']);?></h1>
 
 <div class="form-group">
 	<div class="col-sm-4">
+
 	</div>
 	<div class="col-sm-4 text-center">
 		<img src="images/<?php echo htmlentities($result['IMAGEN']);?>" style="width:200px; border-radius:50%; margin:10px;">
@@ -246,11 +278,20 @@ for ($i=2; $i <=$maxNumAlumClan ; $i++)
 </div>
 
 </form>
+<form method="post" class="form-horizontal" onsubmit="return validateForm3()">
+
+<div class="form-group">
+	<div class="col-sm-8 col-sm-offset-2">
+		<button class="btn btn-warning" name="submit3" type="submit">Salirme del Clan</button>
+	</div>
+</div>
+
+</form>
 <form method="post" class="form-horizontal" onsubmit="return validateForm2()">
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
-		<button class="btn btn-warning" name="submit2" type="submit">Borrar Clan</button>
+		<button class="btn btn-danger" name="submit2" type="submit">Borrar Clan</button>
 	</div>
 </div>
 
@@ -326,6 +367,10 @@ for ($i=2; $i <=$maxNumAlumClan ; $i++)
 function validateForm2()
 {
 	return confirm('¿quieres borrar realmente el clan <?php echo htmlentities(($result==NULL)?'':$result['NOMBRE']);?>?');
+}
+function validateForm3()
+{
+	return confirm('¿quieres realmente salirte del clan <?php echo htmlentities(($result==NULL)?'':$result['NOMBRE']);?>?');
 }
 	</script>
 </body>
