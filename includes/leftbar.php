@@ -16,21 +16,21 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi Clan"))
 			{
 			?>
-				<li><a href="clan.php"><i class="fa fa-user"></i> &nbsp;Mi Clan</a>
+				<li><a href="clan.php"><i class="fa fa-users"></i> &nbsp;Mi Clan</a>
 				</li>
 			<?php
 			}
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi cromo"))
 			{
 			?>
-			<li><a href="micromo.php"><i class="fa fa-envelope"></i> &nbsp;Mi cromo</a>
+			<li><a href="micromo.php"><i class="fa fa-plus-square"></i> &nbsp;Mi cromo</a>
 			</li>
 			<?php
 			}
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi Album"))
 			{
 			?>
-			<li><a href="mialbum.php"><i class="fa fa-envelope"></i> &nbsp;Mi Album</a>
+			<li><a href="mialbum.php"><i class="fa fa-book"></i> &nbsp;Mi Album</a>
 			</li>
 			<?php
 			}
@@ -44,28 +44,28 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Ranking"))
 			{
 			?>
-			<li><a href="ranking.php"><i class="fa fa-envelope"></i> &nbsp;Ranking</a>
+			<li><a href="ranking.php"><i class="fa fa-globe"></i> &nbsp;Ranking</a>
 			</li>
 			<?php
 			}
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mercado"))
 			{
 			?>
-			<li><a href="mercado.php"><i class="fa fa-envelope"></i> &nbsp;Mercado</a>
+			<li><a href="mercado.php"><i class="fa fa-hand-o-right"></i> &nbsp;Mercado</a>
 			</li>
 			<?php
 			}
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi bot"))
 			{
 			?>
-			<li><a href="mibot.php"><i class="fa fa-envelope"></i> &nbsp;Mi bot</a>
+			<li><a href="mibot.php"><i class="fa fa-male"></i> &nbsp;Mi bot</a>
 			</li>
 			<?php
 			}
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Jugar"))
 			{
 			?>
-			<li><a href="https://magicomagico.com/SalleZGamE" target=”_blank”><i class="fa fa-envelope"></i> &nbsp;Jugar</a>
+			<li><a href="https://magicomagico.com/SalleZGamE" target=”_blank”><i class="fa fa-gamepad"></i> &nbsp;Jugar</a>
 			</li>
 			<?php
 			}
@@ -92,7 +92,7 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi QR"))
 			{
 			?>
-			<li><a href="miQR.php"><i class="fa fa-envelope"></i> &nbsp;Mi QR</a>
+			<li><a href="miQR.php"><i class="fa fa-th"></i> &nbsp;Mi QR</a>
 			</li>
 			<?php
 			}
