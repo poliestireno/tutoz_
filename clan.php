@@ -112,6 +112,19 @@ else if(isset($_POST['submit']))
 
 	}
 	
+}
+
+
+function getAsteriscos($nBin)
+{
+	$sBin  = $nBin."";
+	$arrayB = str_split($sBin);
+	$sRe = "";
+	foreach ($arrayB as $charB) 
+	{
+ 		$sRe.="*";
+	}
+	return $sRe;
 }    
 ?>
 
@@ -231,7 +244,8 @@ else if(isset($_POST['submit']))
 
 <label class="col-sm-2 control-label">IdAlumno_1(binario)</label>
 <div class="col-sm-4">
-<input readonly="readonly" type="text" name="integrante1" class="form-control" value="<?php echo decbin(getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID']);?>">
+<input readonly="readonly" type="text" name="integranteaa" class="form-control" value="<?php echo getAsteriscos(decbin(getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID']))?>">
+
 </div>
 	
 	<div class="col-sm-6"><label readonly="readonly" class="form-control"><?php echo getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['NOMBRE']." ".getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['APELLIDO1'];?></label></div>
@@ -270,6 +284,9 @@ for ($i=2; $i <=$maxNumAlumClan ; $i++)
 
 </div>
 <input type="hidden" name="editID" class="form-control" required value="<?php echo htmlentities(($result==NULL)?'':$result['ID']);?>">
+<input type="hidden" name="integrante1" class="form-control" required value="<?php echo decbin(getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID']);?>">
+
+
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
