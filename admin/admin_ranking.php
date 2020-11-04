@@ -122,7 +122,7 @@ if (isset($_POST['texto']))
       <a onclick="managebuttonB()"  class="btn btn-danger btn-outline btn-wrap-text">Enviar Notificación</a>
     </div>
     <br/><br/><br/>
-  
+
   </form>
                </div>
                 </div>
@@ -158,6 +158,7 @@ if (Count($aToConcursos)>0)
       <th>Ganas</th>
       <th>Cromos</th>
       <th>Bonus</th>
+      <th>¿Clan?</th>
     </tr>
   </thead>
   <!--Table head-->
@@ -168,9 +169,37 @@ if (Count($aToConcursos)>0)
      
      //var_dump($aAlumnosCurso);
 
+     $aClanes = array();
+     $aClanesIntroducidos = array ();
      $aTotalAlumnos = array();
      foreach ($aAlumnosCurso as $alumno) 
      {
+      $arrayAlumno=array();
+      $clanId = getClanIdFromAlumnoId($dbh,$alumno['ID']);
+      if ($clanId!="")
+      {
+        $arrayAlumno['TIENE_CLAN'] = "SI";
+      }
+      else
+      {
+        $arrayAlumno['TIENE_CLAN'] = "NO";
+      }
+      if (($clanId!="")&&(!in_array($clanId, $aClanesIntroducidos)))
+      {
+        $aAlumnosIdClan = getAlumnosIdFromClanId($dbh,$clanId);
+        $clan = getClanFromClanId($dbh,$clanId);
+        $aClanesIntroducidos[] = $clanId;
+        $aClanAlumno = array();
+        $aClanAlumno['ID_CLAN']= $clan['ID'];
+        $aClanAlumno['NOMBRE']= $clan['NOMBRE'];
+        $aClanAlumno['IMAGEN']= $clan['IMAGEN'];
+        $aClanAlumno['DESCRIPCION']= $clan['DESCRIPCION'];
+        $aClanAlumno['ALUMNOS_CLAN']= $aAlumnosIdClan;
+        $aClanes[] = $aClanAlumno;
+        
+      }
+      
+      
       // estrellas cromos
 
     $estrellasCromos = getEstrellasCromos($dbh,$alumno['CORREO']);
@@ -205,7 +234,7 @@ $totalComportamiento =getEstrellasGanas($dbh,$alumno['CORREO']);
       $totalSuerte = getEstrellasBonos($dbh,$alumno['CORREO']);
       $totalTotal = $totalRetos+$totalConcursos+$totalComportamiento+$totalCromos+$totalSuerte;
       
-    $arrayAlumno=array();
+
     $arrayAlumno['Nombre']=$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'];
     $arrayAlumno['Retos']=$totalRetos;
     $arrayAlumno['Concursos']=$totalConcursos;
@@ -231,6 +260,7 @@ $totalComportamiento =getEstrellasGanas($dbh,$alumno['CORREO']);
 
       
      }
+     //var_export($aClanes);
 function iniNegrita($correologin, $correoalumno)
 {
     return ($correologin== $correoalumno)?"<b>":"";
@@ -268,6 +298,7 @@ if (Count($aToConcursos)>0)
         echo '<td>'.$alum['Comportamiento'].'</td>';
         echo '<td>'.$alum['Cromos'].'</td>';
         echo '<td>'.$alum['Suerte'].'</td>';
+        echo '<td>'.$alum['TIENE_CLAN'].'</td>';
       echo '</tr>';
       $contador++;
 }
@@ -297,6 +328,7 @@ if (Count($aToConcursos)>0)
       <th>Ganas</th>
       <th>Cromos</th>
       <th>Bonus</th>
+      <th>¿Clan?</th>
     </tr>
   </thead>
 
@@ -393,13 +425,26 @@ foreach ($aToRetos as $reto)
 </table>
 
 
+<h3>Clanes</h3>
 
-
-
-
-
-
-
+<?php
+echo "<ol>";
+foreach ($aClanes as $clan) 
+{
+  echo "<li><b>".$clan['NOMBRE']."</b>(".$clan['DESCRIPCION'].")</li>";
+  $aac = $clan['ALUMNOS_CLAN'];
+  echo "<ol>";
+  for ($i=0; $i < Count($aac); $i++) 
+  { 
+    //var_export($aac[$i]);
+    $ali = getAlumnoFromId($dbh,$aac[$i]['ID_ALUMNO']);
+    echo "<li>".$ali['NOMBRE'].' '.$ali['APELLIDO1'].' '.$ali['APELLIDO2']."</li>";
+  }
+  echo "</ol>";
+}
+echo "</ol>";
+?>
+ 
 
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>

@@ -1000,6 +1000,32 @@ function getAlumnoFromID($db,$IDAlumno)
   } 
   return $fila;
 }
+function getClanFromClanId($db,$clanId)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM CLANES WHERE ID=".$clanId);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! getClanFromClanId ".$ex->getMessage());
+  } 
+  return $fila;
+}
+function getClanIdFromAlumnoId($db,$IDAlumno)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM ALUMNOS_CLANES WHERE ID_ALUMNO=".$IDAlumno);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! getClanIdFromAlumnoId".$ex->getMessage());
+  } 
+  return $fila["ID_CLAN"];
+}
 function getConfAsignaturaFromID($db,$Id)
 {
   try 
@@ -1100,6 +1126,23 @@ function getCursosFromIDSet($db,$idSet)
   catch (PDOException $ex)
   {
     mi_info_log( "Error en getCursosFromIDSet:".$ex->getMessage());
+  }
+    return $vectorTotal;
+}
+function getAlumnosIdFromClanId($db,$idClan)
+{
+  $vectorTotal = array();
+  try
+  {     
+    $stmt = $db->query("SELECT * FROM ALUMNOS_CLANES WHERE ID_CLAN=".$idClan);   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getAlumnosIdFromClanId:".$ex->getMessage());
   }
     return $vectorTotal;
 }
