@@ -236,6 +236,7 @@ $totalComportamiento =getEstrellasGanas($dbh,$alumno['CORREO']);
       
 
     $arrayAlumno['Nombre']=$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'];
+    $arrayAlumno['Id']=$alumno['ID'];
     $arrayAlumno['Retos']=$totalRetos;
     $arrayAlumno['Concursos']=$totalConcursos;
     $arrayAlumno['Comportamiento']=$totalComportamiento;
@@ -444,8 +445,45 @@ foreach ($aClanes as $clan)
 }
 echo "</ol>";
 ?>
- 
+ <h3>Cambio cromos</h3>
 
+<form action="admin_cambio_cromos.php" id="form3" method="post">
+
+                            <div class="form-group">
+                            
+                            <label class="col-sm-1 control-label">ALUMNO1<span style="color:red">*</span></label>
+                            <div class="col-sm-5">
+  <select class="form-control col-md-2" ID="sAlumno1" name="sAlumno1">
+  <?php
+    foreach ($aTotalAlumnos as $alum) 
+    {
+      echo "<option value='".$alum['Id']."'>".$alum['Nombre']."</option>";
+    }
+  ?>
+  </select>
+                            </div>
+                           
+                             
+
+                            <label class="col-sm-1 control-label">ALUMNO2<span style="color:red">*</span></label>
+                            <div class="col-sm-5">
+  <select class="form-control col-md-2" ID="sAlumno2" name="sAlumno2">
+  <?php
+    foreach ($aTotalAlumnos as $alum) 
+    {
+      echo "<option value='".$alum['Id']."'>".$alum['Nombre']."</option>";
+    }
+  ?>
+  </select>
+                            </div>
+                            </div>
+
+
+
+      <div class="form-group col-md-2">
+      <a onclick="document.getElementById('form3').submit();"  class="btn btn-warning btn-outline btn-wrap-text">Cambiar</a>
+    </div>
+</form>
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>

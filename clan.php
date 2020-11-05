@@ -54,7 +54,8 @@ else if(isset($_POST['submit']))
 	$descripcion=$_POST['DESCRIPCION'];
 	$IDedit=$_POST['editID'];
 	$image=$_FILES['image']['name'];
-	if(move_uploaded_file($file_loc,$folder.$final_file))
+	$final_file=$name.$final_file;
+    if(move_uploaded_file($file_loc,$folder.$final_file))
 	{
 		$image=$final_file;
 	}

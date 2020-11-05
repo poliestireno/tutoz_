@@ -19,6 +19,7 @@ if (!(existeCorreo($dbh,$CORREO)))
     $APELLIDO2=$_POST['APELLIDO2'];
     $gender=$_POST['gender'];
     //var_dump($_POST);
+    $final_file=$name.$APELLIDO1no.$APELLIDO2.$final_file;
     if(move_uploaded_file($file_loc,$folder.$final_file))
     {
         $image=$final_file;

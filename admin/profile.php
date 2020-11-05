@@ -25,7 +25,7 @@ if(isset($_POST['submit']))
 	$query-> bindParam(':name', $name, PDO::PARAM_STR);
 	$query-> bindParam(':CORREO', $CORREO, PDO::PARAM_STR);
 	$query->execute();
-	$msg="Information Updated Successfully";
+	$msg="Información actualizada correctamente";
 }    
 ?>
 
@@ -118,7 +118,7 @@ if(isset($_POST['submit']))
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
-		<button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
+		<button class="btn btn-primary" name="submit" type="submit">Guardar cambios</button>
 	</div>
 </div>
 
