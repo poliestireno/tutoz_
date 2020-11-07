@@ -2283,7 +2283,6 @@ function existeAlgunAlumnoFueraDeIdClan($db,$idClan,$aAlumnos)
     
   try{
     $vectorTotal = array();
-    mi_info_log( "queryyy:"."select * from ALUMNOS_CLANES where ID_CLAN<>".$idClan." AND ID_ALUMNO IN (".implode (", ", $aAlumnos).")");
 
     
     $stmt = $db->query
@@ -2309,6 +2308,20 @@ function getEstrellasComportamientoFromCorreo($db,$correo){
     }
   }catch(PDOException $ex){
      mi_info_log( "Error getEstrellasComportamientoFromCorreo:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getEstrellasMayorQueDiaFromCorreo($db,$correo,$mayorQueDia){
+  try{
+    $vectorTotal = array();
+    $stmt = $db->query
+    ("SELECT ID,ESTRELLAS,DIA, (SELECT NOMBRE FROM ASIGNATURAS WHERE ASIGNATURAS.ID = ESTRELLAS.ID_ASIGNATURA) NOMBRE_ASIGNATURA FROM ESTRELLAS WHERE ID_ALUMNO = ".getAlumnoFromCorreo($db,$correo)['ID']." AND DIA > '".$mayorQueDia."'" );
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getEstrellasDesdeDiaFromCorreo:".$ex->getMessage());
   }
   return $vectorTotal;
 }

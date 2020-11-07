@@ -299,11 +299,58 @@ function getNumeroSegundosAlumno($dbh,$correo)
   }
   return $segundosApertura;
 }
+
+function getValorAtributo($dbh,$CORREO)
+{
   
+$hoy = date('Y-m-d');
+$date = DateTime::createFromFormat('Y-m-d',$hoy);
+$date->modify('-7 day'); // una semana atrás
+$mayorQueDia = $date->format('Y-m-d');
+$aFilasEstrellas = getEstrellasMayorQueDiaFromCorreo($dbh,$CORREO,$mayorQueDia);
+$nEstrellas = 0;  
+foreach ($aFilasEstrellas as $filaEst) 
+{
+  $nEstrellas =$nEstrellas + $filaEst['ESTRELLAS'];
+}
+$totalSesiones = (Count($aFilasEstrellas)*4);
+$porcentaje = $nEstrellas/$totalSesiones;
+$valorAtributo = 3;
+if ($porcentaje<0.2)
+{
+  $valorAtributo = -2;
+}
+else if ($porcentaje<=0.3)
+{
+  $valorAtributo = -1;
+}
+else if ($porcentaje<0.5)
+{
+  $valorAtributo = 0;
+}
+else if ($porcentaje<0.6)
+{
+  $valorAtributo = 1;
+}
+else if ($porcentaje<0.8)
+{
+  $valorAtributo = 2;
+}
+else if ($porcentaje==1)
+{
+  $valorAtributo = 4;
+}
+
+//echo 's:'.$totalSesiones;
+//echo 'e:'.$nEstrellas;
+//echo 'r:'.$porcentaje;
+return (($valorAtributo>=0)?"+":"").$valorAtributo; 
+}
+ 
 function manageUtilizacionEvento($dbh,$correoJugador,$idEvento)
 {
-  mi_info_log($correoJugador);
-  mi_info_log($idEvento);
+  //mi_info_log($correoJugador);
+  //mi_info_log($idEvento);
   $esJugable=1;
   $idAlumno = getAlumnoFromCorreo($dbh,$correoJugador)['ID'];
   $evento= getEventoFromID($dbh,$idEvento);

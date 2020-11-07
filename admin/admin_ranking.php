@@ -87,7 +87,18 @@ if (isset($_POST['texto']))
       document.getElementById("form2").action="admin_ranking.php";
       document.getElementById("form2").submit(); 
   }
-
+  function validateAlumnos()
+  {
+    if (document.getElementById('sAlumno2').value==document.getElementById('sAlumno1').value)
+    {
+      alert('Los alumnos del cambio tienen que ser diferentes');
+    }
+    else
+    {
+      document.getElementById('form3').submit();
+    }
+    
+  }
 </script>
 
 </head>
@@ -481,7 +492,7 @@ echo "</ol>";
 
 
       <div class="form-group col-md-2">
-      <a onclick="document.getElementById('form3').submit();"  class="btn btn-warning btn-outline btn-wrap-text">Cambiar</a>
+      <a onclick="validateAlumnos();"  class="btn btn-warning btn-outline btn-wrap-text">Cambiar</a>
     </div>
 </form>
 	<!-- Loading Scripts -->
@@ -500,6 +511,7 @@ echo "</ol>";
 						$('.succWrap').slideUp("slow");
 					}, 3000);
 					});
+
 	</script>
 	
 
