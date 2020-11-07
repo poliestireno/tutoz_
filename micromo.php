@@ -136,7 +136,10 @@ function url(){
 	<div class="col-sm-4">
 	</div>
 <div class="col-sm-4 text-center">
-		<img src="https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities(substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo ((getValorAtributo($dbh,$CORREO)>=0)?'%2B':'').getValorAtributo($dbh,$CORREO).'  '.$cromo['cardtype'];?>&rarity=<?php echo $cromo['rarity'];?>&cardtext=<?php echo $cromo['cardtext'];?>&power=&toughness=<?php echo $cromo['toughness'];?>&artist=<?php echo $cromo['artist'];?>&bottom=<?php echo $cromo['bottom'];?>" style="width:250px; border-radius:5%; margin:10px;">
+		<img src="https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities(substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo 
+		(($cromo['cardtype']!='')?(
+		((getValorAtributo($dbh,$CORREO)>=0)?'%2B':'').getValorAtributo($dbh,$CORREO).'  '
+		):'').$cromo['cardtype'];?>&rarity=<?php echo $cromo['rarity'];?>&cardtext=<?php echo $cromo['cardtext'];?>&power=&toughness=<?php echo $cromo['toughness'];?>&artist=<?php echo $cromo['artist'];?>&bottom=<?php echo $cromo['bottom'];?>" style="width:250px; border-radius:5%; margin:10px;">
 	</div>
 	<div class="col-sm-4">
 	</div>
@@ -162,7 +165,7 @@ $getPropsAlummo =  getPropsVisiblesCromo($dbh,$_SESSION['alogin']);
 
 <div class="form-group">
 	<?php if ($getPropsAlummo['atributo']==1) {?>
-	<label class="col-sm-2 control-label">Atributo<span style="font-size: 200%;"><?php echo " (".getValorAtributo($dbh,$CORREO).")"?></span></label>
+	<label class="col-sm-2 control-label">Atributo<span style="font-size: 200%;"><?php echo ((($cromo['cardtype']!=''))?(" (".getValorAtributo($dbh,$CORREO).")"):"")?></span></label>
 	<div class="col-sm-4">
 	<input type="text" maxlength = "20" name="atributo" class="form-control"  value="<?php echo htmlentities($cromo['cardtype']);?>">
 	</div>
