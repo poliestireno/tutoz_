@@ -999,6 +999,18 @@ function getAlumnoFromID($db,$IDAlumno)
    mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila;
+}function getPreguntaFromID($db,$idPre)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM PREGUNTAS WHERE ID=".$idPre);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! getPreguntaFromID".$ex->getMessage());
+  } 
+  return $fila;
 }
 function getClanFromClanId($db,$clanId)
 {
@@ -1183,7 +1195,10 @@ function opcionMenuOk($db,$CORREO,$opcion)
   {
   // cogemos la primera asignatura del curso, en principio solo puede haber
       // una asignatura por curso(clase).
-    $asignatura = getAsignaturasFromCurso($db,getAlumnoFromCorreo($db,$CORREO)['ID_CURSO'])[0];
+    $aa = getAsignaturasFromCurso($db,getAlumnoFromCorreo($db,$CORREO)['ID_CURSO']);
+    if (Count($aa)>0  )
+    {
+    $asignatura = $aa[0];
     
     $listaOpcionesMenu = explode(",", getConfAsignaturaFromID($db,$asignatura['ID_CONF_ASIGNATURAS'])['OPCIONES_MENU']);
     if ((Count($listaOpcionesMenu)==0)||($listaOpcionesMenu[0]=='TODAS'))
@@ -1200,6 +1215,11 @@ function opcionMenuOk($db,$CORREO,$opcion)
         }
       }
     }
+  }
+  else
+  {
+    return false;
+  }
   } catch(PDOException $ex) 
   {    
     mi_info_log( "An Error occured opcionMenuOk ! ".$ex->getMessage());
@@ -1212,6 +1232,7 @@ function opcionMenuOk($db,$CORREO,$opcion)
 
 function getClanFromCorreo($db,$CORREO)
 {
+  $fila = NULL;
   try 
   {
 
