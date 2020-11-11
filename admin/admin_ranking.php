@@ -28,7 +28,7 @@ if (isset($_POST['texto']))
   
 }
 
-
+$aAlumnosCurso = getAlumnosFromCursoID($dbh,$idCur);
 
  
 ?>
@@ -98,7 +98,7 @@ if (isset($_POST['texto']))
       document.getElementById('form3').submit();
     }
     
-  }
+  }  
 </script>
 
 </head>
@@ -153,7 +153,7 @@ if (isset($_POST['texto']))
       <th>Nivel</th>
       <th>Total Estrellas</th>
 <?php
-$aAlumnosCurso = getAlumnosFromCursoID($dbh,$idCur);
+
 
 $aToConcursos = getTareasTotalesFromAlumno($dbh,$aAlumnosCurso[0]['CORREO'],1);
 
@@ -289,15 +289,16 @@ function cmp($a, $b)
 usort($aTotalAlumnos, "cmp");
 
      $contador=1;
+$textTotalAlumnos = "";
+$comma="";
 foreach ($aTotalAlumnos as $alum) 
  {
       echo '<tr class="table-info">';
         echo '<th scope="row">'.$contador.'</th>';
 
 
-
-
-
+      $textTotalAlumnos.=$comma.$alum['Id'];
+      $comma=",";
         echo '<td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="../ranking.php?l='. $alum['CORREO'].'" target=”_blank”>'.$alum['Nombre'].'</a></td>';
         echo '<td>'.$alum['NivelSinSiguiente'].'</td>';
         echo '<td>'.$alum['Total'].'</td>';
@@ -491,10 +492,43 @@ echo "</ol>";
 
 
 
-      <div class="form-group col-md-2">
-      <a onclick="validateAlumnos();"  class="btn btn-warning btn-outline btn-wrap-text">Cambiar</a>
+      <div class="form-group col-md-1">
+      <a onclick="validateAlumnos();" class="btn btn-warning btn-outline btn-wrap-text">Cambiar</a>
     </div>
+
+
+
 </form>
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Justas</h3>
+
+<form action="justa.php" id="form4" method="post">
+<input type="hidden" name="idc" id="idc" >
+<input type="hidden" name="p1Aux" id="p1Aux" >
+<input type="hidden" name="p2Aux" id="p2Aux" >
+<input type="hidden" name="p1" id="p1" >
+<input type="hidden" name="p2" id="p2" >
+<input type="hidden" name="contJusta" id="contJusta" >
+<input type="hidden" name="textTotalAlumnos" id="textTotalAlumnos" >
+<input type="hidden" name="indicePlayer" id="indicePlayer" >
+<input type="hidden" name="totalJusta" id="totalJusta" >
+
+
+                           
+                            
+                            <label class="col-sm-1 control-label">Nº REPESCAS<span style="color:red">*</span></label>
+                            <div class="col-sm-1">
+  <input type="text" class="form-control col-md-2" ID="nRepescas" name="nRepescas" value="0" />
+
+                            </div>
+                            </div>
+<div class="form-group col-md-2">
+  <a onclick="iniciarJusta();" class="btn btn-success btn-outline btn-wrap-text">Iniciar justas</a>
+</div>  
+</form>
+</div>
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>
@@ -511,6 +545,18 @@ echo "</ol>";
 						$('.succWrap').slideUp("slow");
 					}, 3000);
 					});
+  function iniciarJusta()
+  {
+    
+    document.getElementById('contJusta').value = '1';
+    document.getElementById('totalJusta').value = parseInt(<?php echo (Count($aAlumnosCurso))?>)+parseInt(document.getElementById('nRepescas').value);
+    document.getElementById('textTotalAlumnos').value = '<?php echo $textTotalAlumnos?>';
+    document.getElementById('indicePlayer').value = <?php echo (Count($aAlumnosCurso)-2)?>;
+    document.getElementById('idc').value = <?php echo $idCur?>;
+    document.getElementById('p1').value = <?php echo (Count($aAlumnosCurso)-2)?>;
+    document.getElementById('p2').value = <?php echo (Count($aAlumnosCurso)-1)?>;
+    document.getElementById('form4').submit();   
+  }
 
 	</script>
 	
