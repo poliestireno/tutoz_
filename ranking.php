@@ -449,7 +449,7 @@ foreach ($aToConcursos as $reto)
 		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$reto['ID']);
 		//var_export($datosAlumnoTarea);
 	  	echo '<tr class="table-info">';
-	      echo '<td>'.$reto['NOMBRE'].'</td>';
+	      echo '<td title="'.$reto['DESCRIPCION'].'">'.$reto['NOMBRE'].'</td>';
 	      echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
 	      echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
@@ -501,7 +501,7 @@ foreach ($aToRetos as $reto)
 		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$reto['ID']);
 		//var_export($datosAlumnoTarea);
 	  	echo '<tr class="table-info">';
-	      echo '<td>'.$reto['NOMBRE'].'</td>';
+	      echo '<td title="'.$reto['DESCRIPCION'].'">'.$reto['NOMBRE'].'</td>';
 	      echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
 	      echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';

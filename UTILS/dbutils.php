@@ -556,9 +556,12 @@ function getPreguntasTotal($db){
   return $vectorTotal;
 }
 function getPreguntasFromAsignaturaID($db,$IDAsignatura){
+  
+  $idSetPregunta = getIdSetPreguntaFromIdAsignatura($db,$IDAsignatura);
+  
   $vectorTotal = array();
   try{
-    $stmt = $db->query("SELECT * FROM PREGUNTAS WHERE ID_ASIGNATURA=".$IDAsignatura);
+    $stmt = $db->query("SELECT * FROM PREGUNTAS WHERE ID_SETPREGUNTA=".$idSetPregunta);
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $vectorTotal [] = $fila;
@@ -878,6 +881,24 @@ function getAsignaturasConCurso($db)
   }
   return $vectorTotal;
 }
+
+function getAllAsignaturas($db)
+{
+    $vectorTotal = array();
+  try
+  {
+    $stmt = $db->query("SELECT * FROM ASIGNATURAS");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getAllAsignaturas:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
 function getSitiosVisibles($db)
 {
     $vectorTotal = array();
@@ -999,7 +1020,8 @@ function getAlumnoFromID($db,$IDAlumno)
    mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
   return $fila;
-}function getPreguntaFromID($db,$idPre)
+}
+function getPreguntaFromID($db,$idPre)
 {
   $fila="";
   try 
@@ -1264,6 +1286,18 @@ function getAlumnoFromCorreo($db,$CORREO)
    mi_info_log( "An Error occured getAlumnoFromCorreo ! ".$ex->getMessage());
   } 
   return $fila;
+}
+function getIdSetPreguntaFromIdAsignatura($db,$IdAsignatura)
+{
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM ASIGNATURAS_SETSPREGUNTAS WHERE ID_ASIGNATURA= ".$IdAsignatura);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured getIdSetPreguntaFromIdAsignatura ! ".$ex->getMessage());
+  } 
+  return $fila['ID_SETPREGUNTA'];
 }
 
 

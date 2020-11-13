@@ -394,6 +394,117 @@ function setSesiones()
   
   
   ?>
+ 
+  <?php 
+
+  $aAllAsignaturas = getAllAsignaturas($db);
+  $arrayTotalElegidos = array();
+  foreach ($aAllAsignaturas as $asignatura) 
+  {
+     $arrayFantamas = getFantasmasFromAsignaturaID($db,$asignatura['ID']);
+
+    
+    foreach ($arrayFantamas as $fantasma) 
+    {    
+      //echo '<p><span class="label label-warning">'.$fantasma['DIA'].'</span>';
+      $vectorElegidos = explode(",", $fantasma['ELEGIDOS']);
+      if ($vectorElegidos[0]!='')
+      {
+        //$cont2=1;
+        for ($i=0; (($i < Count($vectorElegidos))&&($i<3)); $i++) 
+        { 
+          if (!array_key_exists($vectorElegidos[$i], $arrayTotalElegidos)) 
+          {
+            $arrayTotalElegidos[$vectorElegidos[$i]]=0;
+          }
+          $arrayTotalElegidos[$vectorElegidos[$i]]=$arrayTotalElegidos[$vectorElegidos[$i]]+1;
+          //$alumno = getAlumnoFromID($db,$vectorElegidos[$i]);
+          //var_export($alumno);
+        //echo '<span class="label label-primary">'.$cont2.' '.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].'</span>';
+        //$cont2=$cont2+1;
+        }
+      }
+    //echo '</p>';
+    }
+  }
+
+
+  
+  $groups = array();
+  foreach ($arrayTotalElegidos as $k => $v) {
+    $groups[$v][] = $k;
+  }
+  krsort($groups);
+  $sorted = array();
+  foreach ($groups as $value => $group) {
+    foreach ($group as $key) {
+        $sorted[$key] = $value;
+    }
+  }
+  echo '<br/><p><span class="label label-danger">RANKING TOTAL ELEGIDOS</span>
+  </p>';
+  $cont=1;
+  $contIAnt=0;
+
+  $totalConPorcentajes = array ();
+
+  foreach ($sorted as $alumId => $contI ) 
+  {
+    if ($contIAnt>$contI)
+    {
+      $cont=$cont+1;     
+    }
+    if ($cont>5)
+    {
+      break;
+    }
+    $contIAnt=$contI;
+    $fila_asignatura = getAsignaturasFromCurso($dbh,getAlumnoFromID($db,$alumId)['ID_CURSO'])[0];
+    $arrayFantamas = getFantasmasFromAsignaturaID($db,$fila_asignatura['ID']);
+    $nFant = Count($arrayFantamas);
+    $alumno = getAlumnoFromID($db,$alumId);
+
+    echo '<span class="label label-primary">'.$cont.'º.- '.$alumno["NOMBRE"].' '.$alumno["APELLIDO1"].'</span>';
+   echo '<span class="label label-info">'.$fila_asignatura['NOMBRE'].'</span>';
+    echo '<span class="label label-success">'.$contI.(($nFant>0)?' de '.$nFant:'').'</span>';    
+    
+    if ($nFant>0)
+    {
+      $valorPor = number_format(($contI*100)/$nFant,2);
+      echo '<span class="label label-warning">'.$valorPor.'%</span>';
+      if (array_key_exists($valorPor, $totalConPorcentajes)) 
+      {
+$totalConPorcentajes[$valorPor]=$totalConPorcentajes[$valorPor].", ".$alumno["NOMBRE"].' '.$alumno["APELLIDO1"]."(".$fila_asignatura['NOMBRE'].")[".$contI.(($nFant>0)?' de '.$nFant:'')."]";
+      }
+      else
+      {
+        $totalConPorcentajes[$valorPor]=$alumno["NOMBRE"].' '.$alumno["APELLIDO1"]."(".$fila_asignatura['NOMBRE'].")[".$contI.(($nFant>0)?' de '.$nFant:'')."]";
+      }
+      
+    }
+
+    echo '<br/>';
+  }
+
+echo '<br/><span class="label label-danger">RANKING PORCENTAJES ELEGIDOS</span>
+  <br/>';
+  krsort($totalConPorcentajes);
+  //var_export($totalConPorcentajes);
+
+  $cont=1;
+  $contIAnt=0;
+
+  foreach ($totalConPorcentajes as $porcen => $data ) 
+  {
+
+    echo '<span class="label label-primary">'.$cont.'º.-'.$porcen.'%</span>';
+    echo '<span class="label label-success">'.$data.'</span>';    
+    echo '<br/>';
+    $cont++;
+  }
+
+ 
+  ?>
   </form>
 
 

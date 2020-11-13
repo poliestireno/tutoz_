@@ -63,15 +63,15 @@ $aTotalAlumnos = explode(",", $_POST['textTotalAlumnos']);
 
 ?>
 <div class="text-center">
-  <h1 class="Oli2" style="font-size: 70px; color: white;">Justas <?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
-  echo getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']?></h1>
+  <h1 class="Oli2" style="font-size: 70px; color: white;"><div title="Si alguien gana una justa tiene que contestar una pregunta monotérmino, si la acierta pasa a la siguiente justa y si la falla se vuelve a realizar el mismo duelo de la justa  y se mantiene la misma pregunta para el que gane, así hasta que el gane conteste bien y pasa a la siguiente justa.">Justas <?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
+  echo getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']?></div></h1>
   <!--p style="color: white">Suerte a los tres!</p--> 
 </div>
   
 <div class="row">
 
 <div class="col-lg-5 col-md-5 col-xs-5 thumb">
-  <h1 class="Oli2 text-center" style="color: white"><?php echo ($_POST['p1']+1)."º ".$player1['NOMBRE']." ".$player1['APELLIDO1']." ".((((getValorAtributo($dbh,$player1['CORREO'])>=0)?'(':'').getValorAtributo($dbh,$player1['CORREO']))).((getValorAtributo($dbh,$player1['CORREO'])>=0)?')':'')?></h1>
+  <h1 class="Oli2 text-center" style="color: white"><?php echo ($_POST['p1']+1)."º ".$player1['NOMBRE']." ".$player1['APELLIDO1']." ".((((getValorAtributo($dbh,$player1['CORREO'])!="")?'(':'').getValorAtributo($dbh,$player1['CORREO']))).((getValorAtributo($dbh,$player1['CORREO'])!="")?')':'')?></h1>
 
 
 
@@ -110,7 +110,7 @@ function url(){
         
 </div>
 <div class="col-lg-5 col-md-5 col-xs-5 thumb">
-  <h1 class="Oli2 text-center" style="color: white"><?php echo ($_POST['p2']+1)."º ".$player2['NOMBRE']." ".$player2['APELLIDO1']." ".((((getValorAtributo($dbh,$player2['CORREO'])>=0)?'(':'').getValorAtributo($dbh,$player2['CORREO']))).((getValorAtributo($dbh,$player2['CORREO'])>=0)?')':'')?></h1>
+  <h1 class="Oli2 text-center" style="color: white"><?php echo ($_POST['p2']+1)."º ".$player2['NOMBRE']." ".$player2['APELLIDO1']." ".((((getValorAtributo($dbh,$player2['CORREO'])!="")?'(':'').getValorAtributo($dbh,$player2['CORREO']))).((getValorAtributo($dbh,$player2['CORREO'])!="")?')':'')?></h1>
 
 <?php
 

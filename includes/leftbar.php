@@ -9,7 +9,7 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Perfil"))
 			{
 			?>
-				<li><a href="profile.php"><i class="fa fa-user"></i> &nbsp;Perfil</a>
+				<li><a href="profile.php"><i class="fa fa-user"></i> &nbsp;Mi Perfil</a>
 				</li>
 			<?php
 			}
@@ -23,7 +23,7 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi cromo"))
 			{
 			?>
-			<li><a href="micromo.php"><i class="fa fa-plus-square"></i> &nbsp;Mi cromo</a>
+			<li><a href="micromo.php"><i class="fa fa-plus-square"></i> &nbsp;Mi Cromo</a>
 			</li>
 			<?php
 			}
@@ -44,7 +44,7 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Ranking"))
 			{
 			?>
-			<li><a href="ranking.php"><i class="fa fa-globe"></i> &nbsp;Ranking</a>
+			<li><a href="ranking.php"><i class="fa fa-globe"></i> &nbsp;Mi Cartilla</a>
 			</li>
 			<?php
 			}
