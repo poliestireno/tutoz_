@@ -514,6 +514,15 @@ echo "</ol>";
 <input type="hidden" name="textTotalAlumnos" id="textTotalAlumnos" >
 <input type="hidden" name="indicePlayer" id="indicePlayer" >
 <input type="hidden" name="totalJusta" id="totalJusta" >
+<input type="hidden" name="numMaxGanadas" id="numMaxGanadas" value="0" >
+<input type="hidden" name="historialGanador" id="historialGanador" value="-1" >
+<input type="hidden" name="historialNumMaxGanadas" id="historialNumMaxGanadas" 
+value="-3" >
+<input type="hidden" name="indiceUltimoGanadorAcum" id="indiceUltimoGanadorAcum" 
+value="-2" >
+<input type="hidden" name="listaGanadores" id="listaGanadores" 
+value="" >
+
 
 
                            
