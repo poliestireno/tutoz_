@@ -253,7 +253,15 @@ function getAsteriscos($nBin)
 <?php 
 $maxNumAlumClan = getConfGeneral($dbh, "NUMERO_ALUMNOS_CLAN");
 //echo 'clanid:'.$result['ID'];
-$aIntegrantes = getAlumnosClan($dbh,$result['ID']);
+if (isset($result))
+{
+	$aIntegrantes = getAlumnosClan($dbh,$result['ID']);
+}
+else
+{
+	$aIntegrantes = array();
+}
+
 //echo 'aIntegrantes:';
 //var_export($aIntegrantes);
 $contInte = 0;

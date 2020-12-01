@@ -2136,6 +2136,18 @@ function modificarGeneradoCromo($db,$gen, $idCromo)
    mi_info_log( "An Error occured! modificarGeneradoCromo ".$ex->getMessage());
   }   
 }
+function modificarMaxReferenciaCromoFromSetId($db,$maxReferencia, $idSet)
+{
+  try 
+  {
+    $sql = "UPDATE CROMOS SET toughness=".$maxReferencia." WHERE ID_SET=".$idSet;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarGeneradoCromo ".$ex->getMessage());
+  }   
+}
 
 function modificarPoseedorCromo($db,$idAlumno, $idCromo)
 {
@@ -2347,7 +2359,7 @@ function existeAlgunAlumnoFueraDeIdClan($db,$idClan,$aAlumnos)
       $vectorTotal [] = $fila;
     }
   }catch(PDOException $ex){
-     mi_info_log( "Error getAlumnosClan:".$ex->getMessage());
+     mi_info_log( "Error existeAlgunAlumnoFueraDeIdClan:".$ex->getMessage());
   }
   return (Count($vectorTotal)==0)?NULL:implode (", ", $aAlumnos);
 }

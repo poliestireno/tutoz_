@@ -499,12 +499,13 @@ echo "</ol>";
 
 
 </form>
+<form action="justa.php" id="form4" method="post">
  <div class="form-group">
   <div class="col-sm-12">
 
  <h3>Justas</h3>
 
-<form action="justa.php" id="form4" method="post">
+
 <input type="hidden" name="idc" id="idc" >
 <input type="hidden" name="p1Aux" id="p1Aux" >
 <input type="hidden" name="p2Aux" id="p2Aux" >
@@ -532,12 +533,30 @@ value="" >
   <input type="text" class="form-control col-md-2" ID="nRepescas" name="nRepescas" value="0" />
 
                             </div>
-                            </div>
+                            
+ 
+
+</div>
+</div>
 <div class="form-group col-md-2">
   <a onclick="iniciarJusta();" class="btn btn-success btn-outline btn-wrap-text">Iniciar justas</a>
-</div>  
+</div> 
 </form>
+
+<form action="admin_meter_cromos_clase.php" id="form5" method="post">
+  <input type="hidden" name="idc2" id="idc2" >
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Meter más cromos a la clase</h3>
 </div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="iniciarMeterMasCromosClase();" class="btn btn-danger btn-outline btn-wrap-text">Crear cromos</a>
+</div> 
+</form>
+
+
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>
@@ -554,6 +573,13 @@ value="" >
 						$('.succWrap').slideUp("slow");
 					}, 3000);
 					});
+
+
+  function iniciarMeterMasCromosClase()
+  {
+    document.getElementById('idc2').value = <?php echo $idCur?>;
+    document.getElementById('form5').submit();  
+  }
   function iniciarJusta()
   {
     
