@@ -61,7 +61,6 @@ if(isset($_POST['sel11']))
 
 if ($haySitio)
 {
-  //mi_info_log("HAY SITIO");
   $asignaturas = getAsignaturasFromCurso($dbh,$sel11);
   
   insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$sExamen);

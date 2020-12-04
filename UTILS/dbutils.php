@@ -126,7 +126,6 @@ function insertarAlumnosClan($db,$idClan,$aAlumnos)
   {
     try
       {
-          mi_info_log( "id-al".$idAlumno);
           $des = "id Alumno:".$idAlumno." id Clan".$idClan;
           $stmt = $db->prepare($sentencia);
           $stmt->bindParam(':ID_ALUMNO',$idAlumno);
@@ -190,7 +189,6 @@ function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,
 function insertarCromo($db,$ID_CREADOR,$ID_POSEEDOR,$GENERADO, $setId, $name, $color, $mana_w, $picture, $cardtype, $rarity, $cardtext, $power, $toughness, $artist, $bottom)
 {
   $sentencia= "INSERT INTO CROMOS(ID_SET, ID_CREADOR, ID_POSEEDOR, GENERADO, name, color, mana_w, picture, cardtype, rarity, cardtext, power, toughness, artist, bottom) VALUES (:setId, :ID_CREADOR,:ID_POSEEDOR,:GENERADO, :name, :color, :mana_w, :picture, :cardtype, :rarity, :cardtext, :power, :toughness, :artist, :bottom)";
-  //mi_info_log( $sentencia;
   try
   {
       $stmt = $db->prepare($sentencia);
@@ -220,7 +218,6 @@ function insertarCromo($db,$ID_CREADOR,$ID_POSEEDOR,$GENERADO, $setId, $name, $c
 function insertarActor($db,$PV, $PM, $PT, $CALAS)
 {
   $sentencia= "INSERT INTO MIACTOR(PV, PM, PT, CALAS) VALUES (:PV, :PM, :PT, :CALAS)";
-  //mi_info_log( $sentencia;
   try
   {
       $stmt = $db->prepare($sentencia);
@@ -259,7 +256,6 @@ $sentencia= "INSERT INTO BONOS (ID_ALUMNO, ID_CURSO, NUM_ESTRELLAS,NOMBRE) VALUE
 function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCIDAD,$FANTASMA,$SALTANDO,$PERSONAJE,$PORCENT_PPT,$POSTURA1,$POSTURA2,$POSTURA3,$LISTA_JUGADAS_HOY_PTT,$ID_MAPA_INICIO,$POS_X_INICIO,$POS_Y_INICIO)
 {
   $sentencia= "INSERT INTO MIBOT(SALUDO,DESCRIPCION,PALABRA_CLAVE,MOVILIDAD,VELOCIDAD,FANTASMA,SALTANDO,PERSONAJE,PORCENT_PPT,POSTURA1,POSTURA2,POSTURA3,LISTA_JUGADAS_HOY_PTT,ID_MAPA_INICIO,POS_X_INICIO,POS_Y_INICIO) VALUES (:SALUDO,:DESCRIPCION,:PALABRA_CLAVE,:MOVILIDAD,:VELOCIDAD,:FANTASMA,:SALTANDO,:PERSONAJE,:PORCENT_PPT,:POSTURA1,:POSTURA2,:POSTURA3,:LISTA_JUGADAS_HOY_PTT,:ID_MAPA_INICIO,:POS_X_INICIO,:POS_Y_INICIO)";
-  //mi_info_log( $sentencia;
   try
   {
       $stmt = $db->prepare($sentencia);
@@ -2209,7 +2205,6 @@ function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,
 
 
     $sql = "UPDATE MIBOT SET PORCENT_PPT='".$porcentajesPPT."'".$setPersonaje.",POSTURA1=".$postura1.",POSTURA2=".$postura2.",POSTURA3=".$postura3.",FANTASMA=".$fantasma.",SALTANDO=".$saltando.",VELOCIDAD=".$velocidad.",MOVILIDAD=".$movilidad.",ID_MAPA_INICIO=".$ID_MAPA_INICIO.",POS_X_INICIO=".$POS_X_INICIO.",POS_Y_INICIO=".$POS_Y_INICIO.",SALUDO='".$saludo."',PALABRA_CLAVE='".$palabra_clave."' WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
-    //mi_info_log( $sql);
     $stmt = $db->prepare($sql);
     $stmt->execute();
   } catch(PDOException $ex) 
@@ -2429,9 +2424,7 @@ function buscarAlumnos($db, $filtro){
 
 function getEstrellasFromAlumnoDiaAsignatura($db, $IDAlumno, $dia, $asignatura)  {
   try{
-    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("SELECT ESTRELLAS FROM ESTRELLAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno);
-    //mi_info_log( "SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno;
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
   catch(PDOException $ex){
@@ -2441,9 +2434,7 @@ function getEstrellasFromAlumnoDiaAsignatura($db, $IDAlumno, $dia, $asignatura) 
 }
 function getFaltasFromAlumnoDiaAsignatura($db, $IDAlumno, $dia, $asignatura)  {
   try{
-    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno);
-    //mi_info_log( "SELECT IFNULL(sum(SESIONES), 0) as nFaltas FROM FALTAS WHERE DIA = '".$dia."' AND ID_ASIGNATURA = ".$asignatura." AND ID_ALUMNO =".$IDAlumno;
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
   catch(PDOException $ex){
@@ -2453,7 +2444,6 @@ function getFaltasFromAlumnoDiaAsignatura($db, $IDAlumno, $dia, $asignatura)  {
 }
 function getFaltasFromAlumnoID($db, $IDAlumno)  {
   try{
-    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno);
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
@@ -2464,7 +2454,6 @@ function getFaltasFromAlumnoID($db, $IDAlumno)  {
 }
 function getEstrellasFromAlumnoID($db, $IDAlumno)  {
   try{
-    //mi_info_log( "select IFNULL(sum(SESIONES), 0) as nFaltas from FALTAS where ID_ALUMNO = ".$IDAlumno;
     $stmt = $db->query("select IFNULL(sum(ESTRELLAS), 0) as nEs from ESTRELLAS where ID_ALUMNO = ".$IDAlumno);
     $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   }
@@ -2590,8 +2579,6 @@ function BrioAlgoritmo($alumnos){
   $n = rand(1,$suma);
   
   for($i = 0; $i < Count($alumnos); $i++){
-    //mi_info_log( "|".$rangos[$i][0]."|". $rangos[$i][1]."|<br>";
-    //mi_info_log( $n;
     if ($n < 1){
       $n++;  
     } 

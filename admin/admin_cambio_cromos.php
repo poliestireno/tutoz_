@@ -48,6 +48,8 @@ if((isset($_POST['sCromo1']))&&($_POST['sCromo1']!='')&&($_POST['sCromo2']!=''))
   	modificarPoseedorCromo($dbh,$_POST['sAlumno1'], $_POST['sCromo2']);
   	modificarPoseedorCromo($dbh,$_POST['sAlumno2'], $_POST['sCromo1']);
 
+if (($posicionCambio1!=-1)&&($posicionCambio2!=-1))
+{
   	$auxOrdenAlbum = $aOrdenAlbum1[$posicionCambio1];
 	$auxOrdenCreadores = $aOrdenCreadores1[$posicionCambio1];
   	$auxOrdenReferencias = $aOrdenReferencias1[$posicionCambio1];
@@ -76,8 +78,12 @@ modificarOrdenReferenciasTotal($dbh,$alumno1['CORREO'], $sOrdenReferencias1);
 modificarOrdenAlbum($dbh,$alumno2['CORREO'], $sOrdenAlbum2);
 modificarOrdenCreadores($dbh,$alumno2['CORREO'], $sOrdenCreadores2);
 modificarOrdenReferenciasTotal($dbh,$alumno2['CORREO'], $sOrdenReferencias2);
-
 	$msg="Cambio procesado correctamente!";
+}
+else
+{
+	$msg="Cambio procesado correctamente, sin modificar orden,creadores y referencias";
+}
 }    
 ?>
 

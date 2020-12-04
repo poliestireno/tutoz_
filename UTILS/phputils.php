@@ -358,12 +358,9 @@ else
  
 function manageUtilizacionEvento($dbh,$correoJugador,$idEvento)
 {
-  //mi_info_log($correoJugador);
-  //mi_info_log($idEvento);
   $esJugable=1;
   $idAlumno = getAlumnoFromCorreo($dbh,$correoJugador)['ID'];
   $evento= getEventoFromID($dbh,$idEvento);
-  mi_info_log($evento);
   $listaUtilizacionesHoyDB= $evento['LISTA_UTILIZACIONES_HOY'];
   $listaUtilizacionesHoy = explode(",", $listaUtilizacionesHoyDB);
   if ((Count($listaUtilizacionesHoy)>0)&&(date('Y-m-d')==$listaUtilizacionesHoy[0]))
