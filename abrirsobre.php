@@ -13,6 +13,9 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 }
 else{
 	
+
+
+
 if(isset($_POST['submit']))
   {	
 	
@@ -38,7 +41,17 @@ if ($decrypted)
    		else
    		{
 			$_SESSION['idCromo']=$idCromo;
-   			header('location:contadorapertura.php');
+			$alumnoAux = getAlumnoFromCorreo($dbh,$correo);
+			if ($alumnoAux['NUMERO_NIVEL']>2)
+			{
+				header('location:tetris.php');
+			}
+			else
+			{
+				header('location:contadorapertura.php');
+			}
+		
+   			
    		}  	
    }
 }
