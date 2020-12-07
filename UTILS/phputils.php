@@ -60,6 +60,8 @@ function getEstrellasCromos($dbh,$correo)
      return $totalEstrellasCromos;
 }
 
+
+
 function getEstrellasGanas($dbh,$correo)
 {
 
@@ -68,6 +70,21 @@ function getEstrellasGanas($dbh,$correo)
   foreach ($aToCompor as $compor) 
   {
     $totalComportamiento += $compor['ESTRELLAS'];
+  }
+  return $totalComportamiento;
+}
+function getEstrellasGanasCampActual($dbh,$correo,$fechaInicioCamp)
+{
+  $fechaInicioCamp = strtotime($fechaInicioCamp);
+  $diaInicioCamp = date('Y-m-d', $fechaInicioCamp);
+  $totalComportamiento = 0;
+  $aToCompor = getEstrellasComportamientoFromCorreo($dbh,$correo);  
+  foreach ($aToCompor as $compor) 
+  {
+    if ($compor['DIA']>$diaInicioCamp)
+    {
+      $totalComportamiento += $compor['ESTRELLAS'];
+    }   
   }
   return $totalComportamiento;
 }
@@ -80,6 +97,18 @@ function getEstrellasRetos($dbh,$correo,$examen)
   $aToRetos = getEstrellasRetosFromCorreo($dbh,$correo,$examen);
   foreach ($aToRetos as $ret) {
     $totalRetos += $ret['ESTRELLAS_CONSEGUIDAS'];
+  }
+  return $totalRetos ;
+}
+function getEstrellasRetosCampActual($dbh,$correo,$examen,$fechaInicioCamp)
+{
+  $totalRetos = 0;
+  $aToRetos = getEstrellasRetosCampActualFromCorreo($dbh,$correo,$examen,$fechaInicioCamp);
+  foreach ($aToRetos as $ret) {
+    if ($ret['FECHA_CREACION']>$fechaInicioCamp)
+    {
+      $totalRetos += $ret['ESTRELLAS_CONSEGUIDAS'];
+    }    
   }
   return $totalRetos ;
 }

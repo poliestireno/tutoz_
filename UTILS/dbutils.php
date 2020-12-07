@@ -160,8 +160,8 @@ catch (PDOException $ex)
 }
 function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen)
 {
-  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_LIMITE,EXAMEN)
-              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, :FECHA_LIMITE,:EXAMEN)";
+  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, now(),:FECHA_LIMITE,:EXAMEN)";
   try
   {
     $stmt = $db->prepare($sentencia);
@@ -236,7 +236,7 @@ function insertarBono($db,$idAlu,$idCur,$numeroEstrellas,$nombre)
 {
      
 
-$sentencia= "INSERT INTO BONOS (ID_ALUMNO, ID_CURSO, NUM_ESTRELLAS,NOMBRE) VALUES (:ID_ALUMNO, :ID_CURSO, :NUM_ESTRELLAS, :NOMBRE)";
+$sentencia= "INSERT INTO BONOS (ID_ALUMNO, ID_CURSO, NUM_ESTRELLAS,NOMBRE,FECHA_CREACION) VALUES (:ID_ALUMNO, :ID_CURSO, :NUM_ESTRELLAS, :NOMBRE, now())";
   try
   {
       $stmt = $db->prepare($sentencia);
@@ -1365,6 +1365,31 @@ function getSitioFromMapID($db,$idMap){
   } 
   return $fila;
 }
+
+function getEstrellasBonosCampActual($db,$CORREO,$fechaInicioCamp)
+{
+  $vectorTotal = array();
+  try
+  {
+    $alum = getAlumnoFromCorreo($db,$CORREO);
+    $stmt = $db->query
+    ("SELECT * FROM BONOS WHERE ID_ALUMNO=".$alum['ID']." AND ID_CURSO = ".$alum['ID_CURSO']." AND FECHA_CREACION > '".$fechaInicioCamp."'");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getEstrellasBonosCampActual:".$ex->getMessage());
+  }
+  $totalEstrellas = 0;
+  foreach ($vectorTotal as $bono) {
+    $totalEstrellas+= $bono['NUM_ESTRELLAS'];
+  }
+  return $totalEstrellas;  
+}
 function getEstrellasBonos($db,$CORREO)
 {
   $vectorTotal = array();
@@ -2384,6 +2409,25 @@ function getEstrellasMayorQueDiaFromCorreo($db,$correo,$mayorQueDia){
     }
   }catch(PDOException $ex){
      mi_info_log( "Error getEstrellasDesdeDiaFromCorreo:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+
+function getEstrellasRetosCampActualFromCorreo($db,$correo,$examen,$fechaInicioCamp){
+  try{
+    $vectorTotal = array();
+    $stmt = $db->query
+    ("SELECT ID,ID_TAREA,ESTRELLAS_CONSEGUIDAS,FECHA, (SELECT NOMBRE FROM TAREAS WHERE TAREAS.ID = ALUMNOS_TAREAS.ID_TAREA) NOMBRE_TAREA , (SELECT TOTAL_ESTRELLAS FROM TAREAS WHERE (TAREAS.ID = ALUMNOS_TAREAS.ID_TAREA)) TOTAL_ESTRELLAS, (SELECT FECHA_CREACION FROM TAREAS WHERE (TAREAS.ID = ALUMNOS_TAREAS.ID_TAREA)) FECHA_CREACION FROM ALUMNOS_TAREAS WHERE ID_ALUMNO = ".getAlumnoFromCorreo($db,$correo)['ID']." ORDER BY FECHA DESC");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $tarea = getTareaFromID($db,$fila['ID_TAREA']);
+      if ($tarea['EXAMEN']==$examen)
+      {
+        $vectorTotal [] = $fila;
+      }
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getEstrellasRetosCampActualFromCorreo:".$ex->getMessage());
   }
   return $vectorTotal;
 }
