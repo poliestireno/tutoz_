@@ -167,7 +167,7 @@ else
        $fechaInicioCampActual = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['FECHA_INICIO_CAMP_ACTUAL'];
        if ($fechaInicioCampActual!=NULL)
        {
-       	echo '<th>Estrellas Campaña '.(($fechaInicioCampActual==NULL)?'':'('.date('Y-m-d', strtotime($fechaInicioCampActual)).')').'</th>';
+       	echo '<th>Estrellas Campaña Actual</th>';
        }      
        ?>
       <th>Total Estrellas</th>
@@ -397,7 +397,7 @@ if (Count($aToConcursos)>0)
        $fechaInicioCampActual = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['FECHA_INICIO_CAMP_ACTUAL'];
        if ($fechaInicioCampActual!=NULL)
        {
-       	echo '<th>Estrellas Campaña '.(($fechaInicioCampActual==NULL)?'':'('.date('Y-m-d', strtotime($fechaInicioCampActual)).')').'</th>';
+       	echo '<th>Campaña desde '.(($fechaInicioCampActual==NULL)?'':''.date('Y-m-d', strtotime($fechaInicioCampActual)).'').'</th>';
    		}
        ?>
       <th>Total Estrellas</th>
@@ -477,9 +477,16 @@ if (Count($aToConcursos)>0)
   <tbody>
   	<?php
 //var_dump($aToRetos);
+$insertadoTituloCampanaActual=0;
 foreach ($aToConcursos as $reto) 
 {
-
+		$fechaInicioCampActual = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['FECHA_INICIO_CAMP_ACTUAL'];
+		$fechaCreacionReto = (($reto['FECHA_CREACION']==NULL)?'-':date('Y-m-d', strtotime($reto['FECHA_CREACION'])));
+		if (($fechaInicioCampActual!=NULL)&&($fechaCreacionReto!='-')&&($fechaCreacionReto>$fechaInicioCampActual)&&($insertadoTituloCampanaActual==0))
+		{
+		echo '<tr class="table-info"><td><strong>Campaña Actual desde ('.date('Y-m-d', strtotime($fechaInicioCampActual)).')</strong></td></tr>';
+		$insertadoTituloCampanaActual=1;
+		}
 		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$reto['ID']);
 		//var_export($datosAlumnoTarea);
 	  	echo '<tr class="table-info">';
@@ -531,9 +538,16 @@ if ($confAsig!='MENU_BASICA')
 
 $aToRetos = getTareasTotalesFromAlumno($dbh,$loginAux,0);
 //var_dump($aToRetos);
+$insertadoTituloCampanaActual=0;
 foreach ($aToRetos as $reto) 
 {
-
+		$fechaInicioCampActual = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['FECHA_INICIO_CAMP_ACTUAL'];
+		$fechaCreacionReto = (($reto['FECHA_CREACION']==NULL)?'-':date('Y-m-d', strtotime($reto['FECHA_CREACION'])));
+		if (($fechaInicioCampActual!=NULL)&&($fechaCreacionReto!='-')&&($fechaCreacionReto>$fechaInicioCampActual)&&($insertadoTituloCampanaActual==0))
+		{
+		echo '<tr class="table-info"><td><strong>Campaña Actual desde ('.date('Y-m-d', strtotime($fechaInicioCampActual)).')</strong></td></tr>';
+		$insertadoTituloCampanaActual=1;
+		}
 		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$reto['ID']);
 		//var_export($datosAlumnoTarea);
 	  	echo '<tr class="table-info">';
@@ -542,7 +556,7 @@ foreach ($aToRetos as $reto)
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
 	      echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
 	      echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';
-	      echo '<td>'.(($reto['FECHA_CREACION']==NULL)?'-':date('Y-m-d', strtotime($reto['FECHA_CREACION']))).'</td>';
+	      echo '<td>'.$fechaCreacionReto.'</td>';
 	      echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
 	      //echo '<td>'.$reto['DESCRIPCION'].'</td>';
 	    echo '</tr>';
@@ -564,7 +578,6 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
   <!--Table head-->
   <thead>
     <tr>
-      <th>Asignatura</th>
       <th>Estrellas</th>
       <th>Día</th>
     </tr>
@@ -574,12 +587,17 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
   <!--Table body-->
   <tbody>
   	<?php
-$aToCompor = getEstrellasComportamientoFromCorreo($dbh,$loginAux);	
+$aToCompor = getEstrellasComportamientoFromCorreo($dbh,$loginAux);
+$insertadoTituloCampanaActual=0;	
 foreach ($aToCompor as $compor) 
 {
-
+		$fechaInicioCampActual = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['FECHA_INICIO_CAMP_ACTUAL'];
+		if (($fechaInicioCampActual!=NULL)&&($compor['DIA']>$fechaInicioCampActual)&&($insertadoTituloCampanaActual==0))
+		{
+		echo '<tr class="table-info"><td><strong>Campaña Actual desde ('.date('Y-m-d', strtotime($fechaInicioCampActual)).')</strong></td></tr>';
+		$insertadoTituloCampanaActual=1;
+		}
 	  	echo '<tr class="table-info">';
-	  	  echo '<td>'.$compor['NOMBRE_ASIGNATURA'].'</td>';
 	      echo '<td><b>'.$compor['ESTRELLAS'].'</b></td>';
 	      echo '<td>'.$compor['DIA'].'</td>';
 	    echo '</tr>';
@@ -614,13 +632,21 @@ if (($confAsig!='MENU_BASICA')&&($confAsig!='MENU_SIMPLON_RETOS'))
   <tbody>
   	<?php
 $aToCompor = getBonusFromCorreo($dbh,$loginAux);	
+$insertadoTituloCampanaActual=0;
 foreach ($aToCompor as $compor) 
 {
+		$fechaInicioCampActual = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['FECHA_INICIO_CAMP_ACTUAL'];
+		$fechaCreacionReto = (($compor['FECHA_CREACION']==NULL)?'-':date('Y-m-d', strtotime($compor['FECHA_CREACION'])));
+		if (($fechaInicioCampActual!=NULL)&&($fechaCreacionReto!='-')&&($fechaCreacionReto>$fechaInicioCampActual)&&($insertadoTituloCampanaActual==0))
+		{
+		echo '<tr class="table-info"><td><strong>Campaña Actual desde ('.date('Y-m-d', strtotime($fechaInicioCampActual)).')</strong></td></tr>';
+		$insertadoTituloCampanaActual=1;
+		}
 
 	  	echo '<tr class="table-info">';
 	  	  echo '<td>'.$compor['NOMBRE'].'</td>';
 	      echo '<td><b>'.$compor['NUM_ESTRELLAS'].'</b></td>';
-	      echo '<td>'.(($compor['FECHA_CREACION']==NULL)?'-':date('Y-m-d', strtotime($compor['FECHA_CREACION']))).'</td>';
+	      echo '<td>'.$fechaCreacionReto.'</td>';
 	    echo '</tr>';
 }
 

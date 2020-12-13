@@ -2388,7 +2388,7 @@ function getEstrellasComportamientoFromCorreo($db,$correo){
   try{
     $vectorTotal = array();
     $stmt = $db->query
-    ("SELECT ID,ESTRELLAS,DIA, (SELECT NOMBRE FROM ASIGNATURAS WHERE ASIGNATURAS.ID = ESTRELLAS.ID_ASIGNATURA) NOMBRE_ASIGNATURA FROM ESTRELLAS WHERE ID_ALUMNO = ".getAlumnoFromCorreo($db,$correo)['ID']." ORDER BY DIA DESC");
+    ("SELECT ID,ESTRELLAS,DIA, (SELECT NOMBRE FROM ASIGNATURAS WHERE ASIGNATURAS.ID = ESTRELLAS.ID_ASIGNATURA) NOMBRE_ASIGNATURA FROM ESTRELLAS WHERE ID_ALUMNO = ".getAlumnoFromCorreo($db,$correo)['ID']." ORDER BY DIA ASC");
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $vectorTotal [] = $fila;

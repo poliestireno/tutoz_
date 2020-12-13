@@ -48,10 +48,13 @@ else if(isset($_POST['submit']))
 	$file_loc = $_FILES['image']['tmp_name'];
 	$folder="images/";
 	$new_file_name = strtolower($file);
-	$final_file=str_replace(' ','-',$new_file_name);
-	
+    
 	$name=$_POST['name'];
 	$descripcion=$_POST['DESCRIPCION'];
+	$final_file=str_replace(' ','-',$new_file_name);
+	$final_file=$name.$descripcion[0].$final_file;
+
+	
 	$IDedit=$_POST['editID'];
 	$image=$_FILES['image']['name'];
 	$final_file=$name.$final_file;

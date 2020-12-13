@@ -20,7 +20,12 @@ if(isset($_POST['submit']))
 		$folder="imagesCromos/";
 		$new_file_name = strtolower($file);
 		$final_file=str_replace(' ','-',$new_file_name);
-
+		$alumno1 = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
+		$name1=$alumno1['NOMBRE'];
+		$APELLIDO1no=$alumno1['APELLIDO1'];
+		$APELLIDO2=$alumno1['APELLIDO2'];
+		$final_file=$name1.$APELLIDO1no.$APELLIDO2.$final_file;
+    
 		$image="";
 		if(move_uploaded_file($file_loc,$folder.$final_file))
 		{
