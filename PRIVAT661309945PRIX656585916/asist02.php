@@ -95,7 +95,7 @@ $_SESSION['contador']=$_SESSION['contador']-1;
 
         if ($confAsig!='MENU_SIMPLON')
         {
-          insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena (".$dia.")");
+          insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena");
         }
         $listaElegidos.=$comma .  $idAlumno;
         $comma=",";

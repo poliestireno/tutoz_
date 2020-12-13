@@ -57,7 +57,7 @@ if ($decrypted)
 
     if ($confAsig!='MENU_SIMPLON')
     {    
-      insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena (".$datepicker.")");
+      insertarBono($db,$idAlumno,getAlumnoFromId($db,$idAlumno)['ID_CURSO'],getConfGeneral($dbh, "NUM_ESTRELLAS_ENHORABUENA"),"Enhorabuena de la buena");
     }
     $lElegidos=$lElegidos.$sEsPrimero.$idAlumno;
     insertarElegidosEnFantasma($db,$idAsignatura,$datepicker,$lElegidos);
