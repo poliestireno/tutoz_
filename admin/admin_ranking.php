@@ -361,7 +361,10 @@ foreach ($aTotalAlumnos as $alum)
       $comma=",";
         echo '<td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="../ranking.php?l='. $alum['CORREO'].'" target=”_blank”>'.$alum['Nombre'].'</a></td>';
         echo '<td>'.$alum['NivelSinSiguiente'].'</td>';
-        echo '<td>'.$alum['TotalActual'].'</td>';
+        if ($fechaInicioCampActual!=NULL)
+        {
+          echo '<td>'.$alum['TotalActual'].'</td>';
+        }
         echo '<td>'.$alum['Total'].'</td>';
 
 if (Count($aToConcursos)>0)
