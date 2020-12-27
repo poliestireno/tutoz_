@@ -138,10 +138,12 @@ $aAlumnosCurso = getAlumnosFromCursoID($dbh,$idCur);
                </div>
                 </div>
 
+<?php 
 
+$tituloClase =  getCursoFromCursoID($dbh,$idCur)['NOMBRE']."/". getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']
+?>
 
-<h3>Ranking de curso/clase (<?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
-  echo getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']?>)</h3>
+<h3>Ranking de curso/clase (<?php echo $tituloClase;?>)</h3>
 
 <table class="table table-striped w-auto table-bordered">
 
@@ -655,7 +657,42 @@ value="" >
 <div class="form-group col-md-2">
   <a onclick="iniciarMeterMasCromosClase();" class="btn btn-danger btn-outline btn-wrap-text">Crear cromos</a>
 </div> 
+
 </form>
+
+
+<?php
+
+$listaAlumnosRuleta = "";
+
+$contRu = 1;
+foreach ($aTotalAlumnos as $alum) 
+{
+  $listaAlumnosRuleta .="&c".$contRu."=".$alum['Nombre'];
+  $contRu++;
+}
+
+
+
+
+?>
+
+
+<form target="_blank" action="https://wheeldecide.com/index.php?col=wof&t=<?php echo $tituloClase;?>&time=5&remove=1<?php echo $listaAlumnosRuleta;?>" id="form6" method="post">
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Ruleta Ramdomly</h3>
+</div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="lanzarRuleta();" class="btn btn-warning btn-outline btn-wrap-text">Abrir Ruleta</a>
+</div> 
+
+</form>
+
+
+
 
 
 	<!-- Loading Scripts -->
@@ -680,6 +717,10 @@ value="" >
   {
     document.getElementById('idc2').value = <?php echo $idCur?>;
     document.getElementById('form5').submit();  
+  }
+  function lanzarRuleta()
+  {
+    document.getElementById('form6').submit();  
   }
   function iniciarJusta()
   {
