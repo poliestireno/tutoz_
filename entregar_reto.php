@@ -56,21 +56,28 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 
     <?php
 //var_export($_POST);
+
 $idTarea = (isset($_GET['idt']))?$_GET['idt']:$_POST['idt'];
+if (isset($_GET['act']))
+{
+    modificarEstadoReto($dbh,$_SESSION['alogin'],$idTarea,"activado");   
+}
 $datosAT = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$idTarea);
 $ok=false;
 $nArchivos=0;
 $numeroEntregas=$datosAT['NUMERO_ENTREGAS']+1;
 $nombreReto = getTareaFromID($dbh,$idTarea)['NOMBRE'];
+$alumno = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
 if(isset($_POST['comentt']))
 {    
-    $alumno = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
+    
     if ($datosAT['ESTADO']!='no activado')
     {
         $folder="retos/".getAsignaturasFromCurso($dbh,$alumno['ID_CURSO'])[0]['NOMBRE']."/".$nombreReto;
         //var_export($folder);
         if (!file_exists($folder)) {
             mkdir($folder, 0777,true);
+            file_put_contents($folder.'/default.php', 'ondevasmaestro...');
         }
         $sListaArchivos = "";
         $comma="";
@@ -82,7 +89,7 @@ if(isset($_POST['comentt']))
             {
                 $bHayArchivo=true;
                 $file = $_FILES['archivo'.$i]['name'];
-                if(move_uploaded_file($_FILES['archivo'.$i]['tmp_name'],$folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2']."_".(($numeroEntregas<10)?"0":"").$numeroEntregas.'__'.$file))
+                if(move_uploaded_file($_FILES['archivo'.$i]['tmp_name'],$folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2']."_".(($numeroEntregas<10)?"0":"").$numeroEntregas.'__'.date("Y-m-d H:i:s").'_'.$file))
                 {
                     $sListaArchivos .= $comma . $file;
                     $comma="\\n";
@@ -102,7 +109,7 @@ if(isset($_POST['comentt']))
         }
         if ($ok)
         {
-        file_put_contents($folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2']."_".(($numeroEntregas<10)?"0":"").$numeroEntregas.'__comentario.txt',$_POST['comentt']);
+        file_put_contents($folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2']."_".(($numeroEntregas<10)?"0":"").$numeroEntregas.'__'.date("Y-m-d H:i:s").'_comentario.txt',$_POST['comentt']);
 modificarEstadoReto($dbh,$_SESSION['alogin'],$idTarea,"entregado");
 modificarFechaEntregadoReto($dbh,$_SESSION['alogin'],$idTarea,date("Y-m-d H:i:s"));
 modificarComentarioReto($dbh,$_SESSION['alogin'],$idTarea,$_POST['comentt']);
@@ -189,7 +196,7 @@ echo "Swal.fire({
 
 
 						<h2 class="text-center text-bold mt-2x">Entregar Reto <?php echo $nombreReto?></h2>
-                        <h4 class="text-center text-bold mt-2x">(Entrega Número <?php echo $numeroEntregas?>)</h4>
+                        <h4 class="text-center text-bold mt-2x">(Vas a hacer la entrega número <?php echo $numeroEntregas?>)</h4>
                         <div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
                          <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" id="regform">
@@ -222,7 +229,45 @@ La entrega valida será la última realizada.
 
                                 </form>
 							</div>
-	
 
+<b>FICHEROS ENTREGADOS</b><br/>
+<?php
+
+$patronPreFix= $alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2'];
+
+$folder="retos/".getAsignaturasFromCurso($dbh,$alumno['ID_CURSO'])[0]['NOMBRE']."/".$nombreReto;
+$files = glob($folder."/".$patronPreFix."*");
+rsort($files);
+$numEntregasInterador = $numeroEntregas-1;
+if ($numEntregasInterador>0)
+{
+    echo "Entrega ".$numEntregasInterador."ª (última) <br/>";
+}
+if ($numEntregasInterador<10)
+{
+    $numEntregasInterador="0".$numEntregasInterador;
+}
+$patronEntregas="_".$numEntregasInterador."__";
+foreach ($files as $ficheroI) 
+{
+    
+    $contienePatronF = strpos($ficheroI, $patronEntregas);
+    if (!$contienePatronF)
+    {
+        $numEntregasInterador--;
+        $textoNumEntregasInterador = $numEntregasInterador;
+        if ($numEntregasInterador<10)
+        {
+            $numEntregasInterador="0".$numEntregasInterador;
+        }
+        $patronEntregas="_".$numEntregasInterador."__";
+        echo "Entrega ".$textoNumEntregasInterador."ª<br/>";
+    }
+
+    echo '<a href="'.$ficheroI.'" target="_blank" rel="noopener">'.basename($ficheroI).'</a><br/>';
+  
+}
+//var_export($files);
+?>
 </body>
 </html>

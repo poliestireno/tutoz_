@@ -548,10 +548,23 @@ foreach ($aToRetos as $reto)
 		echo '<tr class="table-info"><td><strong>Campaña Actual desde ('.date('Y-m-d', strtotime($fechaInicioCampActual)).')</strong></td></tr>';
 		$insertadoTituloCampanaActual=1;
 		}
-		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$reto['ID']);
+		$retoId = $reto['ID'];
+		$datosAlumnoTarea = getDatosAlumnoTarea($dbh,$loginAux,$retoId);
 		//var_export($datosAlumnoTarea);
+
+		$paramShow = '\''.$reto['NOMBRE'].'\',\''.$reto['DESCRIPCION'].'\'';
+		if ($reto['LINK_DOCUMENTO']=='')
+		{
+
+			$linkDocumentos= 'javascript:" onclick="showDesc('.$paramShow .');return false;';
+		}
+		else
+		{
+			$linkDocumentos= $reto['LINK_DOCUMENTO'].'" onclick="showDesc('.$paramShow .');';
+		}
+
 	  	echo '<tr class="table-info">';
-	      echo '<td title="'.$reto['DESCRIPCION'].'">'.$reto['NOMBRE'].'</td>';
+	      echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAR]</a> '.$reto['NOMBRE'].'</td>';
 	      echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
 	      echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
@@ -676,12 +689,19 @@ foreach ($aToCompor as $compor)
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 	<script type="text/javascript">
 				 $(document).ready(function () {          
 					setTimeout(function() {
 						$('.succWrap').slideUp("slow");
 					}, 3000);
 					});
+
+	function showDesc(nombreReto,descReto)
+	{
+		Swal.fire(nombreReto,descReto ,'info');
+	}
+				 
 	</script>
 	
 

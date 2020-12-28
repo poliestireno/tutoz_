@@ -79,12 +79,13 @@ if (isset($_GET['idr']))
 
 <?php 
 $reto = getTareaFromID($dbh,$idReto);
+
+
+
+
+$folder="../retos/".getAsignaturaFromAsignaturaID($dbh,$reto['ID_ASIGNATURA'])['NOMBRE']."/".$reto['NOMBRE'];
 ?>
-
-
-
-
-<h3><?php echo $reto['NOMBRE']?></h3>
+<h3><?php echo $reto['NOMBRE'].'<a href="'.$folder.'" target="_blank" rel="noopener"> [carpeta]</a>';?></h3>
 <table class="table table-striped w-auto table-bordered">
 
   <!--Table head-->
