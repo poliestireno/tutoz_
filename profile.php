@@ -17,12 +17,12 @@ if(isset($_POST['submit']))
 	$file_loc = $_FILES['image']['tmp_name'];
 	$folder="images/";
 	$new_file_name = strtolower($file);
-	$final_file=str_replace(' ','-',$new_file_name);
-	
+	$final_file=str_replace(' ','-',$new_file_name);	
 	$name=$_POST['name'];
 	$APELLIDO1no=$_POST['APELLIDO1'];
 	$APELLIDO2=$_POST['APELLIDO2'];
-	$IDedit=$_POST['editID'];
+	$final_file=$name.$APELLIDO1no.$APELLIDO2.$final_file;
+    $IDedit=$_POST['editID'];
 	$image=$_POST['image'];
 
 	if(move_uploaded_file($file_loc,$folder.$final_file))
