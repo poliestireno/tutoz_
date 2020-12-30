@@ -108,7 +108,7 @@ $folder="../retos/".getAsignaturaFromAsignaturaID($dbh,$reto['ID_ASIGNATURA'])['
         echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
         echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
         echo '<td>'.$reto['DESCRIPCION'].'</td>';
-        echo '<td>'.(($reto['LINK_DOCUMENTO']==NULL)?'-':$reto['LINK_DOCUMENTO']).'</td>';
+        echo '<td>'.(($reto['LINK_DOCUMENTO']==NULL)?'-':'<a href="'.$reto['LINK_DOCUMENTO'].'" target="_blank" rel="noopener">[IR AL DOCUMENTO]</a>').'</td>';
       echo '</tr>';
     
 
