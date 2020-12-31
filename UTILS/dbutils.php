@@ -522,6 +522,19 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   }
   return $vectorTotal;
 }
+function getAllAlumnos($db){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM ALUMNOS  WHERE id >= 201 AND id <= 300");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getAllAlumnos:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
 function getFantasmasFromAsignaturaID($db,$IDAsignatura){
   $vectorTotal = array();
 
