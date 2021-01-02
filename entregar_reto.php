@@ -278,7 +278,7 @@ echo "Swal.fire({
 
 
 						<h2 class="text-center text-bold mt-2x">Entregar Reto <?php echo $nombreReto?></h2>
-                        <h4 class="text-center text-bold mt-2x"><?php echo " [fecha límite de entrega: ".$filaTarea['FECHA_LIMITE']."]"?><br/>[Tamaño límite de la entrega: 20MB]<br/>(Vas a hacer la entrega número <?php echo $numeroEntregas.(($entregaFueraTiempo)?"<b style='color:red'> [entrega fuera de tiempo por ".$sDiferenciaFueraTiempo."] </b>":"")?>)</h4>
+                        <h4 class="text-center text-bold mt-2x"><?php echo " [Fecha límite de entrega: ".$filaTarea['FECHA_LIMITE']."]"?><br/>[Tamaño límite de la entrega: 20MB]<br/>(Vas a hacer la entrega número <?php echo $numeroEntregas.(($entregaFueraTiempo)?"<b style='color:red'> [entrega fuera de tiempo por ".$sDiferenciaFueraTiempo."] </b>":"")?>)</h4>
                         <div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
                          <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" id="regform">
