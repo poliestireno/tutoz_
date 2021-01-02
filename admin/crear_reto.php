@@ -240,8 +240,10 @@ else
                                 </div>
                                 <script type="text/javascript">
                                     $(function () {
+                        var now = new Date();
+                var dateNow1Week = now.setDate(now.getDate() +7 );
                                         $('#datetimepicker4').datetimepicker({
-                                            format: 'YYYY-MM-DD hh:mm:ss'
+                                            format: 'YYYY-MM-DD HH:mm:ss',defaultDate:moment(dateNow1Week).hours(23).minutes(59).seconds(59).milliseconds(0)
                                         });                                       
                                     });
 

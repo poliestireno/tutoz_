@@ -55,6 +55,76 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 
 
     <?php
+
+function getDiferenciaDates($date2,$date1)
+{
+    // Formulate the Difference between two dates
+    $date1 = strtotime($date1);  
+    $date2 = strtotime($date2);  
+    $diff = abs($date2 - $date1);  
+// To get the year divide the resultant date into 
+// total seconds in a year (365*60*60*24) 
+$years = floor($diff / (365*60*60*24));  
+// To get the month, subtract it with years and 
+// divide the resultant date into 
+// total seconds in a month (30*60*60*24) 
+$months = floor(($diff - $years * 365*60*60*24) 
+                               / (30*60*60*24));  
+// To get the day, subtract it with years and  
+// months and divide the resultant date into 
+// total seconds in a days (60*60*24) 
+$days = floor(($diff - $years * 365*60*60*24 -  
+             $months*30*60*60*24)/ (60*60*24)); 
+// To get the hour, subtract it with years,  
+// months & seconds and divide the resultant 
+// date into total seconds in a hours (60*60) 
+$hours = floor(($diff - $years * 365*60*60*24  
+       - $months*30*60*60*24 - $days*60*60*24) 
+                                   / (60*60));  
+// To get the minutes, subtract it with years, 
+// months, seconds and hours and divide the  
+// resultant date into total seconds i.e. 60 
+$minutes = floor(($diff - $years * 365*60*60*24  
+         - $months*30*60*60*24 - $days*60*60*24  
+                          - $hours*60*60)/ 60);  
+// To get the minutes, subtract it with years, 
+// months, seconds, hours and minutes  
+$seconds = floor(($diff - $years * 365*60*60*24  
+         - $months*30*60*60*24 - $days*60*60*24 
+                - $hours*60*60 - $minutes*60));   
+// Print the result 
+//printf("%d years, %d months, %d days, %d hours, "
+//     . "%d minutes, %d seconds", $years, $months, 
+//             $days, $hours, $minutes, $seconds);
+$sDife = "";
+if ($years>0)
+{
+   $sDife .= $years." años ";
+}
+if ($months>0)
+{
+   $sDife .= $months." meses ";
+}
+if ($days>0)
+{
+   $sDife .= $days." días ";
+}
+if ($hours>0)
+{
+   $sDife .= $hours." horas ";
+}
+if ($minutes>0)
+{
+   $sDife .= $minutes." minutos ";
+}
+if ($seconds>0)
+{
+   $sDife .= $seconds." segundos";
+}
+
+return $sDife;
+}
+
 //var_export($_POST);
 
 $idTarea = (isset($_GET['idt']))?$_GET['idt']:$_POST['idt'];
@@ -66,7 +136,15 @@ $datosAT = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$idTarea);
 $ok=false;
 $nArchivos=0;
 $numeroEntregas=$datosAT['NUMERO_ENTREGAS']+1;
-$nombreReto = getTareaFromID($dbh,$idTarea)['NOMBRE'];
+$filaTarea = getTareaFromID($dbh,$idTarea);
+$dateActual = date("Y-m-d H:i:s");
+$entregaFueraTiempo= ($dateActual>$filaTarea['FECHA_LIMITE']);
+$sDiferenciaFueraTiempo = "";
+if ($entregaFueraTiempo)
+{
+    $sDiferenciaFueraTiempo = getDiferenciaDates($dateActual,$filaTarea['FECHA_LIMITE']);
+}
+$nombreReto = $filaTarea['NOMBRE'];
 $alumno = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
 if(isset($_POST['comentt']))
 {    
@@ -196,7 +274,8 @@ echo "Swal.fire({
 
 
 						<h2 class="text-center text-bold mt-2x">Entregar Reto <?php echo $nombreReto?></h2>
-                        <h4 class="text-center text-bold mt-2x">(Vas a hacer la entrega número <?php echo $numeroEntregas?>)</h4>
+                        <h4 class="text-center text-bold mt-2x"><?php echo " [fecha límite de entrega ".$filaTarea['FECHA_LIMITE']."]"?></h4>
+                        <h4 class="text-center text-bold mt-2x">(Vas a hacer la entrega número <?php echo $numeroEntregas.(($entregaFueraTiempo)?"<b style='color:red'> [entrega fuera de tiempo por ".$sDiferenciaFueraTiempo."] </b>":"")?>)</h4>
                         <div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
                          <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" id="regform">
@@ -220,8 +299,6 @@ echo "Swal.fire({
                             <input type="text" name="comentt" class="form-control" maxlength = "499" required>
                             </div>
                             </div>
- 
-La entrega valida será la última realizada.
 
 								<br>
 
@@ -230,7 +307,6 @@ La entrega valida será la última realizada.
                                 </form>
 							</div>
 
-<b>FICHEROS ENTREGADOS</b><br/>
 <?php
 
 $patronPreFix= $alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2'];
@@ -241,8 +317,20 @@ rsort($files);
 $numEntregasInterador = $numeroEntregas-1;
 if ($numEntregasInterador>0)
 {
-    echo "Entrega ".$numEntregasInterador."ª (última) <br/>";
+    $postIniFecha = strpos($files[0], "__")+2;
+    $time = strtotime(substr($files[0], $postIniFecha, 19));
+        $newformat = date('Y-m-d H:i:s',$time);
+        $entregaFueraTiempo2= ($newformat>$filaTarea['FECHA_LIMITE']);
+$sDiferenciaFueraTiempo2 = "";
+if ($entregaFueraTiempo2)
+{
+    $sDiferenciaFueraTiempo2 = getDiferenciaDates($newformat,$filaTarea['FECHA_LIMITE']);
 }
+    echo "<b style='font-size:2vw'>ENTREGA VALIDA</b><br/>";
+    echo "Entrega ".$numEntregasInterador."ª (última)".(($entregaFueraTiempo2)?"<b style='color:red'> [entrega fuera de tiempo por ".$sDiferenciaFueraTiempo2."] </b>":"")." <br/>";
+}
+
+$entregasAnteriores=false;
 if ($numEntregasInterador<10)
 {
     $numEntregasInterador="0".$numEntregasInterador;
@@ -261,7 +349,23 @@ foreach ($files as $ficheroI)
             $numEntregasInterador="0".$numEntregasInterador;
         }
         $patronEntregas="_".$numEntregasInterador."__";
-        echo "Entrega ".$textoNumEntregasInterador."ª<br/>";
+        $postIniFecha = strpos($ficheroI, "__")+2;
+       
+        $time = strtotime(substr($ficheroI, $postIniFecha, 19));
+        $newformat = date('Y-m-d H:i:s',$time);
+        $entregaFueraTiempo2= ($newformat>$filaTarea['FECHA_LIMITE']);
+        $sDiferenciaFueraTiempo2 = "";
+        if ($entregaFueraTiempo2)
+        {
+            $sDiferenciaFueraTiempo2 = getDiferenciaDates($newformat,$filaTarea['FECHA_LIMITE']);
+        }
+        if (!$entregasAnteriores)
+        {
+            echo "<b style='font-size:2vw' >ENTREGAS ANTERIORES</b><br/>";
+            $entregasAnteriores=true;
+        }
+        //var_export($newformat);
+        echo "Entrega ".$textoNumEntregasInterador."ª".(($entregaFueraTiempo2)?"<b style='color:red'> [entrega fuera de tiempo por ".$sDiferenciaFueraTiempo2."] </b>":"")." <br/>";
     }
 
     echo '<a href="'.$ficheroI.'" target="_blank" rel="noopener">'.basename($ficheroI).'</a><br/>';
