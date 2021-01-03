@@ -1427,6 +1427,27 @@ function getEstrellasBonos($db,$CORREO)
   }
   return $totalEstrellas;  
 }
+
+function getDatosAlumnoTareaEntregados($db,$idTarea)
+{
+  $vectorTotal = array();
+  try
+  {
+
+    $stmt = $db->query
+    ("SELECT * FROM ALUMNOS_TAREAS WHERE ID_TAREA=".$idTarea." AND FECHA IS NOT NULL");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getDatosAlumnoTareaEntregados:".$ex->getMessage());
+  }
+  return $vectorTotal;  
+}
 function getTareasFromAlumnoEstado($db,$correo,$estado)
 {
   $vectorTotal = array();

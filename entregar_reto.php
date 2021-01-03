@@ -192,11 +192,20 @@ if(isset($_POST['comentt']))
         if ($ok)
         {
         file_put_contents($folder."/".$alumno['NOMBRE'].'_'.$alumno['APELLIDO1'].'_'.$alumno['APELLIDO2']."_".(($numeroEntregas<10)?"0":"").$numeroEntregas.'__'.date("Y-m-d H:i:s").'_comentario.txt',$_POST['comentt']);
+
+$aDatosATEntregados = getDatosAlumnoTareaEntregados($dbh,$idTarea);
+$numEntregados = Count($aDatosATEntregados) + 1;
+if ($numeroEntregas>1)
+{
+    $numEntregados--;
+}
+
 modificarEstadoReto($dbh,$_SESSION['alogin'],$idTarea,"entregado");
 modificarFechaEntregadoReto($dbh,$_SESSION['alogin'],$idTarea,date("Y-m-d H:i:s"));
 modificarComentarioReto($dbh,$_SESSION['alogin'],$idTarea,$_POST['comentt']);
 modificarOtrosReto($dbh,$_SESSION['alogin'],$idTarea,"Archivos subidos:".$nArchivos);
 modificarNumeroEntregasReto($dbh,$_SESSION['alogin'],$idTarea,$numeroEntregas);
+
 $datosAT = getDatosAlumnoTarea($dbh,$_SESSION['alogin'],$idTarea);
 $numeroEntregas=$datosAT['NUMERO_ENTREGAS']+1;
         }
@@ -235,7 +244,7 @@ function init()
          }
          else
         {
-        echo 'var str="<h3>¡Reto entregado!</h3> Archivos subidos:'.$nArchivos.'"+"\n"+"'.$sListaArchivos.'";';           
+        echo 'var str="<h4>¡Reto entregado</h4><h4> en '.$numEntregados.'ª posición!</h4> Archivos subidos:'.$nArchivos.'"+"\n"+"'.$sListaArchivos.'";';           
         }
 echo "Swal.fire({
   html: '<pre>' + str + '</pre>',
