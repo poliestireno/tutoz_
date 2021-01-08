@@ -89,6 +89,13 @@ require_once("cssutils.php");
 			</li>
 			<?php
 			}
+			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Juicio"))
+			{
+			?>
+			<li><a href="vota_juicio.php"><i class="fa fa-balance-scale"></i> &nbsp;Juicio</a>
+			</li>
+			<?php
+			}
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi QR"))
 			{
 			?>

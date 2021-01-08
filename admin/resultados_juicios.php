@@ -23,50 +23,12 @@ $idCur="";
 		}
 		else
 		{
-		  $idCur=$_POST['idc2'];
+		  $idCur=$_POST['idc3'];
 		}
-	if (isset($_POST['ref_desde']))
-	{
 
-if (utilizaCromosCurso($dbh,$idCur))
-{
-		$aAlumnosCurso = getAlumnosFromCursoID($dbh,$idCur);
-		$setId = NULL;
-		foreach ($aAlumnosCurso as $alumno) 
-     	{
-     		//var_export($alumno);
-     		$setId = getSetCromosIdFromAlumno($dbh,$alumno['CORREO']);
-     		//var_export($setId);
-     		for ($i=$_POST['ref_desde']; $i <= $_POST['ref_hasta']; $i++) 
-     		{ 
-	            
-     			$cromoActual = getCromo($dbh,$alumno['CORREO']);
+//	$msg="todo ok";
 
-	            $ID_POSEEDOR=NULL;
-	            $GENERADO=0;
-		        $ID_CREADOR=$alumno['ID'];        
-		        $name=$cromoActual['name'];
-		        $color=$cromoActual['color'];
-		        $mana_w=$cromoActual['mana_w'];
-		        $picture=$cromoActual['picture'];
-		        $cardtype=$cromoActual['cardtype'];
-		        $rarity=$cromoActual['rarity'];
-		        $cardtext=$cromoActual['cardtext'];
-		        $power=$i;
-		        $toughness=$_POST['ref_hasta'];
-		        $artist=$cromoActual['artist'];
-		        $bottom=$cromoActual['bottom'];
-				insertarCromo($dbh,$ID_CREADOR,$ID_POSEEDOR,$GENERADO,$setId, $name, $color, $mana_w, $picture, $cardtype, $rarity, $cardtext, $power, $toughness, $artist, $bottom);
-     		}
-     	}
-     	modificarMaxReferenciaCromoFromSetId($dbh,$_POST['ref_hasta'], $setId);
-		$msg="Cromos con referencia [".$_POST['ref_desde']."..".$_POST['ref_hasta']."] insertados correctamente correctamente!"; 
-	}
-	else
-	{
-		$msg="La clase no está habilitada con cromos";
-	}
-}
+
 	  
 ?>
 
@@ -81,7 +43,7 @@ if (utilizaCromosCurso($dbh,$idCur))
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Meter cromos clase</title>
+	<title>Resultados Juicios</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -129,40 +91,98 @@ if (utilizaCromosCurso($dbh,$idCur))
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="page-title">Meter cromos clase <?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
+						<h3 class="page-title">Resultados Juicios de clase <?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
   echo getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']?></h3>
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-default">
-									<div class="panel-heading">Máxima referencia: (<?php echo (utilizaCromosCurso($dbh,$idCur))?(getCromo($dbh,getAlumnosFromCursoID($dbh,$idCur)[0]['CORREO'])['toughness']):"-" ?>)</div>
+									<div class="panel-heading">Juicios</div>
 <?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>
 
 									<div class="panel-body">
 
-<form action="admin_meter_cromos_clase.php" id="form3" method="post">
-  <input type="hidden" name="idc2" id="idc2" value="<?php echo $_POST['idc2']?>">
+<form action="resultados_juicios.php" id="form3" method="post">
+  <input type="hidden" name="idc3" id="idc3" value="<?php echo $_POST['idc3']?>">
 
 	<div class="form-group">
- <label class="col-sm-2 control-label">Referencia desde (inclusive)</label>
-<div class="col-sm-4">
-<input type="text" name="ref_desde" class="form-control" required value=""/>
+<label class="col-sm-1 control-label">Juicios</label>
+                            <div class="col-sm-5">
+  <select class="form-control col-md-2" ID="sJuicioId" name="sJuicioId">
+  	<option></option>
+<?php
+	$aJuicios = getJuiciosFromAsignatura($dbh,getAsignaturasFromCurso($dbh,$idCur)[0]['ID']);
+    foreach ($aJuicios as $juicioI) 
+    {
+echo "<option value='".$juicioI['ID']."'>".$juicioI['NOMBRE']." (".$juicioI['FECHA'].")</option>";
+    }
 
-</div>
-
-<label class="col-sm-2 control-label">Referencia hasta (inclusive)</label>
-<div class="col-sm-4">
-<input type="text" name="ref_hasta" class="form-control" required value=""/>
-</div>                           
+?>
+  </select>
+                            </div>                          
 
 	</div>
 	<div class="col-sm-8 col-sm-offset-2"></div>
 	<div class="col-sm-8 col-sm-offset-2"></div>
     <div class="form-group">
   <div class="col-sm-2 col-sm-offset-2">
-    <button class="btn btn-warning" name="submit" type="submit">Crear cromos clase</button>
+    <button class="btn btn-warning" name="submit" type="submit">Ver resultado</button>
   </div>
 </div>
-</form>									</div>
+</form>		
+<br/><br/><br/><br/><br/>
+<div class="form-group">
+<?php
+if (isset($_POST['submit']))
+{
+
+
+$tiposBotones = array( "btn btn-primary", "btn btn-success", "btn btn-warning", "btn btn-info");
+$alumnoDB = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
+
+$juicioElegido = getJuicioFromId($dbh,$_POST['sJuicioId']);
+
+echo '<div class="form-group"><label class="col-sm-4 control-label">'.$juicioElegido['NOMBRE'].'('.$juicioElegido['FECHA'].')</label></div><br/><br/><div class="form-group"><label class="col-sm-8 control-label"> '.$juicioElegido['DESCRIPCION'].'</label></div>';
+	
+	$aOpciones = explode(",", $juicioElegido['OPCIONES']);
+
+	$hOpcionesNumero = array();
+	foreach ($aOpciones as $opcionI) 
+	{
+		$hOpcionesNumero[$opcionI]=0;
+	}
+	//var_export($hOpcionesNumero);
+
+	$aVotaAlumJui = getVotacionesAlumnosJuicio($dbh,$_POST['sJuicioId']);
+	$totalVotos = 0;
+	foreach ($aVotaAlumJui as $votaI) {
+		$hOpcionesNumero[$votaI['OPCION']]++;
+		$totalVotos++;
+	}
+	//var_export($hOpcionesNumero);
+	$i=0;
+	foreach ($hOpcionesNumero as $key => $value) 
+	{
+		$porcentaje = round((($value/(($totalVotos>0)?$totalVotos:1))*100),1);
+		if ($porcentaje<10)
+		{
+			$porcentaje="0".$porcentaje;
+		}
+		$porcentaje.="";
+		if (ctype_digit($porcentaje)) 
+		{
+			$porcentaje.=".0";
+		}
+
+		echo '<div id="aa_0" class="btn-group btn-group-justified" ><a id="bb_0" style="text-align:left;font-family:Courier; font-size:40px; height: 90px" class="'.$tiposBotones[$i % sizeof($tiposBotones)	].'">'.$porcentaje.'%-'.$key.' ('.$value.')</a></div>';
+		$i++;
+	}
+	echo '<label class="col-sm-8 control-label">Votos totales: '.$totalVotos.'</label>';
+
+}
+?>
+</div>
+
+							</div>
 								</div>
 							</div>
 						</div>

@@ -16,6 +16,8 @@
 			</li>
 			<li><a href="crear_reto.php"><i class="fa fa-envelope"></i> &nbsp;Crear Reto</a>
 			</li>
+			<li><a href="crear_juicio.php"><i class="fa fa-envelope"></i> &nbsp;Crear Juicio</a>
+			</li>
 			<li><a href="admin_niveles.php"><i class="fa fa-envelope"></i> &nbsp;Niveles</a>
 			</li>
 			<li><a href="conf_generales.php"><i class="fa fa-envelope"></i> &nbsp;Conf generales</a>

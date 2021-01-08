@@ -647,7 +647,7 @@ value="" >
 </form>
 
 <form action="admin_meter_cromos_clase.php" id="form5" method="post">
-  <input type="hidden" name="idc2" id="idc2" >
+  <input type="hidden" name="idc2" id="idc2" />
  <div class="form-group">
   <div class="col-sm-12">
 
@@ -659,8 +659,20 @@ value="" >
 </div> 
 
 </form>
+<form target="_blank" action="resultados_juicios.php" id="form7" method="post">
+    <input type="hidden" name="idc3" id="idc3" />
 
+ <div class="form-group">
+  <div class="col-sm-12">
 
+ <h3>Resultados juicios</h3>
+</div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="resultadosJuicios();" class="btn btn-info btn-outline btn-wrap-text">Ver resultados</a>
+</div> 
+
+</form>
 <?php
 
 $listaAlumnosRuleta = "";
@@ -671,10 +683,6 @@ foreach ($aTotalAlumnos as $alum)
   $listaAlumnosRuleta .="&c".$contRu."=".$alum['Nombre'];
   $contRu++;
 }
-
-
-
-
 ?>
 
 
@@ -721,6 +729,11 @@ foreach ($aTotalAlumnos as $alum)
   function lanzarRuleta()
   {
     document.getElementById('form6').submit();  
+  }
+  function resultadosJuicios()
+  {
+    document.getElementById('idc3').value = <?php echo $idCur?>;
+    document.getElementById('form7').submit();  
   }
   function iniciarJusta()
   {

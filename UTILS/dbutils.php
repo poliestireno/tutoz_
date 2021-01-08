@@ -158,6 +158,45 @@ catch (PDOException $ex)
     mi_info_log( "Error inserción estrella:".$ex->getMessage());
 }  
 }
+
+  
+function insertarAlumnoJuicio($db,$idJuicio,$idAlumno,$opcionElegida)
+{
+  $sentencia= "INSERT INTO ALUMNOS_JUICIOS ( ID_ALUMNO,  ID_JUICIO, OPCION,FECHA)
+              VALUES ( :ID_ALUMNO, :ID_JUICIO, :OPCION, now())";
+  try
+  {
+    $stmt = $db->prepare($sentencia);
+    $stmt->bindParam(':ID_ALUMNO',$idAlumno);
+    $stmt->bindParam(':ID_JUICIO',$idJuicio);
+    $stmt->bindParam(':OPCION',$opcionElegida);
+    $stmt->execute();
+  }
+  catch (Exception $ex)
+  {
+      mi_info_log( "Error insertarAlumnoJuicio:".$ex->getMessage());
+  }  
+}
+function insertarJuicio($db,$asignatura,$name,$opciones,$descrip)
+{
+  $sentencia= "INSERT INTO JUICIOS ( ID_ASIGNATURA, NOMBRE, OPCIONES, DESCRIPCION, ACTIVO,FECHA)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :OPCIONES,:DESCRIPCION, :ACTIVO, now())";
+  try
+  {
+    $uno = 1;
+    $stmt = $db->prepare($sentencia);
+    $stmt->bindParam(':ID_ASIGNATURA',$asignatura);
+    $stmt->bindParam(':NOMBRE',$name);
+    $stmt->bindParam(':OPCIONES',$opciones);
+    $stmt->bindParam(':DESCRIPCION',$descrip);
+    $stmt->bindParam(':ACTIVO',$uno);
+    $stmt->execute();
+  }
+  catch (Exception $ex)
+  {
+      mi_info_log( "Error insertarJuicio:".$ex->getMessage());
+  }  
+}
 function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen)
 {
   $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN)
@@ -1017,6 +1056,33 @@ function getFaltasAsignaturaClase($db,$diaPasado,$IDPasado)
     return $vectorTotal;  
 }
 
+
+function getJuicioActivo($db,$IdAsignatura)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM JUICIOS WHERE ACTIVO = 1 AND ID_ASIGNATURA=".$IdAsignatura);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! ".$ex->getMessage());
+  } 
+  return $fila;
+}
+function getJuicioFromId($db,$idJuicio)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM JUICIOS WHERE ID=".$idJuicio);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! ".$ex->getMessage());
+  } 
+  return $fila;
+}
 function getAlumnoFromID($db,$IDAlumno)
 {
   $fila="";
@@ -1172,6 +1238,41 @@ function getCursosFromIDSet($db,$idSet)
   }
     return $vectorTotal;
 }
+function getVotacionesAlumnosJuicio($db,$idJuicio)
+{
+  $vectorTotal = array();
+  try
+  {     
+    $stmt = $db->query("SELECT * FROM ALUMNOS_JUICIOS WHERE ID_JUICIO=".$idJuicio);   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getVotacionesAlumnosJuicio:".$ex->getMessage());
+  }
+    return $vectorTotal;
+}
+function getJuiciosFromAsignatura($db,$IdAsignatura)
+{
+  $vectorTotal = array();
+  try
+  {     
+    $stmt = $db->query("SELECT * FROM JUICIOS WHERE ID_ASIGNATURA=".$IdAsignatura. " ORDER BY FECHA DESC");   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getJuiciosFromAsignatura:".$ex->getMessage());
+  }
+    return $vectorTotal;
+}
+
 function getAlumnosIdFromClanId($db,$idClan)
 {
   $vectorTotal = array();
@@ -1842,6 +1943,26 @@ function existeCorreo($db,$CORREO)
   }
     return Count($vectorTotal)>0;  
 }
+function existeAlumnoJuicio($db,$idJuicio,$idAlumno)
+{
+  $vectorTotal = array();
+  try
+  {
+     
+    $stmt = $db->query("SELECT * FROM ALUMNOS_JUICIOS WHERE ID_ALUMNO = ".$idAlumno." AND ID_JUICIO = ".$idJuicio);
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en existeAlumnoJuicio:".$ex->getMessage());
+  }
+    return Count($vectorTotal)>0;  
+}
+
 function existeAlumnoId($db,$id)
 {
   $vectorTotal = array();
@@ -1942,6 +2063,19 @@ function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
   }   
 }
 
+function modificarDesactivarJuicios($db,$IdAsignatura)
+{
+  try 
+  {
+    $sql = "UPDATE JUICIOS SET ACTIVO=0 WHERE ID_ASIGNATURA=".$IdAsignatura;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarDesactivarJuicios ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
 function modificarComentarioReto($db,$correo,$idTarea,$comentario)
 {
   try 
@@ -2054,6 +2188,22 @@ function modificarEstadoReto($db,$correo,$idTarea,$estado)
   } 
   return $stmt->rowCount();
 }
+
+
+function modificarAlumnoJuicio($db,$idJuicio,$idAlumno,$opcionSeleccionada)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_JUICIOS SET OPCION='".$opcionSeleccionada."',FECHA = now() WHERE ID_ALUMNO=".$idAlumno." AND ID_JUICIO=".$idJuicio;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarEstrellasConseguidasReto ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+
 function modificarEstrellasConseguidasReto($db,$correo,$idTarea,$estrellasConseguidas)
 {
   try 
