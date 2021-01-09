@@ -133,7 +133,7 @@ $seleccionadoActivo = false;
     		}   		
     	}
 
-echo "<option ".(($juicioI['ID']==$_POST['sJuicioId'])?" selected='selected' ":"")." value='".$juicioI['ID']."'>".$juicioI['NOMBRE']." (".$juicioI['FECHA'].")".(($juicioI['ACTIVO']==0)?"":"-ACTIVO")."</option>";
+echo "<option ".((isset($_POST['sJuicioId'])&&($juicioI['ID']==$_POST['sJuicioId']))?" selected='selected' ":"")." value='".$juicioI['ID']."'>".$juicioI['NOMBRE']." (".$juicioI['FECHA'].")".(($juicioI['ACTIVO']==0)?"":"-ACTIVO")."</option>";
     }
 
 ?>
