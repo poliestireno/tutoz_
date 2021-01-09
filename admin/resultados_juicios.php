@@ -125,10 +125,14 @@ $seleccionadoActivo = false;
 	$aJuicios = getJuiciosFromAsignatura($dbh,getAsignaturasFromCurso($dbh,$idCur)[0]['ID']);
     foreach ($aJuicios as $juicioI) 
     {
-    	if (($juicioI['ID']==$_POST['sJuicioId']) &&($juicioI['ACTIVO']!=0))
+    	if (isset($_POST['sJuicioId']))
     	{
-    		$seleccionadoActivo = true;
+ 			if (($juicioI['ID']==$_POST['sJuicioId']) &&($juicioI['ACTIVO']!=0))
+    		{
+    			$seleccionadoActivo = true;
+    		}   		
     	}
+
 echo "<option ".(($juicioI['ID']==$_POST['sJuicioId'])?" selected='selected' ":"")." value='".$juicioI['ID']."'>".$juicioI['NOMBRE']." (".$juicioI['FECHA'].")".(($juicioI['ACTIVO']==0)?"":"-ACTIVO")."</option>";
     }
 
