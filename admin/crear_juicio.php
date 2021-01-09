@@ -152,7 +152,7 @@ if(isset($_POST['sel11']))
                             </div>
                             <label class="col-sm-1 control-label">NOMBRE<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" placeholder="(se quitarán las tildes)" name="name" class="form-control" required>
+                            <input type="text" placeholder="(se quitarán las tildes)" name="name" value="JUICIO_CLASE_<?php echo count (getJuiciosComoClase($dbh))?>" class="form-control" required>
                             </div>
                             </div>
                             <div class="form-group">
@@ -161,12 +161,12 @@ if(isset($_POST['sel11']))
 
                             <label class="col-sm-1 control-label">OPCIONES<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" name="opciones" class="form-control" value="SÍ,NO"required>
+                            <input type="text" name="opciones" class="form-control" value="BIEN,REGULAR,MAL" required>
                             </div>
 
                             <label class="col-sm-1 control-label">DESCRIPCIÓN<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" maxlength = "499" name="descrip" class="form-control" required>
+                            <input type="text" maxlength = "499" name="descrip" class="form-control" value="¿CÓMO HA IDO LA CLASE?" required>
                             </div>
                             </div>
 

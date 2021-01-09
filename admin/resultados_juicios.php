@@ -27,9 +27,19 @@ $idCur="";
 		}
 
 //	$msg="todo ok";
+if (isset($_POST['accionI']))
+{
+if ($_POST['accionI']=='desactivar')
+{
 
-
-	  
+	modificarDesactivarJuicios($dbh,getAsignaturasFromCurso($dbh,$idCur)[0]['ID']);
+}
+else if ($_POST['accionI']=='activar')
+{
+	modificarDesactivarJuicios($dbh,getAsignaturasFromCurso($dbh,$idCur)[0]['ID']);
+	modificarActivarJuicio($dbh,$_POST['sJuicioId']);
+}
+}	  
 ?>
 
 <!doctype html>
@@ -102,7 +112,8 @@ $idCur="";
 									<div class="panel-body">
 
 <form action="resultados_juicios.php" id="form3" method="post">
-  <input type="hidden" name="idc3" id="idc3" value="<?php echo $_POST['idc3']?>">
+  <input type="hidden" name="idc3" id="idc3" value="<?php echo $_POST['idc3']?>"/>
+<input type="hidden" name="accionI" id="accionI"/>
 
 	<div class="form-group">
 <label class="col-sm-1 control-label">Juicios</label>
@@ -110,10 +121,15 @@ $idCur="";
   <select class="form-control col-md-2" ID="sJuicioId" name="sJuicioId">
   	<option></option>
 <?php
+$seleccionadoActivo = false;
 	$aJuicios = getJuiciosFromAsignatura($dbh,getAsignaturasFromCurso($dbh,$idCur)[0]['ID']);
     foreach ($aJuicios as $juicioI) 
     {
-echo "<option value='".$juicioI['ID']."'>".$juicioI['NOMBRE']." (".$juicioI['FECHA'].")</option>";
+    	if (($juicioI['ID']==$_POST['sJuicioId']) &&($juicioI['ACTIVO']!=0))
+    	{
+    		$seleccionadoActivo = true;
+    	}
+echo "<option ".(($juicioI['ID']==$_POST['sJuicioId'])?" selected='selected' ":"")." value='".$juicioI['ID']."'>".$juicioI['NOMBRE']." (".$juicioI['FECHA'].")".(($juicioI['ACTIVO']==0)?"":"-ACTIVO")."</option>";
     }
 
 ?>
@@ -124,15 +140,21 @@ echo "<option value='".$juicioI['ID']."'>".$juicioI['NOMBRE']." (".$juicioI['FEC
 	<div class="col-sm-8 col-sm-offset-2"></div>
 	<div class="col-sm-8 col-sm-offset-2"></div>
     <div class="form-group">
-  <div class="col-sm-2 col-sm-offset-2">
-    <button class="btn btn-warning" name="submit" type="submit">Ver resultado</button>
+  <div class="col-sm-5 col-sm-offset-1">
+
+<?php
+echo '<div id="aa_0" class="btn-group btn-group-justified" ><a id="bb_0"  onclick="managebutton(\'ver\')" class="btn btn-info">Ver Resultados</a><a id="bb_0" onclick="managebutton(\'desactivar\')"  class="btn btn-success">Desactivar Juicios</a><a id="bb_0" onclick="managebutton(\'activar\')"  class="btn btn-primary">Activar Juicio</a></div>';
+?>
   </div>
 </div>
 </form>		
 <br/><br/><br/><br/><br/>
 <div class="form-group">
 <?php
-if (isset($_POST['submit']))
+if (isset($_POST['accionI']))
+{
+
+if ($_POST['accionI']=='ver')
 {
 
 
@@ -140,8 +162,9 @@ $tiposBotones = array( "btn btn-primary", "btn btn-success", "btn btn-warning", 
 $alumnoDB = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
 
 $juicioElegido = getJuicioFromId($dbh,$_POST['sJuicioId']);
-
-echo '<div class="form-group"><label class="col-sm-4 control-label">'.$juicioElegido['NOMBRE'].'('.$juicioElegido['FECHA'].')</label></div><br/><br/><div class="form-group"><label class="col-sm-8 control-label"> '.$juicioElegido['DESCRIPCION'].'</label></div>';
+$tamDesc = strlen($juicioElegido['DESCRIPCION']);
+//echo '<div class="form-group"><label class="col-sm-4 control-label">'.$juicioElegido['NOMBRE'].'('.$juicioElegido['FECHA'].')</label></div><br/><br/>';
+echo '<div class="form-group"><label class="col-sm-8 control-label" style="text-align:left;font-family:Courier; font-size:'.(60-$tamDesc).'px;" > '.$juicioElegido['DESCRIPCION'].'</label></div>';
 	
 	$aOpciones = explode(",", $juicioElegido['OPCIONES']);
 
@@ -159,6 +182,8 @@ echo '<div class="form-group"><label class="col-sm-4 control-label">'.$juicioEle
 		$totalVotos++;
 	}
 	//var_export($hOpcionesNumero);
+if (!$seleccionadoActivo)
+{
 	$i=0;
 	foreach ($hOpcionesNumero as $key => $value) 
 	{
@@ -172,11 +197,17 @@ echo '<div class="form-group"><label class="col-sm-4 control-label">'.$juicioEle
 		{
 			$porcentaje.=".0";
 		}
+		$textoAMostrar = $porcentaje.'%-'.$key.' ('.$value.')';
+		$tamTexto = strlen($textoAMostrar);
 
-		echo '<div id="aa_0" class="btn-group btn-group-justified" ><a id="bb_0" style="text-align:left;font-family:Courier; font-size:40px; height: 90px" class="'.$tiposBotones[$i % sizeof($tiposBotones)	].'">'.$porcentaje.'%-'.$key.' ('.$value.')</a></div>';
+		echo '<div id="aa_0" class="btn-group btn-group-justified" ><a id="bb_0" style="text-align:left;font-family:Courier; font-size:'.(52-$tamTexto).'px; height: 90px" class="'.$tiposBotones[$i % sizeof($tiposBotones)	].'">'	.$textoAMostrar.'</a></div>';
 		$i++;
 	}
-	echo '<label class="col-sm-8 control-label">Votos totales: '.$totalVotos.'</label>';
+}
+
+	echo '<label class="col-sm-8 control-label">Votos totales: '.$totalVotos.(($seleccionadoActivo)?"<br/>[SE MOSTRARÁN LOS RESULTADOS CUANDO SE DESACTIVE EL JUICIO] ":"").'</label>';
+
+}
 
 }
 ?>
@@ -202,12 +233,28 @@ echo '<div class="form-group"><label class="col-sm-4 control-label">'.$juicioEle
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>						
 	<script type="text/javascript">
 				 $(document).ready(function () {          
 					setTimeout(function() {
 						$('.succWrap').slideUp("slow");
 					}, 5000);
 					});
+
+	function managebutton(accion)
+{
+	var valorS = document.getElementById("sJuicioId").options[document.getElementById("sJuicioId").selectedIndex].text;
+	if ((valorS=="")&&(accion!="desactivar"))
+	{
+		swal.fire("Selecciona algún juicio!", "please...", "warning"); 
+	}
+	else
+	{
+		document.getElementById('accionI').value=accion;
+   		document.getElementById("form3").submit(); 
+	}	
+}
+
 	</script>
 </body>
 </html>

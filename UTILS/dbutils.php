@@ -2076,6 +2076,20 @@ function modificarDesactivarJuicios($db,$IdAsignatura)
   } 
   return $stmt->rowCount();
 }
+
+function modificarActivarJuicio($db,$idJuicio)
+{
+  try 
+  {
+    $sql = "UPDATE JUICIOS SET ACTIVO=1 WHERE ID=".$idJuicio;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarActivarJuicio ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
 function modificarComentarioReto($db,$correo,$idTarea,$comentario)
 {
   try 
@@ -2520,6 +2534,21 @@ function getSesionesAsignaturaFromDiaSemana($db, $asignatura, $dia){
     mi_info_log( "An Error occured! ".$ex->getMessage());
   }
   return $fila;
+}
+
+function getJuiciosComoClase($db){
+  try{
+    $vectorTotal = array();
+    $stmt = $db->query
+    ("select * from JUICIOS WHERE NOMBRE LIKE 'JUICIO_CLASE_%'");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getJuiciosComoClase:".$ex->getMessage());
+  }
+  return $vectorTotal;
 }
 function getSesionesAsignaturas($db){
   try{

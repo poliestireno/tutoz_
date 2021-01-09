@@ -131,18 +131,21 @@ if(isset($_POST['opcionSel']))
 
 
 
-<div class="form-group">
-	<label class="col-sm-1 control-label"><?php echo $juicioActivo['DESCRIPCION']?></label>
-
-</div>
 
 <?php
+$tamDesc = strlen($juicioActivo['DESCRIPCION']);
+echo '<div class="form-group"><label class="col-sm-8 control-label" style="text-align:left;font-family:Courier; font-size:'.(65-$tamDesc).'px;" > '.$juicioActivo['DESCRIPCION'].'</label></div>';
+
 if ($juicioActivo['OPCIONES']!=NULL)
 {
 	$aOpciones = explode(",", $juicioActivo['OPCIONES']);	
-	for ($i=0; $i < count($aOpciones); $i++) { 
+	for ($i=0; $i < count($aOpciones); $i++) {
+
+
+		$tamTexto = strlen($aOpciones[$i]);
+
 	echo '<div id="aa_'.$i.'" class="btn-group btn-group-justified" >';
-	echo '<a id="bb_'.$i.'" style="font-size:80px; height: 90px" onclick="managebutton(\''.$aOpciones[$i].'\')"  class="'.$tiposBotones[$i % sizeof($tiposBotones)	].'">'.$aOpciones[$i].'</a>';
+	echo '<a id="bb_'.$i.'" style="font-size:'.(60-$tamTexto).'px; height: 90px" onclick="managebutton(\''.$aOpciones[$i].'\')"  class="'.$tiposBotones[$i % sizeof($tiposBotones)	].'">'.$aOpciones[$i].'</a>';
 	echo '</div>';
 
 	}
