@@ -17,6 +17,17 @@ if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION[
 header('location:index.php');
 }
 else{
+
+
+if (isset($_GET['ida']))
+{
+  $_POST['correoGO']=$_GET['ida'];
+  $alumno =getAlumnoFromCorreo($dbh,$_POST['correoGO']);
+  $_POST['cursoGO'] = getNombreCursoFromAlumno($dbh, $alumno['ID']);
+  $_POST['nombreGO']=$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2']; 
+  $_POST['filtro']=$_POST['nombreGO'];
+}
+
 if (isset($_POST['filtro'])){
   $vectorAlumnos = buscarAlumnos($dbh, $_POST['filtro']);
 }
@@ -142,6 +153,7 @@ function managebuttonGO(nombre,curso,correo)
 }
 function managebuttonGO2(nombre,curso,correo) 
 {  
+
        const { value: formValues } =  Swal.fire({
   title: '<span class="label label-primary">'+nombre+'</span>'+
         '<span class="label label-warning">Curso: '+curso+'</span>',
@@ -156,8 +168,11 @@ function managebuttonGO2(nombre,curso,correo)
             
             //var_dump($tareasFA);
             foreach ($tareasFA as $tareai) {
+
+              $selectedT = (isset($_GET['idr'])&& $_GET['idr']==$tareai['ID_TAREA'])?" selected = \'selected\' ":"";
+              
               $ttareaa = getTareaFromID($dbh,$tareai['ID_TAREA']);
-              echo "'<option value=\"".$tareai['ID_TAREA']."|".$tareai['ESTADO']."|".$tareai['ESTRELLAS_CONSEGUIDAS']."\">[".$tareai['ESTADO']."] ".$ttareaa['NOMBRE']."(".getAsignaturaFromAsignaturaID($dbh,$ttareaa['ID_ASIGNATURA'])['NOMBRE'].")/".$ttareaa['TOTAL_ESTRELLAS']."</option>'+";
+              echo "'<option ".$selectedT." value=\"".$tareai['ID_TAREA']."|".$tareai['ESTADO']."|".$tareai['ESTRELLAS_CONSEGUIDAS']."\">[".$tareai['ESTADO']."] ".$ttareaa['NOMBRE']."(".getAsignaturaFromAsignaturaID($dbh,$ttareaa['ID_ASIGNATURA'])['NOMBRE'].")/".$ttareaa['TOTAL_ESTRELLAS']."</option>'+";
             }
         }
         
@@ -414,7 +429,10 @@ if (isset($_POST['correoGO'])&&($_POST['correoGO']!=''))
    </div>                 </div>
                 </div>
 
-
+<?php
+if (!isset($_GET['ida']))
+{
+  ?>
 
               <div class="col-md-12">
                 <div class="panel panel-default">
@@ -558,7 +576,9 @@ foreach ($setsCromos as $seti) {
     <button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
   </div>
 </div>
-
+<?php
+}
+?>
 </form>
                   </div>
                 </div>              

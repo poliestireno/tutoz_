@@ -150,8 +150,10 @@ foreach ($alumnos as $alumno)
 
 $datosAlumnoTarea = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$idReto);
     //var_export($datosAlumnoTarea);
+
+
       echo '<tr class="table-info">';
-        echo '<td>'.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].'</td>';
+        echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].'</a></td>';
         echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
         echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';

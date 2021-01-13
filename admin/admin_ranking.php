@@ -482,7 +482,7 @@ foreach ($aToRetos as $reto)
 
       echo '<tr class="table-info">';
       ?>
-      <td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="admin_detalle_reto.php?idr=<?php echo $reto['ID']?>" target=”_blank”><?php echo $reto['NOMBRE'];?></a></td>
+      <td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="admin_detalle_reto.php?idr=<?php echo $reto['ID']?>" target="_blank"><?php echo $reto['NOMBRE'];?></a></td>
        <?php
         echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
         echo '<td>'.(($reto['FECHA_CREACION']==NULL)?'-':$reto['FECHA_CREACION']).'</td>';
@@ -535,7 +535,7 @@ foreach ($aToRetos as $reto)
       echo '<tr class="table-info">';
 
 ?>
-<td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="admin_detalle_reto.php?idr=<?php echo $reto['ID']?>" target=”_blank”><?php echo $reto['NOMBRE'];?></a></td>
+<td><a  data-toggle="tooltip" title="Ver detalle del reto en otra ventana" href="admin_detalle_reto.php?idr=<?php echo $reto['ID']?>" target="_blank"><?php echo $reto['NOMBRE'];?></a></td>
 <?php
         echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
         echo '<td>'.(($reto['FECHA_CREACION']==NULL)?'-':$reto['FECHA_CREACION']).'</td>';
