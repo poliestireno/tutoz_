@@ -312,7 +312,21 @@ function cmp($a, $b)
 {
     return $b['Total'] - $a['Total'];
 }
-usort($aTotalAlumnos, "cmp");
+function cmpCampActual($a, $b)
+{
+    $valueB = substr($b['TotalActual'],0,(strrpos($b['TotalActual'], "[")-1));
+    $valueA = substr($a['TotalActual'],0,(strrpos($a['TotalActual'], "[")-1));	
+    return $valueB - $valueA;
+}
+if ($fechaInicioCampActual!=NULL)
+{
+	usort($aTotalAlumnos, "cmpCampActual");
+}
+else
+{
+	usort($aTotalAlumnos, "cmp");
+}
+
 
   	 $contador=1;
 foreach ($aTotalAlumnos as $alum) 
