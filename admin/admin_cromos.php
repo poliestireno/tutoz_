@@ -157,7 +157,7 @@ function managebuttonGO2(nombre,curso,correo)
             //var_dump($tareasFA);
             foreach ($tareasFA as $tareai) {
               $ttareaa = getTareaFromID($dbh,$tareai['ID_TAREA']);
-              echo "'<option value=\"".$tareai['ID_TAREA']."|".$tareai['ESTADO']."\">[".$tareai['ESTADO']."] ".$ttareaa['NOMBRE']."(".getAsignaturaFromAsignaturaID($dbh,$ttareaa['ID_ASIGNATURA'])['NOMBRE'].")/".$ttareaa['TOTAL_ESTRELLAS']."</option>'+";
+              echo "'<option value=\"".$tareai['ID_TAREA']."|".$tareai['ESTADO']."|".$tareai['ESTRELLAS_CONSEGUIDAS']."\">[".$tareai['ESTADO']."] ".$ttareaa['NOMBRE']."(".getAsignaturaFromAsignaturaID($dbh,$ttareaa['ID_ASIGNATURA'])['NOMBRE'].")/".$ttareaa['TOTAL_ESTRELLAS']."</option>'+";
             }
         }
         
@@ -196,8 +196,30 @@ function managebuttonGO2(nombre,curso,correo)
     var fields = tareaidselect.split('|');
     var tareaid = fields[0];
     var estado = fields[1];
+    var estrellasAnteriores = fields[2];
     
-    if (estado!='entregado')
+    if (estado=='corregido')
+    {
+      Swal.fire({
+          title: '¿Seguro que quieres recorregirlo y darle sobre?',
+          text: "Ya está corregido con "+estrellasAnteriores+" estrellas",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, lo recorrigo!'
+        }).then((result) => {
+          if (result.value) {
+      document.getElementById("tareaidselect").value=tareaid;
+    document.getElementById("estrellasconseguidas").value=estrellasconseguidas;
+    document.getElementById("alumnoTareaOk").value=correo_alumno;
+    document.getElementById("alumnoCodSobre").value=correo_alumno;
+    document.getElementById("form2").action="admin_cromos.php";
+    document.getElementById("form2").submit(); 
+          }
+        });
+    }    
+    else if (estado!='entregado')
     {
       Swal.fire({
           title: '¿Seguro que quieres corregirlo y darle sobre?',
@@ -233,8 +255,29 @@ function managebuttonGO2(nombre,curso,correo)
     var fields = tareaidselect.split('|');
     var tareaid = fields[0];
     var estado = fields[1];
-
-    if (estado!='entregado')
+    var estrellasAnteriores = fields[2];
+    
+    if (estado=='corregido')
+    {
+      Swal.fire({
+          title: '¿Seguro que quieres recorregirlo?',
+          text: "Ya está corregido "+estrellasAnteriores+" estrellas",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, lo recorrigo!'
+        }).then((result) => {
+          if (result.value) {
+document.getElementById("tareaidselect").value=tareaid;
+    document.getElementById("estrellasconseguidas").value=estrellasconseguidas;
+    document.getElementById("alumnoTareaOk").value=correo_alumno;
+    document.getElementById("form2").action="admin_cromos.php";
+    document.getElementById("form2").submit(); 
+          }
+        });
+    }
+    else if (estado!='entregado')
     {
       Swal.fire({
           title: '¿Seguro que quieres corregirlo?',
