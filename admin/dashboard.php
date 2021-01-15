@@ -14,6 +14,16 @@ if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION[
 header('location:index.php');
 }
 else{
+
+	$fi = new FilesystemIterator("../img/comics", FilesystemIterator::SKIP_DOTS);
+$numeroComics = iterator_count($fi)-1;
+echo "comic:".$numeroComics;
+$nDayOfYear = date('z') + 1;
+echo "nDayOfYear:".$nDayOfYear;
+$nombreComic = $nDayOfYear % $numeroComics;
+echo "nombreComic:".$nombreComic;
+
+$randomColorB4 = array("primary","secondary","success","danger","warning","info","dark")[rand(0,6)];
 	?>
 <!doctype html>
 <html lang="en" class="no-js">
@@ -44,6 +54,10 @@ else{
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -53,7 +67,11 @@ else{
 <?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
-
+				<div class='alert alert-<?php echo $randomColorB4?> alert-dismissible'>
+  <button type="button" class="close" data-dismiss="alert">&times;</button> 
+  <img align = "center" class="img-fluid mx-auto d-block" 
+  src="../img/comics/<?php echo $nombreComic ?>.gif". alt="Chania">
+</div>
 				<div class="row">
 					<div class="col-md-12">
 
