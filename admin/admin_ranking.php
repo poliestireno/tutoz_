@@ -375,7 +375,7 @@ foreach ($aTotalAlumnos as $alum)
 
       $textTotalAlumnos.=$comma.$alum['Id'];
       $comma=",";
-        echo '<td><a  data-toggle="tooltip" title="Ver detalle del alumno en otra ventana" href="../ranking.php?l='. $alum['CORREO'].'" target=”_blank”>'.$alum['Nombre'].'</a> [<a  data-toggle="tooltip" title="Ver album del alumno" href="../mialbum.php?l='. $alum['CORREO'].'" target=”_blank”>ALBUM</a>]</td>';
+        echo '<td><a  data-toggle="tooltip" title="Ver detalle del alumno en otra ventana" href="../ranking.php?l='. $alum['CORREO'].'" target="_blank">'.$alum['Nombre'].'</a> [<a  data-toggle="tooltip" title="Ver album del alumno" href="../mialbum.php?l='. $alum['CORREO'].'" target="_blank">ALBUM</a>]</td>';
         echo '<td>'.$alum['NivelSinSiguiente'].'</td>';
         if ($fechaInicioCampActual!=NULL)
         {

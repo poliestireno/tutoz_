@@ -65,7 +65,7 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Jugar"))
 			{
 			?>
-			<li><a href="https://magicomagico.com/SalleZGamE" target=”_blank”><i class="fa fa-gamepad"></i> &nbsp;Jugar</a>
+			<li><a href="https://magicomagico.com/SalleZGamE" target="_blank"><i class="fa fa-gamepad"></i> &nbsp;Jugar</a>
 			</li>
 			<?php
 			}
