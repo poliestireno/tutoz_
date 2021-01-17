@@ -10,11 +10,30 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 	header('location:index.php');
 }
 else{
-//var_export($_POST);
+var_export($_POST);
 //var_export($_SESSION);
 $CORREO = $_SESSION['alogin'];
+var_export($CORREO);
 $idAlumno = getAlumnoFromCorreo($dbh,$CORREO)['ID'];
-$idAsignatura = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$CORREO)['ID_CURSO'])[0]['ID'];
+
+if (isset($_GET['idc']))
+{
+  $idAsignatura=getAsignaturasFromCurso($dbh,$_GET['idc'])[0]['ID'];;
+}
+else
+{
+$idAsignatura = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$CORREO)['ID_CURSO'])[0]['ID'];	
+}
+$aAlumnosAsig = getAlumnosFromAsignaturaID($dbh,$idAsignatura);
+function getAsteriscos($n)
+{
+	$sAsteriscos = "";
+	for ($i=0; $i < $n ; $i++) 
+	{ 
+		$sAsteriscos = $sAsteriscos ."*";
+	}
+	return $sAsteriscos;
+}
 if(isset($_POST['submitOfrezco']))
 {	
 
@@ -126,6 +145,10 @@ if(isset($_POST['submitQuiero']))
 	<div class="ts-main-content">
 	<?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
+<?php 
+if (!isset($_GET['idc']))
+{
+	?>
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
@@ -142,15 +165,7 @@ if(isset($_POST['submitQuiero']))
 
 $aOfrezcoMercado = getOfrezcoMercado($dbh,$idAsignatura,$idAlumno);
 
-function getAsteriscos($n)
-{
-	$sAsteriscos = "";
-	for ($i=0; $i < $n ; $i++) 
-	{ 
-		$sAsteriscos = $sAsteriscos ."*";
-	}
-	return $sAsteriscos;
-}
+
 
 ?>
 
@@ -255,7 +270,7 @@ $aQuieroMercado = getQuieroMercado($dbh,$idAsignatura,$idAlumno)
 	  	<option></option>
 	<?php
 		$aCromosAlumno1 = getCromosDeAlbum($dbh,$CORREO);
-		$aAlumnosAsig = getAlumnosFromAsignaturaID($dbh,$idAsignatura);
+		
 		$idCromoSeleccionado = ((isset($aQuieroMercado[0]))?$aQuieroMercado[0]['QUIERO_NOMBRE_CROMO_ID']:"-1");
 	    foreach ($aAlumnosAsig as $alumno) 
 	    {
@@ -438,7 +453,7 @@ $idSeleccionado = ((isset($aQuieroMercado[2]))?$aQuieroMercado[2]['QUIERO_ESTREL
 				</div>
 			</div>
 
-
+<?php } ?>
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">

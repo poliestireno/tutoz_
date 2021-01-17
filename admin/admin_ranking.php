@@ -6,7 +6,7 @@ require_once("../UTILS/dbutils.php");
 $msg="";
 if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 	{	
-header('location:index.php');
+  header('location:index.php');
 }
 else{
 
@@ -687,6 +687,20 @@ value="" >
 </div> 
 
 </form>
+<form target="_blank" action="../mimercado.php?idc=<?php echo $idCur;?>" id="form8" method="post">
+    <input type="hidden" name="idc3" id="idc3" />
+
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Mercado Global</h3>
+</div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="verMercadoGlobal();" class="btn btn-dark btn-outline btn-wrap-text">Ver mercado</a>
+</div> 
+
+</form>
 <?php
 
 $listaAlumnosRuleta = "";
@@ -748,6 +762,11 @@ foreach ($aTotalAlumnos as $alum)
   {
     document.getElementById('idc3').value = <?php echo $idCur?>;
     document.getElementById('form7').submit();  
+  }
+  function verMercadoGlobal()
+  {
+    //document.getElementById('idc').value = <?php echo $idCur?>;
+    document.getElementById('form8').submit();  
   }
   function iniciarJusta()
   {
