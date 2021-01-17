@@ -322,6 +322,28 @@ function insertarBot($db,$SALUDO,$DESCRIPCION,$PALABRA_CLAVE,$MOVILIDAD,$VELOCID
     }  
 }
 
+function borrarOfrezcoMercado($db,$IdAsignatura,$IdAlumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM MERCADO WHERE ID_ASIGNATURA=".$IdAsignatura. " AND ID_ALUMNO=".$IdAlumno." AND QUIERO_NOMBRE_CROMO_ID IS NULL";
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarOfrezcoMercado".$ex->getMessage());
+  } 
+}
+function borrarQuieroMercado($db,$IdAsignatura,$IdAlumno)
+{
+ try 
+  {
+   $sql = "DELETE FROM MERCADO WHERE ID_ASIGNATURA=".$IdAsignatura. " AND ID_ALUMNO=".$IdAlumno." AND OFREZCO_ID_CROMO IS NULL";
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarQuieroMercado".$ex->getMessage());
+  } 
+}
 function borrarBotFromId($db,$idBot)
 {
  try 
@@ -530,6 +552,42 @@ catch (PDOException $ex)
     mi_info_log( "Error inserción alumno:".$ex->getMessage());
 }  
 }
+function insertarOfrezcoMercado($db,$IdAsignatura,$IdAlumno,$ofrezcoIdCromo)
+{
+  $sentencia= "INSERT INTO MERCADO ( ID_ASIGNATURA, ID_ALUMNO, OFREZCO_ID_CROMO)
+              VALUES ( :ID_ASIGNATURA, :ID_ALUMNO, :OFREZCO_ID_CROMO)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':ID_ASIGNATURA',$IdAsignatura);
+  $stmt->bindParam(':ID_ALUMNO',$IdAlumno);
+  $stmt->bindParam(':OFREZCO_ID_CROMO',$ofrezcoIdCromo);
+  $stmt->execute();
+    }
+catch (PDOException $ex)
+{
+    mi_info_log( "Error insertarOfrezcoMercado:".$ex->getMessage());
+}  
+}
+function insertarQuieroMercado($db,$IdAsignatura,$IdAlumno,$quieroNombreCromoId,$quieroRefCromo,$quieroEstrellasCromo)
+{
+  $sentencia= "INSERT INTO MERCADO ( ID_ASIGNATURA, ID_ALUMNO, QUIERO_NOMBRE_CROMO_ID,QUIERO_REF_CROMO,QUIERO_ESTRELLAS_CROMO)
+              VALUES ( :ID_ASIGNATURA, :ID_ALUMNO, :QUIERO_NOMBRE_CROMO_ID,:QUIERO_REF_CROMO,:QUIERO_ESTRELLAS_CROMO)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':ID_ASIGNATURA',$IdAsignatura);
+  $stmt->bindParam(':ID_ALUMNO',$IdAlumno);
+  $stmt->bindParam(':QUIERO_NOMBRE_CROMO_ID',$quieroNombreCromoId);
+  $stmt->bindParam(':QUIERO_REF_CROMO',$quieroRefCromo);
+  $stmt->bindParam(':QUIERO_ESTRELLAS_CROMO',$quieroEstrellasCromo);
+  $stmt->execute();
+    }
+catch (PDOException $ex)
+{
+    mi_info_log( "Error insertarQuieroMercado:".$ex->getMessage());
+}  
+}
 function insertarClan($db,$nombre,$imagen,$descripcion)
 {
   $sentencia= "INSERT INTO CLANES ( NOMBRE, IMAGEN, DESCRIPCION)
@@ -558,6 +616,32 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
     }
   }catch(PDOException $ex){
      mi_info_log( "Error getAlumnosFromAsignaturaID:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getOfrezcoMercado($db,$idAsignatura,$idAlumno){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM MERCADO WHERE ID_ASIGNATURA=".$idAsignatura." AND ID_ALUMNO=".$idAlumno." AND QUIERO_NOMBRE_CROMO_ID IS NULL");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getOfrezcoMercado:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getQuieroMercado($db,$idAsignatura,$idAlumno){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM MERCADO WHERE ID_ASIGNATURA=".$idAsignatura." AND ID_ALUMNO=".$idAlumno." AND OFREZCO_ID_CROMO IS NULL");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getQuieroMercado:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -1419,7 +1503,7 @@ function getSetCromoFromIdCromo($db,$idCromo,$correo){
   modificarPoseedorCromo($db, getAlumnoFromCorreo($db,$correo)['ID'], $fila['ID']);
   } catch(PDOException $ex) 
   {    
-   mi_info_log( "An Error occured getCromo ! ".$ex->getMessage());
+   mi_info_log( "An Error occured getSetCromoFromIdCromo ! ".$ex->getMessage());
   } 
   return $fila;
 }
