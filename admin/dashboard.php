@@ -15,13 +15,10 @@ header('location:index.php');
 }
 else{
 
-	$fi = new FilesystemIterator("../img/comics", FilesystemIterator::SKIP_DOTS);
+$fi = new FilesystemIterator("../img/comics", FilesystemIterator::SKIP_DOTS);
 $numeroComics = iterator_count($fi)-1;
-echo "comic:".$numeroComics;
 $nDayOfYear = date('z') + 1;
-echo "nDayOfYear:".$nDayOfYear;
 $nombreComic = $nDayOfYear % $numeroComics;
-echo "nombreComic:".$nombreComic;
 
 $randomColorB4 = array("primary","secondary","success","danger","warning","info","dark")[rand(0,6)];
 	?>

@@ -51,7 +51,7 @@ require_once("cssutils.php");
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mercado"))
 			{
 			?>
-			<li><a href="mercado.php"><i class="fa fa-hand-o-right"></i> &nbsp;Mercado</a>
+			<li><a href="mimercado.php"><i class="fa fa-hand-o-right"></i> &nbsp;Mercado</a>
 			</li>
 			<?php
 			}
