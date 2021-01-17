@@ -9,41 +9,49 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
   header('location:index.php');
 }
 else{
+if (isset($_GET['l']))
+{
+  $CORREO = $_GET['l'];
+}
+else
+{
+  $CORREO = $_SESSION['alogin'];
+}
 
-
+  
 //var_dump($_POST);
 if(isset($_POST['ordentotal']))
 { 
   
-  modificarOrdenAlbum($dbh, $_SESSION['alogin'],$_POST["ordentotal"]);   
-  modificarOrdenCreadores($dbh, $_SESSION['alogin'],$_POST["creatorstotal"]); 
-  modificarOrdenReferenciasTotal($dbh, $_SESSION['alogin'],$_POST["ordenreferenciastotal"]); 
+  modificarOrdenAlbum($dbh, $CORREO,$_POST["ordentotal"]);   
+  modificarOrdenCreadores($dbh, $CORREO,$_POST["creatorstotal"]); 
+  modificarOrdenReferenciasTotal($dbh, $CORREO,$_POST["ordenreferenciastotal"]); 
 }
 
  
-$ordenAlbumDB = getAlumnoFromCorreo($dbh, $_SESSION['alogin'])['ORDEN_ALBUM'];
+$ordenAlbumDB = getAlumnoFromCorreo($dbh, $CORREO)['ORDEN_ALBUM'];
 $vectorOrden = explode(",", $ordenAlbumDB);
 
 
 
-$aRe = getEstrellasCombinaciones($dbh,$_SESSION['alogin']);
+$aRe = getEstrellasCombinaciones($dbh,$CORREO);
 $estrellasCombinaciones=$aRe[0];
 $sEstrellas=$aRe[1];
 $aCombos=$aRe[2];
 
 if(isset($_POST['ordentotal']))
 { 
-    modificarOrdenCombos($dbh, $_SESSION['alogin'],$aCombos);   
+    modificarOrdenCombos($dbh, $CORREO,$aCombos);   
 }
 
-$ordenCombosDB = getAlumnoFromCorreo($dbh, $_SESSION['alogin'])['ORDEN_COMBOS'];
+$ordenCombosDB = getAlumnoFromCorreo($dbh, $CORREO)['ORDEN_COMBOS'];
 
 $vectorOrdenCombos = explode(",", $ordenCombosDB);
 
 
 
   $totalEstrellasCromos = 0;
- $vectorCromos = getCromosDeAlbum($dbh,$_SESSION['alogin']);
+ $vectorCromos = getCromosDeAlbum($dbh,$CORREO);
  foreach ($vectorCromos as $croo) 
  {
     $totalEstrellasCromos +=$croo['mana_w'];
