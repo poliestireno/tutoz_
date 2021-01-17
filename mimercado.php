@@ -88,6 +88,7 @@ if(isset($_POST['submitQuiero']))
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css">
 
+
 	<style>
 	.errorWrap {
     padding: 10px;
@@ -157,7 +158,7 @@ function getAsteriscos($n)
 
 <div class="form-group">
 	
-	<label class="col-sm-2 control-label">Cromo1:</label>
+	<label class="col-sm-2 control-label">CROMO1:</label>
 	<div class="col-sm-4">
 	  <select class="form-control col-md-2" ID="sCromoOfrezco1" name="sCromoOfrezco1">
 	  	<option></option>
@@ -173,7 +174,7 @@ function getAsteriscos($n)
 	  </select>
     </div>
 	
-	<label class="col-sm-2 control-label">Cromo2:</label>
+	<label class="col-sm-2 control-label">CROMO2:</label>
 	<div class="col-sm-4">
 	  <select class="form-control col-md-2" ID="sCromoOfrezco2" name="sCromoOfrezco2">
 	  	<option></option>
@@ -192,7 +193,7 @@ function getAsteriscos($n)
 </div>
 <div class="form-group">
 	
-	<label class="col-sm-2 control-label">Cromo3:</label>
+	<label class="col-sm-2 control-label">CROMO3:</label>
 	<div class="col-sm-4">
 	  <select class="form-control col-md-2" ID="sCromoOfrezco3" name="sCromoOfrezco3">
 	  	<option></option>
@@ -244,7 +245,7 @@ $aQuieroMercado = getQuieroMercado($dbh,$idAsignatura,$idAlumno)
 
 <div class="form-group">
 	
-	<label class="col-sm-1 control-label" style="font-size: 20px">Cromo1:</label>
+	<label class="col-sm-1 control-label" style="font-size: 20px">CROMO1:</label>
 </div>
 <div class="form-group">
 	
@@ -304,7 +305,7 @@ $idSeleccionado = ((isset($aQuieroMercado[0]))?$aQuieroMercado[0]['QUIERO_ESTREL
 </div>
 <div class="form-group">
 	
-	<label class="col-sm-1 control-label" style="font-size: 20px">Cromo2:</label>
+	<label class="col-sm-1 control-label" style="font-size: 20px">CROMO2:</label>
 </div>
 <div class="form-group">
 	
@@ -364,7 +365,7 @@ $idSeleccionado = ((isset($aQuieroMercado[1]))?$aQuieroMercado[1]['QUIERO_ESTREL
 
 <div class="form-group">
 	
-	<label class="col-sm-1 control-label" style="font-size: 20px">Cromo3:</label>
+	<label class="col-sm-1 control-label" style="font-size: 20px">CROMO3:</label>
 </div>
 <div class="form-group">
 	
@@ -468,17 +469,17 @@ foreach ($aAlumnosAsig as $alumno)
 	if (isset($aOfrezcoMercado[0]))
 	{
 		$cromoI = getCromoFromID($dbh,$aOfrezcoMercado[0]['OFREZCO_ID_CROMO']);
-	$ofer1 =$cromoI['name']." | ".$cromoI['power']." | ".getAsteriscos($cromoI['mana_w']);
+	$ofer1 ="CROMO1: ".$cromoI['name']." | ".$cromoI['power']." | ".getAsteriscos($cromoI['mana_w']);
 	}
 	if (isset($aOfrezcoMercado[1]))
 	{
 		$cromoI = getCromoFromID($dbh,$aOfrezcoMercado[1]['OFREZCO_ID_CROMO']);
-	$ofer2 =$cromoI['name']." | ".$cromoI['power']." | ".getAsteriscos($cromoI['mana_w']);
+	$ofer2 ="CROMO2: ".$cromoI['name']." | ".$cromoI['power']." | ".getAsteriscos($cromoI['mana_w']);
 	}
 	if (isset($aOfrezcoMercado[2]))
 	{
 		$cromoI = getCromoFromID($dbh,$aOfrezcoMercado[2]['OFREZCO_ID_CROMO']);
-	$ofer3 =$cromoI['name']." | ".$cromoI['power']." | ".getAsteriscos($cromoI['mana_w']);
+	$ofer3 ="CROMO3: ".$cromoI['name']." | ".$cromoI['power']." | ".getAsteriscos($cromoI['mana_w']);
 	}
 if (count($aOfrezcoMercado)>0)
 {
@@ -537,60 +538,69 @@ foreach ($aAlumnosAsig as $alumno)
 		$nomb ="";
 		$refe ="";
 		$nEstre ="";
+		$comma = "";
 		if ($aQuieroMercado[0]['QUIERO_NOMBRE_CROMO_ID']!="")
 		{
 			$cromoI = getCromoFromID($dbh,$aQuieroMercado[0]['QUIERO_NOMBRE_CROMO_ID']);
 			$nomb ="Nombre:<strong>".$cromoI['name']."</strong>";
+			$comma = ",";
 		}
 		if ($aQuieroMercado[0]['QUIERO_REF_CROMO']!="")
 		{
-		$refe ="  Referencia:<strong>".$aQuieroMercado[0]['QUIERO_REF_CROMO']."</strong>";
+		$refe =$comma." Referencia:<strong>".$aQuieroMercado[0]['QUIERO_REF_CROMO']."</strong>";
+			$comma = ",";
 		}
 		if ($aQuieroMercado[0]['QUIERO_ESTRELLAS_CROMO']!="")
 		{
-			$nEstre ="  NºEstrellas:<strong>".getAsteriscos($aQuieroMercado[0]['QUIERO_ESTRELLAS_CROMO'])."</strong>";
+			$nEstre =$comma." NºEstrellas:<strong>".getAsteriscos($aQuieroMercado[0]['QUIERO_ESTRELLAS_CROMO'])."</strong>";
 		}
-		$demanda1 =$nomb.$refe.$nEstre;
+		$demanda1 ="<strong>CROMO1:</strong> ".$nomb.$refe.$nEstre;
 	}
 	if (isset($aQuieroMercado[1]))
 	{
 		$nomb ="";
 		$refe ="";
 		$nEstre ="";
+		$comma = "";
 		if ($aQuieroMercado[1]['QUIERO_NOMBRE_CROMO_ID']!="")
 		{
 			$cromoI = getCromoFromID($dbh,$aQuieroMercado[1]['QUIERO_NOMBRE_CROMO_ID']);
 			$nomb ="Nombre:<strong>".$cromoI['name']."</strong>";
+			$comma = ",";
 		}
 		if ($aQuieroMercado[1]['QUIERO_REF_CROMO']!="")
 		{
-		$refe ="  Referencia:<strong>".$aQuieroMercado[1]['QUIERO_REF_CROMO']."</strong>";
+		$refe =$comma." Referencia:<strong>".$aQuieroMercado[1]['QUIERO_REF_CROMO']."</strong>";
+		$comma = ",";
 		}
 		if ($aQuieroMercado[1]['QUIERO_ESTRELLAS_CROMO']!="")
 		{
-			$nEstre ="  NºEstrellas:<strong>".getAsteriscos($aQuieroMercado[1]['QUIERO_ESTRELLAS_CROMO'])."</strong>";
+			$nEstre =$comma." NºEstrellas:<strong>".getAsteriscos($aQuieroMercado[1]['QUIERO_ESTRELLAS_CROMO'])."</strong>";
 		}
-		$demanda2 =$nomb.$refe.$nEstre;
+		$demanda2 ="<strong>CROMO2:</strong> ".$nomb.$refe.$nEstre;
 	}
 	if (isset($aQuieroMercado[2]))
 	{
 		$nomb ="";
 		$refe ="";
 		$nEstre ="";
+		$comma = "";
 		if ($aQuieroMercado[2]['QUIERO_NOMBRE_CROMO_ID']!="")
 		{
 			$cromoI = getCromoFromID($dbh,$aQuieroMercado[2]['QUIERO_NOMBRE_CROMO_ID']);
 			$nomb ="Nombre:<strong>".$cromoI['name']."</strong>";
+			$comma = ",";
 		}
 		if ($aQuieroMercado[2]['QUIERO_REF_CROMO']!="")
 		{
-		$refe ="  Referencia:<strong>".$aQuieroMercado[2]['QUIERO_REF_CROMO']."</strong>";
+		$refe =$comma." Referencia:<strong>".$aQuieroMercado[2]['QUIERO_REF_CROMO']."</strong>";
+		$comma = ",";
 		}
 		if ($aQuieroMercado[2]['QUIERO_ESTRELLAS_CROMO']!="")
 		{
-			$nEstre ="  NºEstrellas:<strong>".getAsteriscos($aQuieroMercado[2]['QUIERO_ESTRELLAS_CROMO'])."</strong>";
+			$nEstre =$comma." NºEstrellas:<strong>".getAsteriscos($aQuieroMercado[2]['QUIERO_ESTRELLAS_CROMO'])."</strong>";
 		}
-		$demanda3 =$nomb.$refe.$nEstre;
+		$demanda3 ="<strong>CROMO3:</strong> ".$nomb.$refe.$nEstre;
 	}
 if (count($aQuieroMercado)>0)
 {
