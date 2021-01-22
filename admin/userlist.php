@@ -162,7 +162,18 @@ foreach($results as $result)
 										<tr>
 
 											<td><?php echo htmlentities($cnt);?></td>
-											<td><img src="../images/<?php echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>
+											<td><img src="../images/<?php 
+		$dbImage = htmlentities($result->image);
+		if (file_exists("images/".$dbImage)) 
+		{   
+			echo $dbImage;
+		}
+		else
+		{
+			echo "anonimous_profile.jpg";
+		}
+
+											?>" style="width:50px; border-radius:50%;"/></td>
                                             
                                             <td><?php echo htmlentities($result->NOMBRE);?></td>
                                              <td><?php echo htmlentities($result->APELLIDO1);?></td>

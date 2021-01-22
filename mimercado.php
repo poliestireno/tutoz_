@@ -10,7 +10,7 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 	header('location:index.php');
 }
 else{
-var_export($_POST);
+//var_export($_POST);
 //var_export($_SESSION);
 $CORREO = $_SESSION['alogin'];
 var_export($CORREO);

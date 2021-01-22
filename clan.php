@@ -224,7 +224,19 @@ function getAsteriscos($nBin)
 
 	</div>
 	<div class="col-sm-4 text-center">
-		<img src="images/<?php echo htmlentities($result['IMAGEN']);?>" style="width:200px; border-radius:50%; margin:10px;">
+		<img src="images/<?php 
+
+
+		$dbImage = htmlentities($result['IMAGEN']);
+		if (file_exists("images/".$dbImage)) 
+		{   
+			echo $dbImage;
+		}
+		else
+		{
+			echo "anonimous_clan.jpg";
+		}
+		?>" style="width:200px; border-radius:50%; margin:10px;">
 		<input type="file" 	name="image" class="form-control">
 		<input type="hidden" name="image" class="form-control" value="<?php echo htmlentities($result['IMAGEN']);?>">
 	</div>
