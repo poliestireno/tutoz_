@@ -163,8 +163,8 @@ foreach($results as $result)
 
 											<td><?php echo htmlentities($cnt);?></td>
 											<td><img src="../images/<?php 
-		$dbImage = htmlentities($result->image);
-		if (file_exists("images/".$dbImage)) 
+		$dbImage = htmlentities($result->image);		
+		if (($dbImage!="")&&(file_exists("../images/".$dbImage)))
 		{   
 			echo $dbImage;
 		}

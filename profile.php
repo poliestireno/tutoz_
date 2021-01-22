@@ -22,6 +22,7 @@ if(isset($_POST['submit']))
 	$APELLIDO1no=$_POST['APELLIDO1'];
 	$APELLIDO2=$_POST['APELLIDO2'];
 	$final_file=$name.$APELLIDO1no.$APELLIDO2.$final_file;
+	$final_file=remove_accents($final_file);
     $IDedit=$_POST['editID'];
 	$image=$_POST['image'];
 
@@ -71,7 +72,10 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
-
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	<style>
 	.errorWrap {
@@ -145,7 +149,7 @@ $randomColorB4 = array("primary","secondary","success","danger","warning","info"
 	<div class="col-sm-4 text-center">
 		<img src="images/<?php 
 		$dbImage = htmlentities($result->image);
-		if (file_exists("images/".$dbImage)) 
+		if (($dbImage!="")&&(file_exists("images/".$dbImage)))
 		{   
 			echo $dbImage;
 		}

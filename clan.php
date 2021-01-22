@@ -58,6 +58,7 @@ else if(isset($_POST['submit']))
 	$IDedit=$_POST['editID'];
 	$image=$_FILES['image']['name'];
 	$final_file=$name.$final_file;
+	$final_file=remove_accents($final_file);
     if(move_uploaded_file($file_loc,$folder.$final_file))
 	{
 		$image=$final_file;
@@ -228,7 +229,7 @@ function getAsteriscos($nBin)
 
 
 		$dbImage = htmlentities($result['IMAGEN']);
-		if (file_exists("images/".$dbImage)) 
+		if (($dbImage!="")&&(file_exists("images/".$dbImage)))
 		{   
 			echo $dbImage;
 		}
