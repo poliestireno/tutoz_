@@ -25,7 +25,7 @@ if(isset($_POST['submit']))
 		$APELLIDO1no=$alumno1['APELLIDO1'];
 		$APELLIDO2=$alumno1['APELLIDO2'];
 		$final_file=$name1.$APELLIDO1no.$APELLIDO2.$final_file;
-    
+    	$final_file=remove_accents($final_file);
 		$image="";
 		if(move_uploaded_file($file_loc,$folder.$final_file))
 		{
