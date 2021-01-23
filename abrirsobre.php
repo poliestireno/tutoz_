@@ -42,9 +42,13 @@ if ($decrypted)
    		{
 			$_SESSION['idCromo']=$idCromo;
 			$alumnoAux = getAlumnoFromCorreo($dbh,$correo);
-			if ($alumnoAux['NUMERO_NIVEL']>2)
+			if ($alumnoAux['NUMERO_NIVEL']==3)
 			{
 				header('location:tetris.php');
+			}
+			else if ($alumnoAux['NUMERO_NIVEL']>3)
+			{
+				header('location:galaga/galaga.php');
 			}
 			else
 			{
