@@ -1,4 +1,7 @@
 <?php
+if (!esUsernameAdministrador($dbh,$_SESSION['alogin']))
+{
+
 require_once("cssutils.php");
 ?>
 
@@ -116,3 +119,7 @@ require_once("cssutils.php");
     cols[i].style.backgroundColor = '#<?php echo getColorDay()[0]?>';
   }
 </script>
+
+<?php
+}
+?>

@@ -18,7 +18,7 @@ $idAlumno = getAlumnoFromCorreo($dbh,$CORREO)['ID'];
 
 if (isset($_GET['idc']))
 {
-  $idAsignatura=getAsignaturasFromCurso($dbh,$_GET['idc'])[0]['ID'];;
+  $idAsignatura=getAsignaturasFromCurso($dbh,$_GET['idc'])[0]['ID'];
 }
 else
 {
