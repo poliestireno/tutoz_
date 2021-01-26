@@ -1,4 +1,35 @@
 <?php
+function enviarCorreo($in_to,$in_subject,$in_message)
+{
+// enviar correo
+  $success = false;
+  try
+  {
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+    $from = "no-reply@enhorabuenadelabuena.com";
+    $to = $in_to;
+    $subject = $in_subject;
+    $message = $in_message;
+    //echo "to:".$to;
+    //echo "subject:".$subject;
+    //echo "message:".$message;
+    $headers = "From:" . $from;
+    $success = mail($to,$subject,$message, $headers);
+    if (!$success) {
+      $errorMessage = error_get_last()['message'];
+      echo 'e:'.$errorMessage;
+    }
+  }
+  catch (Exception $ex)
+  {
+      echo "Error enviarCorreo:".$ex->getMessage();
+      mi_info_log( "Error enviarCorreo:".$ex->getMessage());
+
+  } 
+  return $success;
+}
+
 function getEstrellasPareja($aF,$nEstrellasPareja)
 {
   //var_dump($aF);

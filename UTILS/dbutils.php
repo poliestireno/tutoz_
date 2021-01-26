@@ -8,26 +8,7 @@ $array_ini = parse_ini_file($_SERVER['DOCUMENT_ROOT'].'/sallez.ini');
 require_once("logfiles.php");
 require_once("phputils.php");
 
-function enviarCorreo($in_to,$in_subject,$in_message)
-{
-// enviar correo
-    ini_set( 'display_errors', 1 );
-    error_reporting( E_ALL );
-    $from = "afsanchez@lasalleinstitucion.es";
-    $to = $in_to;
-    $subject = $in_subject;
-    $message = $in_message;
-    //echo "to:".$to;
-    //echo "subject:".$subject;
-    //echo "message:".$message;
-    $headers = "From:" . $from;
-    $success = mail($to,$subject,$message, $headers);
-    if (!$success) {
-      $errorMessage = error_get_last()['message'];
-      echo 'e:'.$errorMessage;
-    }
-  return $success;
-}
+
 
 function conectarDB()
 {

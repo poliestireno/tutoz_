@@ -26,26 +26,6 @@ if ($okEnvio)
   $textoMostrar = "Correo enviado correctamente a ".$to.", revisalo para pulsar el enlace sumistrado y terminar el proceso de asistencia.";
 }
 
-function enviarCorreo($in_to,$in_subject,$in_message)
-{
-// enviar correo
-    ini_set( 'display_errors', 1 );
-    error_reporting( E_ALL );
-    $from = "no-reply@enhorabuenadelabuena.com";
-    $to = $in_to;
-    $subject = $in_subject;
-    $message = $in_message;
-    //echo "to:".$to;
-    //echo "subject:".$subject;
-    //echo "message:".$message;
-    $headers = "From:" . $from;
-    $success = mail($to,$subject,$message, $headers);
-    if (!$success) {
-      $errorMessage = error_get_last()['message'];
-      echo 'e:'.$errorMessage;
-    }
-  return $success;
-}
 
 ?>
   <!DOCTYPE html>
