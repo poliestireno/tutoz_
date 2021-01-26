@@ -223,6 +223,8 @@ rsort($files);
 $numEntregasInterador = $numeroEntregas-1;
 if ($numEntregasInterador>0)
 {
+    if (count($files)>0)
+    {
     $postIniFecha = strpos($files[0], "__")+2;
     $time = strtotime(substr($files[0], $postIniFecha, 19));
         $newformat = date('Y-m-d H:i:s',$time);
@@ -288,7 +290,7 @@ foreach ($files as $ficheroI)
     echo '<a href="'.$ficheroI.'" target="_blank" rel="noopener">'.basename($ficheroI).'</a><br/>';
   
 }
-
+}
 }
 
    ?>
