@@ -171,9 +171,9 @@ function managebutton(alSel,correoI)
   <input type='hidden' name='correoTo' id='correoTo' value='poliestireno@gmail.com'/>
   <input type='hidden' name='nuevoCorreo' id='nuevoCorreo'/>
   
-  <div id="cargador" align="center" style="display: none; position:fixed; height: 100%; width: 100%; top:0;left 0;">
+  <!--div id="cargador" align="center" style="display: none; position:fixed; height: 100%; width: 100%; top:0;left 0;">
       <img src='car.gif' style="height: 100%" />
-  </div>
+  </div!-->
    <?php 
 $limite = getAlumnosPorLinea();
 $cont=0;

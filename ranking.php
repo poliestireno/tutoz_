@@ -169,8 +169,13 @@ else
        {
        	echo '<th>Estrellas Campaña Actual</th>';
        }      
+       
+       if ($fechaInicioCampActual==NULL)
+       {
+       	echo '<th>Estrellas Total</th>';
+       }
        ?>
-      <th>Total Estrellas</th>
+      
  <?php
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
@@ -198,16 +203,21 @@ $aToConcursos = getTareasTotalesFromAlumno($dbh,$loginAux,1);
 if (Count($aToConcursos)>0)
 {
 ?>
-      <th>Concursos</th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Concursos":"Concursos Actual")?></th>
  <?php
 }
  ?>
-      <th>Retos</th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Retos":"Retos Actual")?></th>
 
-      <th>Ganas</th>
-      <th>Cromos</th>
-      <th>Bonus</th>
-<?php 
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Ganas":"Ganas Actual")?></th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Bonus":"Bonus Actual")?></th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Cromos":"Cromos Total")?></th>
+
+<?php
+if ($fechaInicioCampActual!=NULL)
+       {
+       	echo '<th>Estrellas Total</th>';
+       }
 }
 ?>
 
@@ -278,9 +288,14 @@ $totalComportamiento =getEstrellasGanas($dbh,$alumno['CORREO']);
 		$totalGanasActual = getEstrellasGanasCampActual($dbh,$alumno['CORREO'],$fechaInicioCampActual);
 		$totalBonusActual = getEstrellasBonosCampActual($dbh,$alumno['CORREO'],$fechaInicioCampActual);
 
+		$arrayAlumno['totalRetosActual']=$totalRetosActual;
+		$arrayAlumno['totalConcursosActual']=$totalConcursosActual;
+		$arrayAlumno['totalGanasActual']=$totalGanasActual;
+		$arrayAlumno['totalBonusActual']=$totalBonusActual;
+
 		$totalTotalActual = $totalConcursosActual + $totalRetosActual + $totalGanasActual + $totalBonusActual;
 
-		$arrayAlumno['TotalActual']=$totalTotalActual." [".$totalConcursosActual.",".$totalRetosActual.",".$totalGanasActual.",".$totalBonusActual."]";
+		$arrayAlumno['TotalActual']=$totalTotalActual;//." [".$totalConcursosActual.",".$totalRetosActual.",".$totalGanasActual.",".$totalBonusActual."]";
 
 		$siguienteNivel = getNivelFromNumeroNivel($dbh,$alumno['CORREO'],$alumno['NUMERO_NIVEL']+1);
 		
@@ -314,9 +329,7 @@ function cmp($a, $b)
 }
 function cmpCampActual($a, $b)
 {
-    $valueB = substr($b['TotalActual'],0,(strrpos($b['TotalActual'], "[")-1));
-    $valueA = substr($a['TotalActual'],0,(strrpos($a['TotalActual'], "[")-1));	
-    return $valueB - $valueA;
+    return $b['TotalActual'] - $a['TotalActual'];
 }
 if ($fechaInicioCampActual!=NULL)
 {
@@ -338,19 +351,28 @@ foreach ($aTotalAlumnos as $alum)
       <th>Nombre</th>';
       if ($fechaInicioCampActual!=NULL)
        {
-       		echo '<th>[Concursos,Retos,Ganas,Bonus]</th>';
+       		echo '<th>Estrellas Campaña Actual</th>';
    		}
-      echo '<th>Total Estrellas</th>';
+   	if ($fechaInicioCampActual==NULL)
+       {	
+      echo '<th>Estrellas Total</th>';
+     }
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
 echo ''.((Count($aToConcursos)>0)?'<th>Concursos</th>':'').'<th>Retos</th><th>Ganas</th>';
 }  
 else if ($confAsig!='MENU_BASICA')
 {      
-      echo '<th>Nivel</th>'.((Count($aToConcursos)>0)?'<th>Concursos</th>':'').'<th>Retos</th>
-      <th>Ganas</th>
-      <th>Cromos</th>
-      <th>Bonus</th>';
+     
+
+      echo '<th>Nivel</th>'.((Count($aToConcursos)>0)?'<th>'.(($fechaInicioCampActual==NULL)?"Concursos":"Concursos Actual").'</th>':'').'<th>'.(($fechaInicioCampActual==NULL)?"Retos":"Retos Actual").'</th>
+      <th>'.(($fechaInicioCampActual==NULL)?"Ganas":"Ganas Actual").'</th>
+      <th>'.(($fechaInicioCampActual==NULL)?"Bonus":"Bonus Actual").'</th>
+      <th>'.(($fechaInicioCampActual==NULL)?"Cromos":"Cromos Total").'</th>';
+      if ($fechaInicioCampActual!=NULL)
+       {
+       	echo '<th>Estrellas Total</th>';
+       }
 }
  echo   '</tr>';
 		}
@@ -363,7 +385,12 @@ else if ($confAsig!='MENU_BASICA')
        {
 	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['TotalActual']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 	    }
-	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Total']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+	      if ($fechaInicioCampActual==NULL)
+       {
+       	echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Total']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+       }
+	      
+
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
 if (Count($aToConcursos)>0)
@@ -382,14 +409,26 @@ else if ($confAsig!='MENU_BASICA')
 
 if (Count($aToConcursos)>0)
 {
-	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Concursos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+	      
+//totalConcursosActual.",".$totalRetosActual.",".$totalGanasActual.",".$totalBonusActual
+			
+	      $valorConcursos = ($fechaInicioCampActual!=NULL)?$alum['totalConcursosActual']:$alum['Concursos'];
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$valorConcursos:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 }
 
+		$valorRetos = ($fechaInicioCampActual!=NULL)?$alum['totalRetosActual']:$alum['Retos'];	
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$valorRetos:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+		$valorGanas = ($fechaInicioCampActual!=NULL)?$alum['totalGanasActual']:$alum['Comportamiento'];
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$valorGanas:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 
-	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Retos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+		$valorBonus = ($fechaInicioCampActual!=NULL)?$alum['totalBonusActual']:$alum['Suerte'];
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$valorBonus:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+
 	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Cromos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
-	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Suerte']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+	    if ($fechaInicioCampActual!=NULL)
+       	{
+       	echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Total']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+       	}
 }
 
 	    echo '</tr>';
@@ -413,8 +452,12 @@ if (Count($aToConcursos)>0)
        {
        	echo '<th>Campaña desde '.(($fechaInicioCampActual==NULL)?'':''.date('Y-m-d', strtotime($fechaInicioCampActual)).'').'</th>';
    		}
+      
+       if ($fechaInicioCampActual==NULL)
+       {
+      		echo '<th>Estrellas Total</th>';
+  		}
        ?>
-      <th>Total Estrellas</th>
  <?php
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
@@ -441,16 +484,23 @@ $aToConcursos = getTareasTotalesFromAlumno($dbh,$loginAux,1);
 if (Count($aToConcursos)>0)
 {
 ?>
-      <th>Concursos</th>
+
+<th><?php echo (($fechaInicioCampActual==NULL)?"Concursos":"Concursos Actual")?></th>
  <?php
 }
  ?>
-      <th>Retos</th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Retos":"Retos Actual")?></th>
 
-      <th>Ganas</th>
-      <th>Cromos</th>
-      <th>Bonus</th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Ganas":"Ganas Actual")?></th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Bonus":"Bonus Actual")?></th>
+      <th><?php echo (($fechaInicioCampActual==NULL)?"Cromos":"Cromos Total")?></th>
+
+
 <?php 
+if ($fechaInicioCampActual!=NULL)
+       {
+       	echo '<th>Estrellas Total</th>';
+       }	
 }
 ?>
 

@@ -30,23 +30,31 @@ function enviarCorreo($in_to,$in_subject,$in_message)
   return $success;
 }
 
-function getEstrellasPareja($aF,$nEstrellasPareja)
+
+function pOk($aF,$i,$j)
 {
   //var_dump($aF);
-   return ((($aF[0]==$aF[1])&&$aF[1]!=-1)||(($aF[0]==$aF[2])&&$aF[2]!=-1)||(($aF[0]==$aF[3])&&$aF[3]!=-1)||(($aF[1]==$aF[2])&&$aF[1]!=-1)||(($aF[1]==$aF[3])&&$aF[1]!=-1)||(($aF[2]==$aF[3])&&$aF[3]!=-1))?$nEstrellasPareja:0;
+  return ((($aF[$i]==$aF[$j])&&$aF[$j]!=-1)||
+          (($aF[$i]==-2) || ($aF[$j]==-2)));
+}
+
+function getEstrellasPareja($aF,$nEstrellasPareja)
+{
+
+   return (pOk($aF,0,1)||pOk($aF,0,2)||pOk($aF,0,3)||pOk($aF,1,2)||pOk($aF,1,3)||pOk($aF,2,3))?$nEstrellasPareja:0;
 }
 function getEstrellasDoblePareja($aF,$nEstrellasDoblePareja)
 {
    return (
-    ((($aF[0]==$aF[1])&&$aF[1]!=-1)&&(($aF[2]==$aF[3])&&$aF[2]!=-1))||((($aF[0]==$aF[2])&&$aF[2]!=-1)&&(($aF[1]==$aF[3])&&$aF[1]!=-1))||((($aF[0]==$aF[3])&&$aF[3]!=-1)&&(($aF[1]==$aF[2])&&$aF[1]!=-1)))?$nEstrellasDoblePareja:0;
+    (pOk($aF,0,1)&&pOk($aF,2,3))||(pOk($aF,0,2)&&pOk($aF,1,3))||(pOk($aF,0,3)&&pOk($aF,1,2)))?$nEstrellasDoblePareja:0;
 }
 function getEstrellasTrio($aF,$nEstrellasTrio)
 {
-   return ((($aF[0]==$aF[3])&&$aF[3]!=-1)&&(($aF[3]==$aF[2])&&$aF[3]!=-1)||(($aF[0]==$aF[1])&&$aF[1]!=-1)&&(($aF[1]==$aF[2])&&$aF[1]!=-1)||(($aF[0]==$aF[1])&&$aF[1]!=-1)&&(($aF[1]==$aF[3])&&$aF[1]!=-1)||(($aF[1]==$aF[2])&&$aF[1]!=-1)&&(($aF[2]==$aF[3])&&$aF[2]!=-1))?$nEstrellasTrio:0;
+   return (pOk($aF,0,3)&&pOk($aF,2,3)&&pOk($aF,0,2)||pOk($aF,0,1)&&pOk($aF,1,2)&&pOk($aF,0,2)||pOk($aF,0,1)&&pOk($aF,1,3)&&pOk($aF,0,3)||pOk($aF,1,2)&&pOk($aF,2,3)&&pOk($aF,1,3))?$nEstrellasTrio:0;
 }
 function getEstrellasCuarteto($aF,$nEstrellasCuarteto)
 {
-   return ((($aF[0]==$aF[1])&&$aF[1]!=-1)&&(($aF[1]==$aF[2])&&$aF[1]!=-1)&&(($aF[2]==$aF[3])&&$aF[3]!=-1)&&(($aF[0]==$aF[3])&&$aF[3]!=-1))?$nEstrellasCuarteto:0;
+   return (pOk($aF,0,1)&&pOk($aF,0,2)&&pOk($aF,1,3)&&pOk($aF,1,2)&&pOk($aF,2,3)&&pOk($aF,0,3))?$nEstrellasCuarteto:0;
 }
 function getEstrellasEscaleraSimple3($aF,$nEstrellasEscaleraSimple3)
 {
@@ -170,7 +178,8 @@ $aCromosAlbum= explode(',', $ordenAlbumDB);
   //echo Count($aCreators);
 if (Count($aCreators)>1)
 {
-  for ($i=0; $i < getAdminCromos($dbh)['NUM_SLOTS']; $i++) 
+  $num_slotss = getAdminCromos($dbh)['NUM_SLOTS'];
+  for ($i=0; $i < $num_slotss; $i++) 
   { 
     $estreAux=0;
     $aAux = array();
@@ -178,6 +187,7 @@ if (Count($aCreators)>1)
     $aAux[]=$aCreators[(1)+$i*4];
     $aAux[]=$aCreators[(2)+$i*4];
     $aAux[]=$aCreators[(3)+$i*4];
+
     $aAuxRef = array();
     if (Count($aReferencias)>((3)+$i*4))
     {
@@ -194,11 +204,33 @@ if (Count($aCreators)>1)
       $aAuxRef[]=-1;     
     }
     $aAuxCromos = array();
-    
-$aAuxCromos[]=($aCromosAlbum[$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[$i*4])['mana_w']:-1;
-$aAuxCromos[]=($aCromosAlbum[(1)+$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[(1)+$i*4])['mana_w']:-1;
-$aAuxCromos[]=($aCromosAlbum[(2)+$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[(2)+$i*4])['mana_w']:-1;
-$aAuxCromos[]=($aCromosAlbum[(3)+$i*4]!=-1)?getCromoFromID($dbh,$aCromosAlbum[(3)+$i*4])['mana_w']:-1;
+$cromoi4 = getCromoFromID($dbh,$aCromosAlbum[$i*4]); 
+$aAuxCromos[]=($aCromosAlbum[$i*4]!=-1)?$cromoi4['mana_w']:-1;
+$cromoi41 = getCromoFromID($dbh,$aCromosAlbum[(1)+$i*4]);
+$aAuxCromos[]=($aCromosAlbum[(1)+$i*4]!=-1)?$cromoi41['mana_w']:-1;
+$cromoi42 = getCromoFromID($dbh,$aCromosAlbum[(2)+$i*4]);
+$aAuxCromos[]=($aCromosAlbum[(2)+$i*4]!=-1)?$cromoi42['mana_w']:-1;
+$cromoi43 = getCromoFromID($dbh,$aCromosAlbum[(3)+$i*4]);
+$aAuxCromos[]=($aCromosAlbum[(3)+$i*4]!=-1)?$cromoi43['mana_w']:-1;
+
+// si hay algún comodín se mete en id creador -2
+if ($cromoi4['rarity']=="Mythic")
+{
+  $aAux[0]=-2;
+}
+if ($cromoi41['rarity']=="Mythic")
+{
+  $aAux[1]=-2;
+}
+if ($cromoi42['rarity']=="Mythic")
+{
+  $aAux[2]=-2;
+}
+if ($cromoi43['rarity']=="Mythic")
+{
+  $aAux[3]=-2;
+}
+
     
     $filaI=NULL;
     if (isset($_POST['selfila_'.($i+1)])) 
