@@ -72,7 +72,9 @@ if(isset($_POST['submit']))
   //var_dump($_POST);
   //$CORREO=$_POST['CORREO'];
   //$sql="UPDATE admin SET username=(:name), email=(:CORREO)";
-  $sql="UPDATE ADMIN_CROMOS SET N_CROMOS_INI=(:n_cromos_iniciales), N_CROMOS_PROPIOS=(:n_cromos_propios), NUM_SLOTS= (:nslots) ,  PAREJA=(:valorpareja),  DOBLEPAREJA=(:valordoblepareja),  TRIO=(:valortrio), CUARTETO=(:valorcuarteto),  ESCALERA3=(:valorescalera3),  ESCALERA4=(:valorescalera4),ESCALERASIMPLE3=(:valorescalerasimple3),  ESCALERASIMPLE4=(:valorescalerasimple4),  ESCALERA3_ESTRELLAS=(:valorescalera3_estrellas),  ESCALERA4_ESTRELLAS=(:valorescalera4_estrellas) ";
+  $sql="UPDATE ADMIN_CROMOS SET N_CROMOS_INI=(:n_cromos_iniciales), N_CROMOS_PROPIOS=(:n_cromos_propios), NUM_SLOTS= (:nslots) ,  PAREJA=(:valorpareja),  DOBLEPAREJA=(:valordoblepareja),  TRIO=(:valortrio), CUARTETO=(:valorcuarteto),  ESCALERA3=(:valorescalera3),  ESCALERA4=(:valorescalera4),ESCALERASIMPLE3=(:valorescalerasimple3),  ESCALERASIMPLE4=(:valorescalerasimple4),  ESCALERA3_ESTRELLAS=(:valorescalera3_estrellas),  ESCALERA4_ESTRELLAS=(:valorescalera4_estrellas),  FRACCION_ESCA_IMPERIAL=(:valorfraccionescaimperial) ";
+
+
   $query = $dbh->prepare($sql);
   $query-> bindParam(':n_cromos_iniciales', $_POST['n_cromos_iniciales'], PDO::PARAM_STR);
   $query-> bindParam(':n_cromos_propios', $_POST['n_cromos_propios'], PDO::PARAM_STR);
@@ -88,6 +90,7 @@ if(isset($_POST['submit']))
   $query-> bindParam(':valorescalera4', $_POST['valorescalera4'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera3_estrellas', $_POST['valorescalera3_estrellas'], PDO::PARAM_STR);
   $query-> bindParam(':valorescalera4_estrellas', $_POST['valorescalera4_estrellas'], PDO::PARAM_STR);
+  $query-> bindParam(':valorfraccionescaimperial', $_POST['valorfraccionescaimperial'], PDO::PARAM_STR);
   $query->execute();
   $msg="Información actualizada correctamente";
 }    
@@ -511,9 +514,12 @@ foreach ($setsCromos as $seti) {
 </div>
 
 
-<label class="col-sm-2 control-label"></label>
+<label class="col-sm-2 control-label">Valor fracción escalera imperial</label>
 <div class="col-sm-4">
-<input type="text" name="ppp" class="form-control" value="">
+<input type="text" name="valorfraccionescaimperial" class="form-control" value="<?php echo htmlentities($result->FRACCION_ESCA_IMPERIAL);?>">
+
+
+
 </div>
 </div>
 <div class="form-group">

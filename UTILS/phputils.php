@@ -56,25 +56,77 @@ function getEstrellasCuarteto($aF,$nEstrellasCuarteto)
 {
    return (pOk($aF,0,1)&&pOk($aF,0,2)&&pOk($aF,1,3)&&pOk($aF,1,2)&&pOk($aF,2,3)&&pOk($aF,0,3))?$nEstrellasCuarteto:0;
 }
-function getEstrellasEscaleraSimple3($aF,$nEstrellasEscaleraSimple3)
+function getEstrellasEscaleraSimple3($aF,$nEstrellasEscaleraSimple3,$fraccionImpe)
 {
-   return ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))||(($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1))))?$nEstrellasEscaleraSimple3:0;
+      $totalEstrellas = 0;
+   if (($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))
+   {
+    $totalEstrellas=$nEstrellasEscaleraSimple3;
+    if ($aF[0]==1)
+    {
+     $totalEstrellas=$totalEstrellas+round(($nEstrellasEscaleraSimple3/$fraccionImpe), 0);
+    }
+   }
+   else if (($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))
+   {
+    $totalEstrellas=$nEstrellasEscaleraSimple3;
+    if ($aF[1]==1)
+    {
+      $totalEstrellas=$totalEstrellas+round(($nEstrellasEscaleraSimple3/$fraccionImpe), 0);
+    }   
+   }
+   return $totalEstrellas;
 }
-function getEstrellasEscaleraSimple4($aF,$nEstrellasEscaleraSimple4)
+function getEstrellasEscaleraSimple4($aF,$nEstrellasEscaleraSimple4,$fraccionImpe)
 {
-   return (($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))?$nEstrellasEscaleraSimple4:0;
+   $totalEstrellas = 0;
+   if (($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))
+   {
+    $totalEstrellas=$nEstrellasEscaleraSimple4;
+    if ($aF[0]==1)
+    {
+      $totalEstrellas=$totalEstrellas+round(($nEstrellasEscaleraSimple4/$fraccionImpe), 0);
+    }
+   }
+    return $totalEstrellas;
 }
-function getEstrellasEscalera3($aF,$aFI,$nEstrellasEscalera3)
+function getEstrellasEscalera3($aF,$aFI,$nEstrellasEscalera3,$fraccionImpe)
 {
-   return (((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))&&((($aFI[0]==$aFI[1])&&$aFI[1]!=-1)&&(($aFI[1]==$aFI[2])&&$aFI[1]!=-1)))
-    ||
-    ((($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))&&((($aFI[1]==$aFI[2])&&$aFI[1]!=-1)&&(($aFI[2]==$aFI[3])&&$aFI[2]!=-1))))?$nEstrellasEscalera3:0;    
+
+   $totalEstrellas = 0;
+   if ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1)))&&(pOk($aFI,0,1)&&pOk($aFI,1,2)&&pOk($aFI,0,2)))
+   {
+    $totalEstrellas=$nEstrellasEscalera3;
+    if ($aF[0]==1)
+    {
+      $totalEstrellas=$totalEstrellas+round(($nEstrellasEscalera3/$fraccionImpe), 0);
+    }
+   }
+   else if ((($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))&&(pOk($aFI,1,2)&&pOk($aFI,2,3)&&pOk($aFI,1,3)))
+   {
+    $totalEstrellas=$nEstrellasEscalera3;
+    if ($aF[1]==1)
+    {
+      $totalEstrellas=$totalEstrellas+round(($nEstrellasEscalera3/$fraccionImpe), 0);
+    }
+
+   
+   }
+    return $totalEstrellas;
 }
-function getEstrellasEscalera4($aF,$aFI,$nEstrellasEscalera4)
+function getEstrellasEscalera4($aF,$aFI,$nEstrellasEscalera4,$fraccionImpe)
 {
-   return ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2  ]+1)))&&
-    (((($aFI[0]==$aFI[1])&&$aFI[1]!=-1)&&(($aFI[1]==$aFI[2])&&$aFI[1]!=-1)&&(($aFI[2]==$aFI[3])&&$aFI[3]!=-1)&&(($aFI[0]==$aFI[3])&&$aFI[3]!=-1)))
-  )?$nEstrellasEscalera4:0;
+   $totalEstrellas = 0;
+   if ((($aF[1]==($aF[0]+1))&&($aF[2]==($aF[1]+1))&&($aF[3]==($aF[2]+1)))&&
+    (pOk($aFI,0,1)&&pOk($aFI,0,2)&&pOk($aFI,1,3)&&pOk($aFI,1,2)&&pOk($aFI,2,3)&&pOk($aFI,0,3)))
+   {
+    $totalEstrellas=$nEstrellasEscalera4;
+    if ($aF[0]==1)
+    {
+      $totalEstrellas=$totalEstrellas+round(($nEstrellasEscalera4/$fraccionImpe), 0);
+    }
+   }
+  return $totalEstrellas;
 }
 function getEstrellasEscaleraEstrellas3($aF,$nEstrellasEscaleraEstrellas3)
 {
@@ -259,16 +311,16 @@ if ($cromoi43['rarity']=="Mythic")
         $estreAux=getEstrellasCuarteto($aAux,$adCromos['CUARTETO']);
         break;
       case '5':
-        $estreAux=getEstrellasEscaleraSimple3($aAuxRef,$adCromos['ESCALERASIMPLE3']);
+        $estreAux=getEstrellasEscaleraSimple3($aAuxRef,$adCromos['ESCALERASIMPLE3'],$adCromos['FRACCION_ESCA_IMPERIAL']);
         break;
       case '6':
-        $estreAux=getEstrellasEscaleraSimple4($aAuxRef,$adCromos['ESCALERASIMPLE4']);
+        $estreAux=getEstrellasEscaleraSimple4($aAuxRef,$adCromos['ESCALERASIMPLE4'],$adCromos['FRACCION_ESCA_IMPERIAL']);
         break;
       case '7':
-        $estreAux=getEstrellasEscalera3($aAuxRef,$aAux,$adCromos['ESCALERA3']);
+        $estreAux=getEstrellasEscalera3($aAuxRef,$aAux,$adCromos['ESCALERA3'],$adCromos['FRACCION_ESCA_IMPERIAL']);
         break;
       case '8':
-        $estreAux=getEstrellasEscalera4($aAuxRef,$aAux,$adCromos['ESCALERA4']);
+        $estreAux=getEstrellasEscalera4($aAuxRef,$aAux,$adCromos['ESCALERA4'],$adCromos['FRACCION_ESCA_IMPERIAL']);
         break;
       case '9':
         $estreAux=getEstrellasEscaleraEstrellas3($aAuxCromos,$adCromos['ESCALERA3_ESTRELLAS']);
