@@ -215,27 +215,27 @@ body > * {
 <a onclick="managebuttonDash()"  class="btn btn-danger btn-outline btn-wrap-text">Volver</a>
 <?php
 echo '<br/><br/><span class="label label-danger">PREMIOS</span>';
-echo '<br/><span class="label label-primary">PAREJA(nombre)</span>';
+echo '<br/><span class="label label-primary">PAREJA (nombre)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['PAREJA'].'</span>';
-echo '<span class="label label-primary">DOBLE PAREJA(nombre)</span>';
+echo '<span class="label label-primary">DOBLE PAREJA (nombre)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['DOBLEPAREJA'].'</span>';
-echo '<span class="label label-primary">TRIO(nombre)</span>';
+echo '<span class="label label-primary">TRIO (nombre)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['TRIO'].'</span>';
-echo '<span class="label label-primary">CUARTETO(nombre)</span>';
+echo '<span class="label label-primary">CUARTETO (nombre)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['CUARTETO'].'</span>';
-echo '<br/><span class="label label-primary">ESCALERA(3)(referencia)</span>';
+echo '<br/><span class="label label-primary">ESCALERA REFERENCIA (3) (referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERASIMPLE3'].'</span>';
-echo '<span class="label label-primary">ESCALERA(4)(referencia)</span>';
+echo '<span class="label label-primary">ESCALERA REFERENCIA (4) (referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERASIMPLE4'].'</span>';
-echo '<br/><span class="label label-primary">ESCALERA COLOR(3)(referencia)</span>';
+echo '<br/><span class="label label-primary">ESCALERA COLOR (3) (nombre y referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA3'].'</span>';
-echo '<span class="label label-primary">ESCALERA COLOR(4)(referencia)</span>';
+echo '<span class="label label-primary">ESCALERA COLOR (4) (nombre y referencia)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA4'].'</span>';
-echo '<br/><span class="label label-info">ESCALERA IMPERIAL (empieza por referencia 1)</span>';
+echo '<br/><span class="label label-info">ESCALERA IMPERIAL (cualquier escalera que empiece por referencia 1)</span>';
 echo '<span class="label label-success">+1/'.getAdminCromos($dbh)['FRACCION_ESCA_IMPERIAL'].' del valor de la escalera</span>';
-echo '<br/><span class="label label-primary">ESCALERA(3)(estrellas)</span>';
+echo '<br/><span class="label label-primary">ESCALERA ESTRELLAS (3) (estrellas)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA3_ESTRELLAS'].'</span>';
-echo '<span class="label label-primary">ESCALERA(4)(estrellas)</span>';
+echo '<span class="label label-primary">ESCALERA ESTRELLAS (4) (estrellas)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['ESCALERA4_ESTRELLAS'].'</span>';
 ?>
 
