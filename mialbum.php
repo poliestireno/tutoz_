@@ -217,10 +217,10 @@ body > * {
 echo '<br/><br/><span class="label label-danger">PREMIOS</span>';
 echo '<br/><span class="label label-primary">PAREJA (nombre)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['PAREJA'].'</span>';
-echo '<span class="label label-primary">DOBLE PAREJA (nombre)</span>';
-echo '<span class="label label-success">'.getAdminCromos($dbh)['DOBLEPAREJA'].'</span>';
 echo '<span class="label label-primary">TRIO (nombre)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['TRIO'].'</span>';
+echo '<span class="label label-primary">DOBLE PAREJA (nombre)</span>';
+echo '<span class="label label-success">'.getAdminCromos($dbh)['DOBLEPAREJA'].'</span>';
 echo '<span class="label label-primary">CUARTETO (nombre)</span>';
 echo '<span class="label label-success">'.getAdminCromos($dbh)['CUARTETO'].'</span>';
 echo '<br/><span class="label label-primary">ESCALERA REFERENCIA (3) (referencia)</span>';
