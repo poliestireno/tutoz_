@@ -120,7 +120,7 @@ $msg="Datos borrados correctamente";
 					</div>
 				</div>
 
-			</div>
+			
 											<table ID="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 									<thead>
 										<tr>
@@ -202,7 +202,7 @@ foreach($results as $result)
 
 		</div>
 	</div>
-
+</div>
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>
@@ -217,7 +217,8 @@ foreach($results as $result)
 
 		$('#zctb').DataTable( {
     scrollY: 300,
-    paging: false
+    paging: false,
+    scrollCollapse: true
 } );
 				 $(document).ready(function () {          
 					setTimeout(function() {

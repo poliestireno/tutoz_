@@ -503,6 +503,20 @@ value="" >
 </div> 
 
 </form>
+<form target="_blank" action="resultados_fastests.php" id="form0" method="post">
+    <input type="hidden" name="idc4" id="idc4" />
+
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Resultados Test Rápidos</h3>
+</div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="resultadosTestRapidos();" class="btn btn-primary btn-outline btn-wrap-text">Ver resultados</a>
+</div> 
+
+</form>
 <form target="_blank" action="../mimercado.php?idc=<?php echo $idCur;?>" id="form8" method="post">
     <input type="hidden" name="idc3" id="idc3" />
 
@@ -776,6 +790,12 @@ if (Count($aToConcursos)>0)
     document.getElementById('idc3').value = <?php echo $idCur?>;
     document.getElementById('form7').submit();  
   }
+  function resultadosTestRapidos()
+  {
+    document.getElementById('idc4').value = <?php echo $idCur?>;
+    document.getElementById('form0').submit();  
+  }
+
   function verMercadoGlobal()
   {
     //document.getElementById('idc').value = <?php echo $idCur?>;

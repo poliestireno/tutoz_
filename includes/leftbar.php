@@ -8,7 +8,7 @@ require_once("cssutils.php");
 	<nav class="ts-sidebar">
 			<ul class="ts-sidebar-menu">
 			
-			<li class="ts-label">Menú</li>
+			<li class="ts-label"></li>
 			<?php
 			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Perfil"))
 			{
@@ -56,6 +56,13 @@ require_once("cssutils.php");
 			{
 			?>
 			<li><a href="mimercado.php"><i class="fa fa-hand-o-right"></i> &nbsp;Mercado</a>
+			</li>
+			<?php
+			}
+			if (opcionMenuOk($dbh,$_SESSION['alogin'],"Mi Mochila"))
+			{
+			?>
+			<li><a href="mimochila.php"><i class="fa fa-briefcase"></i> &nbsp;Mi Mochila</a>
 			</li>
 			<?php
 			}

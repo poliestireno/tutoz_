@@ -180,6 +180,27 @@ function insertarAlumnoJuicio($db,$idJuicio,$idAlumno,$opcionElegida)
       mi_info_log( "Error insertarAlumnoJuicio:".$ex->getMessage());
   }  
 }
+function insertarAlumnoTest($db,$idTest,$idAlumno,$idPregunta,$respuestaOK)
+{
+  $sentencia= "INSERT INTO ALUMNOS_FASTESTS ( ID_ALUMNO,  ID_FASTEST, PREGUNTAS, RESPUESTAS, RESULTADO, FECHA)
+              VALUES ( :ID_ALUMNO, :ID_FASTEST, :PREGUNTAS, :RESPUESTAS, :RESULTADO, now())";
+  try
+  {
+    
+    $resultadoo = ($respuestaOK)?1:0;
+    $stmt = $db->prepare($sentencia);
+    $stmt->bindParam(':ID_ALUMNO',$idAlumno);
+    $stmt->bindParam(':ID_FASTEST',$idTest);
+    $stmt->bindParam(':PREGUNTAS',$idPregunta);
+    $stmt->bindParam(':RESPUESTAS',$resultadoo);
+    $stmt->bindParam(':RESULTADO',$resultadoo);
+    $stmt->execute();
+  }
+  catch (Exception $ex)
+  {
+      mi_info_log( "Error insertarAlumnoTest:".$ex->getMessage());
+  }  
+}
 function insertarJuicio($db,$asignatura,$name,$opciones,$descrip)
 {
   $sentencia= "INSERT INTO JUICIOS ( ID_ASIGNATURA, NOMBRE, OPCIONES, DESCRIPCION, ACTIVO,FECHA)
@@ -198,6 +219,25 @@ function insertarJuicio($db,$asignatura,$name,$opciones,$descrip)
   catch (Exception $ex)
   {
       mi_info_log( "Error insertarJuicio:".$ex->getMessage());
+  }  
+}
+function insertarFastest($db,$asignatura,$name,$descrip)
+{
+  $sentencia= "INSERT INTO FASTESTS ( ID_ASIGNATURA, NOMBRE, DESCRIPCION, ACTIVO,FECHA)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE,:DESCRIPCION, :ACTIVO, now())";
+  try
+  {
+    $uno = 1;
+    $stmt = $db->prepare($sentencia);
+    $stmt->bindParam(':ID_ASIGNATURA',$asignatura);
+    $stmt->bindParam(':NOMBRE',$name);
+    $stmt->bindParam(':DESCRIPCION',$descrip);
+    $stmt->bindParam(':ACTIVO',$uno);
+    $stmt->execute();
+  }
+  catch (Exception $ex)
+  {
+      mi_info_log( "Error insertarFastest:".$ex->getMessage());
   }  
 }
 function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen)
@@ -1162,6 +1202,19 @@ function getJuicioActivo($db,$IdAsignatura)
   } 
   return $fila;
 }
+function getFastestActivo($db,$IdAsignatura)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM FASTESTS WHERE ACTIVO = 1 AND ID_ASIGNATURA=".$IdAsignatura);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! ".$ex->getMessage());
+  } 
+  return $fila;
+}
 function getJuicioFromId($db,$idJuicio)
 {
   $fila="";
@@ -1172,6 +1225,32 @@ function getJuicioFromId($db,$idJuicio)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! ".$ex->getMessage());
+  } 
+  return $fila;
+}
+function getFastestFromId($db,$idFT)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM FASTESTS WHERE ID=".$idFT);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured getFastestFromId ! ".$ex->getMessage());
+  } 
+  return $fila;
+}
+function getTestAlumno($db,$idFT,$idAlumno)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM ALUMNOS_FASTESTS WHERE ID_FASTEST=".$idFT." AND ID_ALUMNO=".$idAlumno);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured getTestAlumno ! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -1313,6 +1392,24 @@ function getCursoFromAsignaturaID($db,$IDAsignatura){
 }
 
 
+ 
+function getAlumnosfromFastestId($db,$idFT)
+{
+  $vectorTotal = array();
+  try
+  {     
+    $stmt = $db->query("SELECT * FROM ALUMNOS_FASTESTS WHERE ID_FASTEST=".$idFT." ORDER BY RESULTADO DESC");   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getAlumnosfromFastestId:".$ex->getMessage());
+  }
+    return $vectorTotal;
+}
 function getCursosFromIDSet($db,$idSet)
 {
   $vectorTotal = array();
@@ -1364,7 +1461,23 @@ function getJuiciosFromAsignatura($db,$IdAsignatura)
   }
     return $vectorTotal;
 }
-
+function getFastTestsFromAsignatura($db,$IdAsignatura)
+{
+  $vectorTotal = array();
+  try
+  {     
+    $stmt = $db->query("SELECT * FROM FASTESTS WHERE ID_ASIGNATURA=".$IdAsignatura. " ORDER BY FECHA DESC");   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getFastTestsFromAsignatura:".$ex->getMessage());
+  }
+    return $vectorTotal;
+}
 function getAlumnosIdFromClanId($db,$idClan)
 {
   $vectorTotal = array();
@@ -2168,6 +2281,40 @@ function modificarDesactivarJuicios($db,$IdAsignatura)
   } 
   return $stmt->rowCount();
 }
+function modificarDesactivarFastests($db,$IdAsignatura)
+{
+  try 
+  {
+    $sql = "UPDATE FASTESTS SET ACTIVO=0 WHERE ID_ASIGNATURA=".$IdAsignatura;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarDesactivarFastests ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarAlumnoFastest($db,$aTestAlumno,$idPregunta,$respuestaOK)
+{
+  try 
+  {
+    $valorResultado = ($respuestaOK)?1:0;
+    $preguntas = $aTestAlumno['PREGUNTAS'];
+    $respuestas = $aTestAlumno['RESPUESTAS'];
+    $resultado = $aTestAlumno['RESULTADO'];
+    $preguntas=$preguntas.",".$idPregunta;
+    $respuestas=$respuestas.",".$valorResultado;
+    $resultado=$resultado+$valorResultado;
+
+    $sql = "UPDATE ALUMNOS_FASTESTS SET PREGUNTAS='".$preguntas."',RESPUESTAS='".$respuestas."',RESULTADO='".$resultado."' WHERE ID_FASTEST=".$aTestAlumno['ID_FASTEST']. " AND ID_ALUMNO =".$aTestAlumno['ID_ALUMNO'] ;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarAlumnoFastest ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
 
 function modificarActivarJuicio($db,$idJuicio)
 {
@@ -2179,6 +2326,19 @@ function modificarActivarJuicio($db,$idJuicio)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarActivarJuicio ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarActivarFastest($db,$idFT)
+{
+  try 
+  {
+    $sql = "UPDATE FASTESTS SET ACTIVO=1 WHERE ID=".$idFT;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarActivarFastest ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
@@ -2639,6 +2799,20 @@ function getJuiciosComoClase($db){
     }
   }catch(PDOException $ex){
      mi_info_log( "Error getJuiciosComoClase:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getFastestsComoClase($db){
+  try{
+    $vectorTotal = array();
+    $stmt = $db->query
+    ("select * from FASTESTS WHERE NOMBRE LIKE 'FASTEST_CLASE_%'");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getFastestsComoClase:".$ex->getMessage());
   }
   return $vectorTotal;
 }

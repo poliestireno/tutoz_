@@ -10,6 +10,22 @@ if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION[
 { 
   header('location:../admin/index.php');
 }
+
+
+function respuestaOk($respDB,$resUsu)
+{  
+  $aRespDB = explode(",", $respDB);
+  foreach ($aRespDB as $respuestaI) 
+  {
+    if (strcasecmp($respuestaI,$resUsu) == 0)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 $db=conectarDB();
 if (!isset($_POST["sel11"])){
   $_POST["sel11"] = $_SESSION["sel11"];
@@ -50,6 +66,10 @@ else{
   $_POST["sel11"] = $_SESSION["sel11"];
 }
 
+
+
+
+
 ?>
 <html lang="es">
 <head>
@@ -79,12 +99,13 @@ else{
   }
 
 
+
 function cargaInicial()
 {
 <?php
 if (isset($_POST['filtro']) && ($_POST['tipoPet']=='C'))
 {
- if (strcasecmp($apreguntaa['RESPUESTA'], $_POST['filtro']) == 0)
+ if (respuestaOk($apreguntaa['RESPUESTA'], $_POST['filtro']))
   {
     echo 'swal.fire("Correcto!", "Tu respuesta:'.$_POST['filtro'].'", "success")';
   }
