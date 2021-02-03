@@ -156,10 +156,29 @@ function insertarEstrella($db,$IDAlumno,$IDAsignatura,$nEstrellas,$dia)
   $stmt->bindParam(':estrellas',$nEstrellas);
   $stmt->execute();
     }
-catch (PDOException $ex)
+  catch (PDOException $ex)
+  {
+      mi_info_log( "Error inserción estrella:".$ex->getMessage());
+  }  
+}
+function insertarCambio($db,$iDAlumno1,$iDAlumno12,$iDCromo1,$iDCromo2,$dia)
 {
-    mi_info_log( "Error inserción estrella:".$ex->getMessage());
-}  
+  $sentencia= "INSERT INTO CAMBIOS (ID_ALUMNO1, ID_ALUMNO2, ID_CROMO1, ID_CROMO2, DIA)
+              VALUES (:ID_ALUMNO1, :ID_ALUMNO2, :ID_CROMO1, :ID_CROMO2, :DIA)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':ID_ALUMNO1',$iDAlumno1);
+  $stmt->bindParam(':ID_ALUMNO2',$iDAlumno12);
+  $stmt->bindParam(':ID_CROMO1',$iDCromo1);
+  $stmt->bindParam(':ID_CROMO2',$iDCromo2);
+  $stmt->bindParam(':DIA',$dia);
+  $stmt->execute();
+    }
+  catch (PDOException $ex)
+  {
+      mi_info_log( "Error insertarCambio:".$ex->getMessage());
+  }  
 }
 
   
@@ -2634,6 +2653,18 @@ function modificarPoseedorCromo($db,$idAlumno, $idCromo)
 }
 
 
+function modificarAtributoAuxCromo($db,$correo,$atributoAux)
+{
+  try 
+  {
+    $sql = "UPDATE CROMOS SET ATRIBUTO_AUX='".$atributoAux."' WHERE ID_CREADOR = (SELECT ID FROM ALUMNOS WHERE CORREO='".$correo."')";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarAtributoAuxCromo ".$ex->getMessage());
+  }   
+}
 function modificarNEstrellasCromo($db,$correo,$nestrellas)
 {
   try 

@@ -446,7 +446,17 @@ function getNumeroSegundosAlumno($dbh,$correo)
 
 function getValorAtributo($dbh,$CORREO)
 {
-  
+
+// si el atributoAux del cromo es diferente de NULL, coge ese valor si no
+// utiliza el siguiente código,por ejemplo las ganas desde la semana pasada
+$cromoI = getCromo($dbh,$CORREO);
+if ($cromoI['ATRIBUTO_AUX']!=NULL)
+{
+  return (($cromoI['ATRIBUTO_AUX']>=0)?"+":"").$cromoI['ATRIBUTO_AUX']; 
+}
+else
+{
+
 $hoy = date('Y-m-d');
 $date = DateTime::createFromFormat('Y-m-d',$hoy);
 $date->modify('-7 day'); // una semana atrás
@@ -494,9 +504,14 @@ else
 {
   return "";
 }
-//echo 's:'.$totalSesiones;
-//echo 'e:'.$nEstrellas;
-//echo 'r:'.$porcentaje;
+
+}
+
+}
+function getValorAtributoDesdeTest($posI,$total,$minAtri,$maxAtri)
+{
+
+return intval(($total-$posI)/($total/($maxAtri-$minAtri+1)))+$minAtri;
 
 }
  

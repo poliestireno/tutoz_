@@ -84,6 +84,10 @@ else
 {
 	$msg="Cambio procesado correctamente, sin modificar orden,creadores y referencias";
 }
+
+$diaHoy = DateTime::createFromFormat('Y-m-d',date('Y-m-d'))->format('Y-m-d');
+insertarCambio($dbh,$_POST['sAlumno1'],$_POST['sAlumno2'],$_POST['sCromo1'],$_POST['sCromo2'],$diaHoy);
+
 }    
 ?>
 

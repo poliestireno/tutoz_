@@ -93,7 +93,7 @@ else if ($_POST['accionI']=='activar')
 
 </head>
 
-<body>
+<body onload="init()">
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar.php');?>
@@ -114,6 +114,7 @@ else if ($_POST['accionI']=='activar')
 <form action="resultados_fastests.php" id="form3" method="post">
   <input type="hidden" name="idc4" id="idc4" value="<?php echo $_POST['idc4']?>"/>
 <input type="hidden" name="accionI" id="accionI"/>
+<input type="hidden" name="flash" id="flash"/>
 
 	<div class="form-group">
 <label class="col-sm-1 control-label">Test Rápidos</label>
@@ -151,7 +152,7 @@ echo '<div id="aa_0" class="btn-group btn-group-justified" ><a id="bb_0"  onclic
 ?>
   </div>
 </div>
-</form>		
+	
 <br/><br/><br/><br/><br/>
 <div class="form-group">
 <?php
@@ -163,46 +164,16 @@ if ($_POST['accionI']=='ver')
 {
 
 
+//modificarAtributoAuxCromo($db,$correo,$atributoAux)
+
 $tiposBotones = array( "btn btn-primary", "btn btn-success", "btn btn-warning", "btn btn-info");
 $alumnoDB = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
 
 $fastestElegido = getFastestFromId($dbh,$_POST['sFTId']);
 $tamDesc = strlen($fastestElegido['DESCRIPCION']);
-//echo '<div class="form-group"><label class="col-sm-4 control-label">'.$fastestElegido['NOMBRE'].'('.$fastestElegido['FECHA'].')</label></div><br/><br/>';
+
 echo '<div class="form-group"><label class="col-sm-8 control-label" style="text-align:left;font-family:Courier; font-size:'.(60-$tamDesc).'px;" > '.$fastestElegido['DESCRIPCION'].'</label></div>';
 	
-
-
-	/*$aVotaAlumJui = getVotacionesAlumnosJuicio($dbh,$_POST['sFTId']);
-	$totalVotos = 0;
-	foreach ($aVotaAlumJui as $votaI) {
-		$hOpcionesNumero[$votaI['OPCION']]++;
-		$totalVotos++;
-	}
-	//var_export($hOpcionesNumero);
-if (!$seleccionadoActivo)
-{
-	$i=0;
-	foreach ($hOpcionesNumero as $key => $value) 
-	{
-		$porcentaje = round((($value/(($totalVotos>0)?$totalVotos:1))*100),1);
-		if ($porcentaje<10)
-		{
-			$porcentaje="0".$porcentaje;
-		}
-		$porcentaje.="";
-		if (ctype_digit($porcentaje)) 
-		{
-			$porcentaje.=".0";
-		}
-		$textoAMostrar = $porcentaje.'%-'.$key.' ('.$value.')';
-		$tamTexto = strlen($textoAMostrar);
-
-		echo '<div id="aa_0" class="btn-group btn-group-justified" ><a id="bb_0" style="text-align:left;font-family:Courier; font-size:'.(52-$tamTexto).'px; height: 90px" class="'.$tiposBotones[$i % sizeof($tiposBotones)	].'">'	.$textoAMostrar.'</a></div>';
-		$i++;
-	}
-}
-*/
 	echo '<label class="col-sm-8 control-label">'.(($seleccionadoActivo)?"<br/>[SE MOSTRARÁN LOS RESULTADOS CUANDO SE DESACTIVE EL TEST] ":"").'</label>';
 
 }
@@ -275,12 +246,34 @@ foreach($aAlumnosFastest as $alumnoFastI)
                                             <td><?php echo htmlentities($alumnoII['APELLIDO2']);?> 
                                             </td>
 										</tr>
-										<?php $cnt=$cnt+1; }} ?>
+										<?php 
+
+if ((isset($_POST['flash']))&&($_POST['flash']==1))
+{
+$atributoAux=getValorAtributoDesdeTest($cnt,count($aAlumnosFastest),$_POST['minAtri'],$_POST['maxAtri']);
+modificarAtributoAuxCromo($dbh,$alumnoII['CORREO'],$atributoAux);
+}
+$cnt=$cnt+1; 
+								}?>
+
+
 										
 									</tbody>
 								</table>
 
 
+
+
+
+
+<?php
+
+echo '<div id="aab_0" class=" col-sm-3 form-inline" ><a id="bbb_0"  onclick="managebutton(\'modAtriAux\')" class="btn btn-danger">Flashear atributos con el orden actual de la tabla</a>
+                            </div><label class=" form-inline" >Mínimo valor atributoAux:&nbsp;   </label><div class="btn-group form-inline "><input type="text" maxlength = "5" name="minAtri" class="form-control"  value="0"  required>
+                            </div><label class=" form-inline" >&nbsp;Máximo valor atributoAux:&nbsp;  </label><div class="btn-group btn-group-inline"><input type="text" maxlength = "5" name="maxAtri" class="form-control"  value="2" required>
+                            </div>';
+
+ }?>
 
 
 
@@ -320,12 +313,31 @@ foreach($aAlumnosFastest as $alumnoFastI)
 	}
 	else
 	{
-		document.getElementById('accionI').value=accion;
+		if (accion=='modAtriAux')
+		{
+			document.getElementById('flash').value=1;
+		}
+		else
+		{
+			document.getElementById('flash').value=0;
+		}
+		
+   		document.getElementById('accionI').value=accion;
    		document.getElementById("form3").submit(); 
 	}	
 }
 
+function init()
+{
+	<?php
+if ((isset($_POST['flash']))&&($_POST['flash']==1))
+{
+	echo 'swal.fire("Flasheados atributos correctamente", "según la el orden de la tabla", "success");';	
+}	
+	?>
+}
 	</script>
+	</form>	
 </body>
 </html>
 <?php } ?>
