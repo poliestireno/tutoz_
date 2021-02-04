@@ -672,6 +672,8 @@ function getPropsVisiblesBot($dbh,$correo)
 
 }
 function remove_accents($string) {
+    $string = preg_replace('/\s+/', '', $string);
+
     if ( !preg_match('/[\x80-\xff]/', $string) )
         return $string;
 
@@ -773,7 +775,7 @@ function remove_accents($string) {
     );
 
     $string = strtr($string, $chars);
-
+    
     return $string;
 }
 
