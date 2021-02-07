@@ -218,7 +218,7 @@ $cnt=$cnt+1;
 	}
  function checkTheBox() {
     var flag = 0;
-    for (var i = 0; i< 5; i++) {
+    for (var i = 0; i< document.form3["cCheckIds[]"].length; i++) {
       if(document.form3["cCheckIds[]"][i].checked){
         flag ++;
       }

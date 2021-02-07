@@ -16,14 +16,13 @@ header('location:index.php');
 else{
 $idCur="";
 
-	//var_export($_POST);	
 		if (isset($_GET['idc']))
 		{
 		  $idCur=$_GET['idc'];
 		}
 		else
 		{
-		  $idCur=$_POST['idc4'];
+		  $idCur=$_POST['idc5'];
 		}
 
 //	$msg="todo ok";
@@ -112,7 +111,7 @@ else if ($_POST['accionI']=='activar')
 									<div class="panel-body">
 
 <form action="resultados_fastests.php" id="form3" method="post">
-  <input type="hidden" name="idc4" id="idc4" value="<?php echo $_POST['idc4']?>"/>
+  <input type="hidden" name="idc5" id="idc5" value="<?php echo $_POST['idc5']?>"/>
 <input type="hidden" name="accionI" id="accionI"/>
 <input type="hidden" name="flash" id="flash"/>
 

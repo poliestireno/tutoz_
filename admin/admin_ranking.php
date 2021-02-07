@@ -491,8 +491,8 @@ echo "</ol>";
 </div> 
 
 </form>
-<form target="_blank" action="resultados_fastests.php" id="form0" method="post">
-    <input type="hidden" name="idc4" id="idc4" />
+<form target="_blank" action="resultados_fastests.php" id="form9" method="post">
+    <input type="hidden" name="idc5" id="idc5" />
 
  <div class="form-group">
   <div class="col-sm-12">
@@ -780,8 +780,8 @@ if (Count($aToConcursos)>0)
   }
   function resultadosTestRapidos()
   {
-    document.getElementById('idc4').value = <?php echo $idCur?>;
-    document.getElementById('form0').submit();  
+    document.getElementById('idc5').value = <?php echo $idCur?>;
+    document.getElementById('form9').submit();  
   }
 
   function verMercadoGlobal()
