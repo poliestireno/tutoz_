@@ -16,7 +16,7 @@ header('location:index.php');
 else{
 $idCur="";
 
-	var_export($_POST);	
+	//var_export($_POST);	
 		if (isset($_GET['idc']))
 		{
 		  $idCur=$_GET['idc'];

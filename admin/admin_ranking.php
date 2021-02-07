@@ -432,7 +432,7 @@ echo "</ol>";
 
 
 </form>
-<form action="justa.php" id="form4" method="post">
+<form  id="form4" method="post">
  <div class="form-group">
   <div class="col-sm-12">
 
@@ -440,6 +440,7 @@ echo "</ol>";
 
 
 <input type="hidden" name="idc" id="idc" >
+<input type="hidden" name="idc4" id="idc4" >
 <input type="hidden" name="p1Aux" id="p1Aux" >
 <input type="hidden" name="p2Aux" id="p2Aux" >
 <input type="hidden" name="p1" id="p1" >
@@ -450,29 +451,16 @@ echo "</ol>";
 <input type="hidden" name="totalJusta" id="totalJusta" >
 <input type="hidden" name="numMaxGanadas" id="numMaxGanadas" value="0" >
 <input type="hidden" name="historialGanador" id="historialGanador" value="-1" >
-<input type="hidden" name="historialNumMaxGanadas" id="historialNumMaxGanadas" 
-value="-3" >
-<input type="hidden" name="indiceUltimoGanadorAcum" id="indiceUltimoGanadorAcum" 
-value="-2" >
-<input type="hidden" name="listaGanadores" id="listaGanadores" 
-value="" >
-
-
-
-                           
-                            
-                            <label class="col-sm-1 control-label">Nº REPESCAS<span style="color:red">*</span></label>
-                            <div class="col-sm-1">
-  <input type="text" class="form-control col-md-2" ID="nRepescas" name="nRepescas" value="0" />
-
-                            </div>
-                            
- 
-
+<input type="hidden" name="historialNumMaxGanadas" id="historialNumMaxGanadas" value="-3" >
+<input type="hidden" name="indiceUltimoGanadorAcum" id="indiceUltimoGanadorAcum" value="-2" >
+<input type="hidden" name="listaGanadores" id="listaGanadores" value="" >
 </div>
 </div>
-<div class="form-group col-md-2">
-  <a onclick="iniciarJusta();" class="btn btn-success btn-outline btn-wrap-text">Iniciar justas</a>
+<div class="form-group col-md-12">
+  <a onclick="iniciarJusta(1);" class=" btn btn-success btn-outline btn-wrap-text">Justa (ahora caigo)</a><label class="col-sm-1 control-label">Nº REPESCAS<span style="color:red">*</span></label>&nbsp; &nbsp; <input type="text" class=" form-inline form-controll col-md-1" ID="nRepescas" name="nRepescas" value="0" />
+</div> 
+<div class="form-group col-md-12">
+  <a onclick="iniciarJusta(2);" class=" btn btn-success btn-outline btn-wrap-text">Justa Lista</a>
 </div> 
 </form>
 
@@ -801,9 +789,10 @@ if (Count($aToConcursos)>0)
     //document.getElementById('idc').value = <?php echo $idCur?>;
     document.getElementById('form8').submit();  
   }
-  function iniciarJusta()
+  function iniciarJusta(n)
   {
-    
+    if (n==1)
+    {
     document.getElementById('contJusta').value = '1';
     document.getElementById('totalJusta').value = parseInt(<?php echo (Count($aAlumnosCurso))?>)+parseInt(document.getElementById('nRepescas').value);
     document.getElementById('textTotalAlumnos').value = '<?php echo $textTotalAlumnos?>';
@@ -811,6 +800,13 @@ if (Count($aToConcursos)>0)
     document.getElementById('idc').value = <?php echo $idCur?>;
     document.getElementById('p1').value = <?php echo (Count($aAlumnosCurso)-2)?>;
     document.getElementById('p2').value = <?php echo (Count($aAlumnosCurso)-1)?>;
+    document.getElementById('form4').action="justa.php"; 
+    }
+    else if (n==2)
+    {
+      document.getElementById('idc4').value = <?php echo $idCur?>;
+      document.getElementById('form4').action="lista_justas.php"; 
+    }
     document.getElementById('form4').submit();   
   }
 

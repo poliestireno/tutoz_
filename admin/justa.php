@@ -135,10 +135,11 @@ function url(){
     $_SERVER['REQUEST_URI']
   );
 }
-
+$urlIni = substr(url(),0,strrpos(url(), '/'));
+$urlIni = substr($urlIni, 0, -6);
 ?>
 
-    <img id="imgP1" class="center-block img-responsive" height="50%" width="50%" src="https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities(substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo 
+    <img id="imgP1" class="center-block img-responsive" height="50%" width="50%" src="https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities($urlIni.'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo 
     (($cromo['cardtype']!='')?(
     ((getValorAtributo($dbh,$player1['CORREO'])>=0)?'%2B':'').getValorAtributo($dbh,$player1['CORREO']).'  '
     ):'').$cromo['cardtype'];?>&rarity=<?php echo $cromo['rarity'];?>&cardtext=<?php echo $cromo['cardtext'];?>&power=&toughness=<?php echo $cromo['toughness'];?>&artist=<?php echo $cromo['artist'];?>&bottom=<?php echo $cromo['bottom'];?>" style="border-radius:5%;"/>
@@ -185,7 +186,7 @@ function url(){
 
 ?>
 
-    <img id="imgP2" class="center-block img-responsive" height="50%" width="50%" src="https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities(substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo 
+    <img id="imgP2" class="center-block img-responsive" height="50%" width="50%" src="https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities($urlIni.'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo 
     (($cromo['cardtype']!='')?(
     ((getValorAtributo($dbh,$player2['CORREO'])>=0)?'%2B':'').getValorAtributo($dbh,$player2['CORREO']).'  '
     ):'').$cromo['cardtype'];?>&rarity=<?php echo $cromo['rarity'];?>&cardtext=<?php echo $cromo['cardtext'];?>&power=&toughness=<?php echo $cromo['toughness'];?>&artist=<?php echo $cromo['artist'];?>&bottom=<?php echo $cromo['bottom'];?>" style="border-radius:5%;"/>
