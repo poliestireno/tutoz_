@@ -3,7 +3,12 @@ session_start();
 //error_reporting(0);
 include('../includes/config.php');
 require_once("../UTILS/dbutils.php");
-if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
+$sql = "SELECT username from admin;";
+    $query = $dbh -> prepare($sql);
+    $query->execute();
+    $result=$query->fetch(PDO::FETCH_OBJ);
+
+if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION['alogin']!=$result->username)))
 	{	
 header('location:index.php');
 }
