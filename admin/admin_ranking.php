@@ -405,7 +405,16 @@ echo "</ol>";
                             <div class="col-sm-5">
   <select class="form-control col-md-2" ID="sAlumno1" name="sAlumno1">
   <?php
-    foreach ($aTotalAlumnos as $alum) 
+  function cmpNombre($a, $b)
+{
+    //echo '000';var_export($b['Nombre']) ;
+    return strcasecmp($a['Nombre'],$b['Nombre']);
+}
+    $b = new ArrayObject($aTotalAlumnos) ; 
+  $aTotalAlumnosOrderByNombre = $b->getArrayCopy() ; 
+  var_export($aTotalAlumnosOrderByNombre);
+    usort($aTotalAlumnosOrderByNombre, "cmpNombre");
+    foreach ($aTotalAlumnosOrderByNombre as $alum) 
     {
       echo "<option value='".$alum['Id']."'>".$alum['Nombre']."</option>";
     }
@@ -419,7 +428,7 @@ echo "</ol>";
                             <div class="col-sm-5">
   <select class="form-control col-md-2" ID="sAlumno2" name="sAlumno2">
   <?php
-    foreach ($aTotalAlumnos as $alum) 
+    foreach ($aTotalAlumnosOrderByNombre as $alum) 
     {
       echo "<option value='".$alum['Id']."'>".$alum['Nombre']."</option>";
     }
@@ -647,6 +656,7 @@ function finNegrita($correologin, $correoalumno)
 {
     return ($correologin== $correoalumno)?"</b>":"";
 }
+
 
 function cmp($a, $b)
 {

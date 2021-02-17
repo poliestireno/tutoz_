@@ -169,9 +169,56 @@ insertarCambio($dbh,$_POST['sAlumno1'],$_POST['sAlumno2'],$_POST['sCromo1'],$_PO
 <form action="admin_cambio_cromos.php" id="form3" method="post">
  <input type='hidden' name='sAlumno1' id='sAlumno1' value='<?php echo $_POST['sAlumno1']?>'/>
  <input type='hidden' name='sAlumno2' id='sAlumno2' value='<?php echo $_POST['sAlumno2']?>'/>
+
+<?php 
+
+$ali1 = getAlumnoFromId($dbh,$_POST['sAlumno1']);
+$ali2 = getAlumnoFromId($dbh,$_POST['sAlumno2']);
+$aCambios1 = getCambiosFromAlumnoIdOrderDate($dbh,$_POST['sAlumno1']);
+$aCambios2 = getCambiosFromAlumnoIdOrderDate($dbh,$_POST['sAlumno2']);
+
+$hoy = date('Y-m-d');
+/*
+$date = DateTime::createFromFormat('Y-m-d',$hoy);
+$date->modify('-7 day'); // una semana atrás
+$mayorQueDia = $date->format('Y-m-d');
+*/
+
+$nDias1="muchos muchos";
+if (count($aCambios1)>0)
+{
+	
+	$diff = strtotime($hoy) - strtotime($aCambios1[0]['DIA']);
+$years = floor($diff / (365*60*60*24));
+$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+$nDias1 = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+}
+$nDias2="muchos muchos";
+if (count($aCambios2)>0)
+{
+	$diff = strtotime($hoy) - strtotime($aCambios2[0]['DIA']);
+	$years = floor($diff / (365*60*60*24));
+$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+$nDias2 = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+	//$nDias2=$hoy - DateTime::createFromFormat('Y-m-d',$aCambios2[0]['DIA']);
+}
+
+
+?>
+
+
                             <div class="form-group">
                             
-<label class="col-sm-1 control-label"><?php $ali1 = getAlumnoFromId($dbh,$_POST['sAlumno1']); echo $ali1['NOMBRE'].' '.$ali1['APELLIDO1'];
+<label class="col-sm-6 control-label">Lleva <?php echo count($aCambios1);?> cambios y hace <?php echo $nDias1;?> días desde su último cambio</label>
+
+<label class="col-sm-6 control-label">Lleva <?php echo count($aCambios2);?> cambios y hace <?php echo $nDias2;?> días desde su último cambio</label>
+
+
+                            </div>
+<br/>
+                            <div class="form-group">
+                            
+<label class="col-sm-1 control-label"><?php  echo $ali1['NOMBRE'].' '.$ali1['APELLIDO1'];
  ?><span style="color:red">*</span></label>
                             <div class="col-sm-5">
   <select class="form-control col-md-2" ID="sCromo1" name="sCromo1">
@@ -189,7 +236,7 @@ echo "<option value='".$cromoI['ID']."'>".$cromoI['name']."-".$cromoI['power']."
                            
                              
 
-                            <label class="col-sm-1 control-label"><?php $ali2 = getAlumnoFromId($dbh,$_POST['sAlumno2']); echo $ali2['NOMBRE'].' '.$ali2['APELLIDO1'];
+                            <label class="col-sm-1 control-label"><?php  echo $ali2['NOMBRE'].' '.$ali2['APELLIDO1'];
  ?><span style="color:red">*</span></label>
                             <div class="col-sm-5">
   <select class="form-control col-md-2" ID="sCromo2	" name="sCromo2">
@@ -204,7 +251,7 @@ echo "<option value='".$cromoI['ID']."'>".$cromoI['name']."-".$cromoI['power']."
 ?>  
   </select>
                             </div>
-                            </div>
+                            </div>                            
 
 
 
