@@ -681,6 +681,19 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   }
   return $vectorTotal;
 }
+function getCambiosFromAlumnoIdOrderDate($db,$IdAlumno){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM CAMBIOS WHERE ID_ALUMNO1=".$IdAlumno." OR ID_ALUMNO2=".$IdAlumno." ORDER BY DIA DESC");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getCambiosFromAlumnoIdOrderDate:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
 function getOfrezcoMercado($db,$idAsignatura,$idAlumno){
   $vectorTotal = array();
   try{
