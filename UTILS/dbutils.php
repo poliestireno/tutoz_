@@ -121,6 +121,23 @@ catch (PDOException $ex)
     mi_info_log( "Error inserción estrella:".$ex->getMessage());
 }  
 }
+function insertarPregunta($db,$idSetPregunta,$sPregunta,$sRespuesta)
+{
+  $sentencia= "INSERT INTO PREGUNTAS (ID_SETPREGUNTA, PREGUNTA, RESPUESTA)
+              VALUES (:ID_SETPREGUNTA, :PREGUNTA, :RESPUESTA)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':ID_SETPREGUNTA',$idSetPregunta);
+  $stmt->bindParam(':PREGUNTA',$sPregunta);
+  $stmt->bindParam(':RESPUESTA',$sRespuesta);
+  $stmt->execute();
+    }
+catch (PDOException $ex)
+{
+    mi_info_log( "Error inserción insertarPregunta:".$ex->getMessage());
+}  
+}
 function insertarAlumnosClan($db,$idClan,$aAlumnos)
 {
   $sentencia= "INSERT INTO ALUMNOS_CLANES (ID_ALUMNO, ID_CLAN, DESCRIPCION)
@@ -180,8 +197,25 @@ function insertarCambio($db,$iDAlumno1,$iDAlumno12,$iDCromo1,$iDCromo2,$dia)
       mi_info_log( "Error insertarCambio:".$ex->getMessage());
   }  
 }
-
-  
+ 
+function insertMonotermino($db,$idPregunta,$idRespuesta,$idCurso,$idAlumno)
+{
+  $sentencia= "INSERT INTO MONOTERMINOS ( PREGUNTA,  RESPUESTAS, ID_CURSO,ID_ALUMNO)
+              VALUES ( :PREGUNTA,  :RESPUESTAS, :ID_CURSO,:ID_ALUMNO)";
+  try
+  {
+    $stmt = $db->prepare($sentencia);
+    $stmt->bindParam(':PREGUNTA',$idPregunta);
+    $stmt->bindParam(':RESPUESTAS',$idRespuesta);
+    $stmt->bindParam(':ID_CURSO',$idCurso);
+    $stmt->bindParam(':ID_ALUMNO',$idAlumno);
+    $stmt->execute();
+  }
+  catch (Exception $ex)
+  {
+      mi_info_log( "Error insertMonotermino:".$ex->getMessage());
+  }  
+}
 function insertarAlumnoJuicio($db,$idJuicio,$idAlumno,$opcionElegida)
 {
   $sentencia= "INSERT INTO ALUMNOS_JUICIOS ( ID_ALUMNO,  ID_JUICIO, OPCION,FECHA)
@@ -415,6 +449,17 @@ function borrarBotFromId($db,$idBot)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! borrarBotFromId".$ex->getMessage());
+  } 
+}
+function borrarMonoterminoFromId($db,$idMo)
+{
+ try 
+  {
+   $sql = "DELETE FROM MONOTERMINOS WHERE ID=".$idMo;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarMonoterminoFromId".$ex->getMessage());
   } 
 }
 function borrarAlumnoFromClanId($db,$idAlumno,$idClan)
@@ -678,6 +723,20 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
     }
   }catch(PDOException $ex){
      mi_info_log( "Error getAlumnosFromAsignaturaID:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getMonoterminosFromIdCurso($db,$IdCurso){
+  $vectorTotal = array();
+  try{
+  $stmt = $db->query("SELECT * FROM MONOTERMINOS WHERE ID_CURSO=".$IdCurso);
+
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getMonoterminosFromIdCurso:".$ex->getMessage());
   }
   return $vectorTotal;
 }

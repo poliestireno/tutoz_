@@ -318,8 +318,16 @@ shuffle($aRespuestas2);
       	document.getElementById("idPreguntaNext").value=<?php echo $apreguntaa['ID']?>;
       	document.getElementById("ids_preguntas").value=<?php echo $apreguntaa['ID']?>;
       	document.getElementById("respuestaUsu").value='SABESQUESI';
-      	document.getElementById("form1").submit(); 
+     document.getElementById("form1").action="fastest.php";
+    
+    document.getElementById("form1").submit(); 
 	}
+	function mandarMo()
+	{       	
+	document.getElementById("form1").action="mandar_monotermino.php";
+          	document.getElementById("form1").submit(); 
+	}
+
 	function testLento()
 	{ 
 	}
@@ -391,7 +399,7 @@ function getRandomNumber(min, max) {
 <?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>
 
 									<div class="panel-body">
-<form method="post" class="form-horizontal" enctype="multipart/form-data" id="form1" action="fastest.php">
+<form method="post" class="form-horizontal" enctype="multipart/form-data" id="form1" >
 <input type="hidden" name="respuestaUsu" id="respuestaUsu"/>
 <input type="hidden" name="ids_preguntas" id="ids_preguntas" value=""/>
 <input type="hidden" name="idPreguntaNext" id="idPreguntaNext" value=""/>
@@ -452,7 +460,28 @@ function getRandomNumber(min, max) {
 		<div class="form-group">
 
 		<div class="col-md-4">
-		<a onclick="mostratDado();" class="btn btn-info btn-outline btn-wrap-text">Suerte!!!</a>
+		<a onclick="mostratDado();" class="btn btn-danger btn-outline btn-wrap-text">Suerte!!!</a>
+		</div> 
+
+		</div>
+
+		</div>
+
+
+		</div>
+		<div class="panel panel-default col-sm-2 col-sm-offset-1">
+		<div class="panel-heading">Mandar Monotérmino</div>
+		<div class="panel-body">
+
+		<div class="form-group">
+		<div class="col-sm-10">
+		<label class="control-label">Mandar Monotérmino</label>
+		</div>
+		</div>
+		<div class="form-group">
+
+		<div class="col-md-4">
+		<a  target="_blank" onclick="mandarMo();" class="btn btn-warning btn-outline btn-wrap-text">Mandar</a>
 		</div> 
 
 		</div>

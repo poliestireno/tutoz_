@@ -519,6 +519,20 @@ echo "</ol>";
 </div> 
 
 </form>
+<form target="_blank" action="aceptar_monoterminos.php" id="form10" method="post">
+    <input type="hidden" name="idc6" id="idc6" />
+
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Gestionar Monotérminos</h3>
+</div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="gestionarMonoterminos();" class="btn btn-danger btn-outline btn-wrap-text">Gestionar</a>
+</div> 
+
+</form>
 <form target="_blank" action="../mimercado.php?idc=<?php echo $idCur;?>" id="form8" method="post">
     <input type="hidden" name="idc3" id="idc3" />
 
@@ -797,6 +811,11 @@ if (Count($aToConcursos)>0)
   {
     document.getElementById('idc5').value = <?php echo $idCur?>;
     document.getElementById('form9').submit();  
+  }
+  function gestionarMonoterminos()
+  {
+    document.getElementById('idc6').value = <?php echo $idCur?>;
+    document.getElementById('form10').submit();  
   }
 
   function verMercadoGlobal()
