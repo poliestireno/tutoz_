@@ -22,10 +22,41 @@ else
 //var_dump($_POST);
 if(isset($_POST['ordentotal']))
 { 
-  
-  modificarOrdenAlbum($dbh, $CORREO,$_POST["ordentotal"]);   
-  modificarOrdenCreadores($dbh, $CORREO,$_POST["creatorstotal"]); 
-  modificarOrdenReferenciasTotal($dbh, $CORREO,$_POST["ordenreferenciastotal"]); 
+/*  echo "ordentotal:";
+  var_export($_POST["ordentotal"]);
+  echo "creatorstotal:";
+  var_export($_POST["creatorstotal"]);
+  echo "ordenreferenciastotal:";
+  var_export($_POST["ordenreferenciastotal"]);
+  */
+  if (validateCromos($dbh,$CORREO,$_POST["ordentotal"]))
+  {
+   modificarOrdenAlbum($dbh, $CORREO,$_POST["ordentotal"]);   
+   $aOToo = explode(",", $_POST["ordentotal"]);
+   $auxCreatorsTotal="";
+   $auxReferenciasTotal="";
+   $comma="";
+   foreach ($aOToo as $cromoId) 
+   {
+      if ($cromoId==-1)
+      {
+        $auxCreatorsTotal.=$comma."-1";
+        $auxReferenciasTotal.=$comma."-1";
+      }
+      else
+      {
+        $cromoAux = getCromoFromID($dbh,$cromoId);
+        $auxCreatorsTotal.=$comma.$cromoAux['ID_CREADOR'];
+        $auxReferenciasTotal.=$comma.$cromoAux['power'];
+      }
+      $comma=",";
+   }
+  modificarOrdenCreadores($dbh, $CORREO,$auxCreatorsTotal); 
+  modificarOrdenReferenciasTotal($dbh, $CORREO,$auxReferenciasTotal);   
+  }
+
+
+
 }
 
  
@@ -208,8 +239,7 @@ body > * {
 <body onload="init()">
   <form id="form2" method="post" action="profile.php">
     <input type='hidden' name='ordentotal' id='ordentotal'/>
-    <input type='hidden' name='creatorstotal' id='creatorstotal'/>
-    <input type='hidden' name='ordenreferenciastotal' id='ordenreferenciastotal'/>
+   
 
 <div class="form-group" style="margin: 10px">
 <a onclick="managebuttonDash()"  class="btn btn-danger btn-outline btn-wrap-text">Volver</a>
@@ -388,9 +418,6 @@ foreach ($vectorOrdenado as $cromo)
   {
 ?>
 <div id= "kko_<?php echo $cont?>" 
-  data-creador="<?php echo $cromo['ID_CREADOR']?>" 
-  data-estrellas="<?php echo $cromo['mana_w']?>" 
-  data-orden="<?php echo $cromo['power']?>"  
   data-idcromo="<?php echo $cromo['ID']?>"  
 
   class="image-thumbnail"
@@ -412,9 +439,6 @@ style="background-image: url('https://www.mtgcardmaker.com/mcmaker/createcard.ph
   {
  ?>
 <div id= "kko_<?php echo $cont?>" 
-  data-creador="-1" 
-  data-estrellas="-1" 
-  data-orden="-1"  
   data-idcromo="-1"  
 
   class="image-thumbnail"
@@ -450,26 +474,9 @@ $cont = $cont + 1;
 
   function calcular()
   { 
-      
-
-      // fila 1 0-3
-      // fila 2 4-7
-      // fila 3 8-11
-      // 0 pareja 1 doblepareja 2 trio 3 escalera34 escalera4
-     /* $('[id^=selfila]').each(function() 
-      {
-        //alert(this.dataset.creador+","+this.dataset.estrellas+","+this.dataset.orden+","+this.dataset.idcromo);
-        alert(this.value);
-
-      });
-     */
-
-
-      
+     
       comma="";
       ordenTotal="";
-      ordenreferenciastotal="";
-      creatorsTotal="";
      // estrellasCromosTotal=0;
       numSlots = <?php echo $numSelect?>;
       contCromos = numSlots * 4;
@@ -477,20 +484,15 @@ $cont = $cont + 1;
       {
         if (contCromos>0)
         {
-        //alert(this.dataset.creador+","+this.dataset.estrellas+","+this.dataset.orden+","+this.dataset.idcromo);
         ordenTotal+=comma+this.dataset.idcromo;
-        ordenreferenciastotal+=comma+this.dataset.orden;
-        creatorsTotal+=comma+this.dataset.creador;
-       // estrellasCromosTotal+=(this.dataset.estrellas==-1)?0:parseInt(this.dataset.estrellas);
         comma=",";
         contCromos=contCromos-1;
         //console.log('c:'+contCromos); 
         }
       });
-      //alert();
-      document.getElementById("creatorstotal").value=creatorsTotal;
+
       document.getElementById("ordentotal").value=ordenTotal;
-      document.getElementById("ordenreferenciastotal").value=ordenreferenciastotal;
+
       document.getElementById("form2").action="mialbum.php";
       document.getElementById("form2").submit();
 

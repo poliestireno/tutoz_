@@ -779,4 +779,42 @@ function remove_accents($string) {
     return $string;
 }
 
+
+function validateCromos($db, $sCorreo, $sOrdenTotal) 
+{
+  // validar número cromos
+  $aCromosDB = getCromosDeAlbum($db,$sCorreo);
+  $aCromosAlbum = explode(",", $sOrdenTotal);
+  $nCromosAlb= 0;
+  foreach ($aCromosAlbum as $idCromo) 
+  {
+    if ($idCromo!=-1)
+    {
+      $nCromosAlb++;
+    }
+  }
+  if (count($aCromosDB)!=$nCromosAlb)
+  {
+    return false;
+  }
+  // validar que son exactemente los de base de datos
+  foreach ($aCromosAlbum as $idCromo) 
+  {
+    if ($idCromo!=-1)
+    {
+        foreach ($aCromosDB as $key => $cromoI) 
+        {
+            if ($cromoI['ID']==$idCromo)
+            {
+              unset($aCromosDB[$key]);
+              break;
+            }
+        }
+    }
+  }
+
+  return (count($aCromosDB)==0);
+
+
+}
 ?>

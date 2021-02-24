@@ -470,12 +470,12 @@ function getRandomNumber(min, max) {
 
 		</div>
 		<div class="panel panel-default col-sm-2 col-sm-offset-1">
-		<div class="panel-heading">Mandar Monotérmino</div>
+		<div class="panel-heading">Monotérmino</div>
 		<div class="panel-body">
 
 		<div class="form-group">
 		<div class="col-sm-10">
-		<label class="control-label">Mandar Monotérmino</label>
+		<label class="control-label">Monotérmino</label>
 		</div>
 		</div>
 		<div class="form-group">
