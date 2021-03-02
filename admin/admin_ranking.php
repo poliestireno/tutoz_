@@ -376,7 +376,7 @@ foreach ($aToRetos as $reto)
 </table>
 
 
-<h3>Clanes</h3>
+<h3>Clanes(<?echo count($aClanes)?>)</h3>
 
 <?php
 echo "<ol>";
