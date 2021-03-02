@@ -113,6 +113,60 @@ function esDiferenteTipo($resDefinitiva,$isRespNum)
 	$isRespNumNueva = is_numeric($resDefinitiva);
 	return ($isRespNumNueva xor $isRespNum);
 }
+function transformacionRespuesta($respu)
+{
+	
+	if (is_numeric($respu))
+	{
+		if (($respu & ($respu - 1)) == 0)
+		{			
+			if (rand(0,1)==0)
+			{
+				return $respu*2;
+			}
+			else
+			{
+				return $respu/2;
+			}
+		}
+		else
+		{
+			$nR = rand(1,5);
+			if (rand(0,1)==0)
+			{
+				return $respu-$nR;
+			}
+			else
+			{
+				return $respu+$nR;
+			}
+
+		}
+	}
+	else
+	{
+		if (rand(0,1)==0)
+		{
+			$vowel_arr=array('a','e','i','o','u');
+			$len=strlen($respu);
+			$aPosVocales= array();
+			for($i=0;$i<$len;$i++)
+			{
+				if(in_array($respu[$i],$vowel_arr))
+				{
+					$aPosVocales[]=$i;
+				}
+			}
+			if (count($aPosVocales)>0)
+			{
+				$indexVocal = $aPosVocales[rand(0,Count($aPosVocales)-1)];
+				$respu[$indexVocal]=$vowel_arr[rand(0,Count($vowel_arr)-1)];				
+			}
+		}
+		return $respu;
+	}
+}
+
 
 
 $numOpcionesPreguntas = getConfGeneral($dbh, "NUMERO_OPCIONES_PREGUNTAS");
@@ -142,7 +196,7 @@ while (((in_array($resDefinitiva, $aRespuestas2)||(esDiferenteTipo($resDefinitiv
 			$apreguntaa2 = $aPreguntas[rand(0,Count($aPreguntas)-1)];
 		}
 		$aRespDB22 = explode(",", $apreguntaa2['RESPUESTA']);
-	 	$resDefinitiva= $aRespDB22[rand(0,Count($aRespDB22)-1)];
+	 	$resDefinitiva= $aRespDB22[rand(0,Count($aRespDB22)-1)];	
 		$contt++;
 	}
 	if ($contt>=1000)
@@ -150,6 +204,28 @@ while (((in_array($resDefinitiva, $aRespuestas2)||(esDiferenteTipo($resDefinitiv
 		$resDefinitiva= $aRespDB22[rand(0,Count($aRespDB22)-1)];
 	}
 	//$aRespuestasOk[]=$resDefinitiva;
+
+	if (rand(0,3)==0)
+	{
+		$resDefinitiva2=transformacionRespuesta($aRespuestas2[0]);
+		if ($aRespuestas2[0]!=$resDefinitiva2)
+		{
+			if (!(in_array($resDefinitiva2, $aRespuestas2)))
+			{
+				$resDefinitiva=$resDefinitiva2;
+			}
+			else
+			{
+			$resDefinitiva2=transformacionRespuesta($resDefinitiva);
+			if (!(in_array($resDefinitiva2, $aRespuestas2)))
+			{
+				$resDefinitiva=$resDefinitiva2;
+			}
+			}
+			
+		}
+	}
+	
 	$aRespuestas2[]=$resDefinitiva;
 	//var_export($aRespuestas2);
 }

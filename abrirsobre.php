@@ -46,9 +46,13 @@ if ($decrypted)
 			{
 				header('location:tetris.php');
 			}
-			else if ($alumnoAux['NUMERO_NIVEL']>3)
+			else if ($alumnoAux['NUMERO_NIVEL']==4)
 			{
 				header('location:galaga/galaga.php');
+			}
+			else if ($alumnoAux['NUMERO_NIVEL']>4)
+			{
+				header('location:pacman/pacman.php');
 			}
 			else
 			{
