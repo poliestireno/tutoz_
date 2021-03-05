@@ -215,7 +215,7 @@ else
                             </div>
                             <label class="col-sm-1 control-label">NOMBRE<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" placeholder="(se quitarán las tildes)" name="name" class="form-control" required>
+                            <input type="text" placeholder="(no poner símbolos raros, será una carpeta)" name="name" class="form-control" required>
                             </div>
                             </div>
                             <div class="form-group">
