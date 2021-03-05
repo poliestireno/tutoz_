@@ -716,7 +716,7 @@ return $db->lastInsertId();
 function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   $vectorTotal = array();
   try{
-    $stmt = $db->query("SELECT * FROM ALUMNOS WHERE ID_CURSO=(SELECT ID_CURSO FROM ASIGNATURAS WHERE ID=".$IDAsignatura.")");
+    $stmt = $db->query("SELECT * FROM ALUMNOS WHERE ID_CURSO=(SELECT ID_CURSO FROM ASIGNATURAS WHERE ID=".$IDAsignatura.") order by NOMBRE,APELLIDO1");
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $vectorTotal [] = $fila;
