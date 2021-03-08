@@ -56,10 +56,9 @@ if (isset($_POST['filtro'])){
     }  
     $apreguntaa = $aPreguntas[rand(0,Count($aPreguntas)-1)];
   }
-  else if ($_POST['tipoPet']=='C') 
+  else if (($_POST['tipoPet']=='C') ||($_POST['tipoPet']=='V'))
   {
-    $apreguntaa = getPreguntaFromID($db,$_POST["preguntaId"]);
-    
+    $apreguntaa = getPreguntaFromID($db,$_POST["preguntaId"]);   
   }
 }
 else{
@@ -114,6 +113,10 @@ if (isset($_POST['filtro']) && ($_POST['tipoPet']=='C'))
     echo 'swal.fire("Regular!", "Tu respuesta:'.$_POST['filtro'].'", "error")';  
   }
 }
+else if (isset($_POST['tipoPet']) && ($_POST['tipoPet']=='V'))
+{
+echo 'swal.fire("La respuesta es "+"'.$apreguntaa['RESPUESTA'].'", "", "success")';
+}
 
 ?>
 
@@ -132,11 +135,12 @@ if (isset($_POST['filtro']) && ($_POST['tipoPet']=='C'))
       <h1><?php echo $apreguntaa['PREGUNTA'];?></h1>
       <input type = "text" id = "filtro" name = "filtro"/>
     <a onclick="managebuttonB('C')"  class="btn btn-danger ">Contestar</a><br/><br/>
-    <a onclick="managebuttonB('P')"  class="btn btn-primary btn-outline btn-wrap-text">Nueva pregunta</a>       
+    <a onclick="managebuttonB('P')"  class="btn btn-primary btn-outline btn-wrap-text">Nueva pregunta</a> 
+    <br/><br/><a onclick="managebuttonB('V')"  class="btn btn-success">Ver respuesta</a>      
     <br>  
   </form>
 <form id="form1" method="post" action="asis00.php">
-  <a onclick="managebuttonP()"  class="btn btn-danger btn-outline btn-wrap-text">Menu Principal</a> 
+  <a onclick="managebuttonP()"  class="btn btn-danger btn-outline btn-wrap-text">Menu Principal</a>
   </form>
 </body>
 </html>
