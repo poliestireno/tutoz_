@@ -883,7 +883,7 @@ function setNotificationsOff($db,$notireciver)
     $stmt->execute();
   } catch(PDOException $ex) 
   {    
-   mi_info_log( "An Error occured! cambiarNivelAlumno ".$ex->getMessage());
+   mi_info_log( "An Error occured! setNotificationsOff ".$ex->getMessage());
   }   
 }
 
@@ -943,6 +943,21 @@ function getCursoFromCursoID($db,$idCurso){
   } 
   return $fila;
 }
+function getBonoLike($db,$idAlumno,$idCurso,$fecha,$sTextoLike){
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM BONOS WHERE ID_ALUMNO= ".$idAlumno." AND ID_CURSO= ".$idCurso." AND DATE(FECHA_CREACION)= '".$fecha."' AND NOMBRE LIKE '%".$sTextoLike."%'");
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! getBonoLike".$ex->getMessage());
+  } 
+  return $fila;
+}
+
+
+
+
 
 function getNivelFromNumeroNivel($db,$correo,$numeroNivel){
   try 

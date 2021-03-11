@@ -405,7 +405,11 @@ if (isset($_SESSION['alogin']))
         //AplicarRecompesasNivel
         $cromo = getCromo($dbh,$_SESSION['alogin']);
         // se da por hash(algo, data)echo que las estrellas del cromo propio coinciden con el número de nivel del alumno.
-        modificarNEstrellasCromo($dbh,$_SESSION['alogin'],$nivelReal);
+        // solo subir el nivel de estrellas hasta nivel 6
+        if ($nivelReal<=6)
+        {
+          modificarNEstrellasCromo($dbh,$_SESSION['alogin'],$nivelReal);
+        }
         //meter aqui las demas recompesas.
         
         
@@ -643,25 +647,25 @@ function getPropsVisiblesBot($dbh,$correo)
     $aProps['saludo']=1;
     $aProps['palabra_clave']=1;    
   }
-  if ($nivelAlumno>=2)
+  if ($nivelAlumno>=4)
   {
     $aProps['movilidad']=1;   
   }
-  if ($nivelAlumno>=3)
+  if ($nivelAlumno>=5)
   {
     $aProps['velocidad_1']=1;   
     $aProps['personajes']=1;   
   }
-  if ($nivelAlumno>=4)
+  if ($nivelAlumno>=6)
   {
     $aProps['saltando']=1;   
     $aProps['ppt1']=1;   
   }
-  if ($nivelAlumno>=5)
+  if ($nivelAlumno>=7)
   {
     $aProps['localizacion']=1;   
   }
-  if ($nivelAlumno>=6)
+  if ($nivelAlumno>=8)
   {
     $aProps['fantasma']=1;   
     $aProps['velocidad_2']=1;   
