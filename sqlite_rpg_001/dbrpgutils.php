@@ -10,6 +10,9 @@ switch ($funcion) {
 	case 'getData':
 		echo getData();
 		break;
+	case 'mi_info_log':
+		echo mi_info_log2();
+		break;
 	case 'getCompaneros':
 		echo getCompaneros();
 		break;
@@ -80,6 +83,14 @@ function getPregunta()
 
 	$result = json_encode($aPreguntas[$randomPre]);
 	return $result;
+}
+function mi_info_log2()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$mensaje = $_POST["param01"];
+	mi_info_log($mensaje);
+	return "";
 }
 function getCompaneros()
 {
