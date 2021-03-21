@@ -7,7 +7,8 @@ function enviarCorreo($in_to,$in_subject,$in_message)
   {
     ini_set( 'display_errors', 1 );
     error_reporting( E_ALL );
-    $from = "no-reply@enhorabuenadelabuena.com";
+    //$from = "no-reply@enhorabuenadelabuena.com";
+    $from = "afsanchez@lasalleinstitucion.es";
     $to = $in_to;
     $subject = $in_subject;
     $message = $in_message;
@@ -386,10 +387,54 @@ function calcularNivelDeEstrellas($dbh,$estrellasTotales,$correo)
 
 // INI Recalcular nivel alumno, no se hace para un administrador
 
+
+
+
 if (isset($_SESSION['alogin']))
 {
   if (!esUsernameAdministrador($dbh,$_SESSION['alogin']))
   {
+    if (opcionMenuOk($dbh,$_SESSION['alogin'],"Jugar"))
+    {
+      $asignaturaAux=getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID_CURSO'])[0];
+      $diaHoy = DateTime::createFromFormat('Y-m-d',date('Y-m-d'))->format('Y-m-d');
+      if ($asignaturaAux['DIA_CROM_DIARIO']!=$diaHoy)
+      {
+      // para todos los de su clase genera un sitio aleatorio
+      // si no tienen movilidad, una vez al día.
+      $aAlumnosCurso = getAlumnosCompanerosCursoFromCorreo($dbh,$_SESSION['alogin']);
+      foreach ($aAlumnosCurso as $alumno) 
+      {  
+        //var_export($alumno);
+        $getPropsAlummo =  getPropsVisiblesbot($dbh,$alumno['CORREO']);
+        if ($getPropsAlummo['movilidad']!=1)
+        {
+          $aallSitios = getAllSitiosVisibles($dbh);
+          $sitioElegido = $aallSitios[rand(0,Count($aallSitios)-1)];
+          $posx = rand($sitioElegido['INI_X'],$sitioElegido['MAX_X']);
+          $posy = rand($sitioElegido['INI_Y'],$sitioElegido['MAX_Y']);
+          $cont = 1000;
+          while (existeLugar($dbh,$sitioElegido['ID'],$posx,$posy)) 
+          {
+              $posx = rand($sitioElegido['INI_X'],$sitioElegido['MAX_X']);
+              $posy = rand($sitioElegido['INI_Y'],$sitioElegido['MAX_Y']);
+              $cont--;
+              if ($cont==0)
+              {
+                $cont = 1000;
+                $sitioElegido = $aallSitios[rand(0,Count($aallSitios)-1)];
+              }
+          };
+          modificarLocalizacionBot($dbh,$alumno['CORREO'], $sitioElegido['ID_MAP'], $posx, $posy);
+        }
+      }
+      
+modificarDiaCromDiarioAsignatura($dbh,$asignaturaAux['ID'],$diaHoy);
+     }
+    }
+
+
+
      $estrellasTotales = calcularEstrellasTotales($dbh,$_SESSION['alogin']);
       //echo "estrellas:".$estrellasTotales;
 

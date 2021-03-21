@@ -94,25 +94,6 @@ if(isset($_POST['sel11']))
     <script type="text/javascript">
 
 
-    function submitOk()
-    {
-  
-            Swal.fire({
-        title: 'Datos correctos',
-        text: '¿Son los datos correctos?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí'
-      }).then((result) => {
-        if (result.value) {
-          document.getElementById("regform").submit();
-        }
-      })
-
-    }
-
         
 </script>
 </head>

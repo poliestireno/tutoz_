@@ -451,6 +451,17 @@ function borrarBotFromId($db,$idBot)
    mi_info_log( "An Error occured! borrarBotFromId".$ex->getMessage());
   } 
 }
+function borrarCompraFromId($db,$idCompra)
+{
+ try 
+  {
+   $sql = "DELETE FROM ARTICULOS_TIENDA WHERE ID=".$idCompra;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarCompraFromId".$ex->getMessage());
+  } 
+}
 function borrarMonoterminoFromId($db,$idMo)
 {
  try 
@@ -740,6 +751,65 @@ function getMonoterminosFromIdCurso($db,$IdCurso){
   }
   return $vectorTotal;
 }
+function getArticulosFromIdTienda($db,$IdTienda){
+  $vectorTotal = array();
+  try{
+  $stmt = $db->query("SELECT * FROM ARTICULOS_TIENDA WHERE ID_TIENDA=".$IdTienda);
+
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getArticulosPendientesFromIdTienda:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getComprasFromArticuloYEstado($db,$Idarticulo,$estado){
+  $vectorTotal = array();
+  try{
+  $stmt = $db->query("SELECT * FROM ARTICULOS_COMPRADORES WHERE ID_ARTICULO=".$Idarticulo." AND ESTADO='".$estado."'");
+
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getComprasFromArticulo:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getComprasFromAlumno($db,$IdAlumno){
+  $vectorTotal = array();
+  try{
+  $stmt = $db->query("SELECT * FROM ARTICULOS_COMPRADORES WHERE ID_ALUMNO=".$IdAlumno." ORDER BY FECHA_COMPRA DESC");
+
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getComprasFromAlumno:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getComprasFromArticulosYEstado($db,$aArticulos,$estado)
+{
+  $vectorTotal = array();
+  try{
+  foreach ($aArticulos as $articulo) 
+  {
+    $aComprasArt = getComprasFromArticuloYEstado($db,$articulo['ID'],$estado);
+    $vectorTotal = array_merge($vectorTotal, $aComprasArt);
+  }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getComprasPentientesFromArticulos:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+
+
+
 function getCambiosFromAlumnoIdOrderDate($db,$IdAlumno){
   $vectorTotal = array();
   try{
@@ -1373,6 +1443,20 @@ function getAlumnoFromID($db,$IDAlumno)
   } 
   return $fila;
 }
+function getCompraFromId($db,$compraId)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM ARTICULOS_COMPRADORES WHERE ID=".$compraId);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error getCompraFromId! ".$ex->getMessage());
+  } 
+  return $fila;
+}
+
 function getPreguntaFromID($db,$idPre)
 {
   $fila="";
@@ -1705,6 +1789,30 @@ function getAlumnoFromCorreo($db,$CORREO)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured getAlumnoFromCorreo ! ".$ex->getMessage());
+  } 
+  return $fila;
+}
+function getTiendaFromAsignatura($db,$idAsignatura)
+{
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM TIENDAS WHERE ID_ASIGNATURA=".$idAsignatura);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured getTiendaFromCorreo ! ".$ex->getMessage());
+  } 
+  return $fila;
+}
+function getArticuloFromId($db,$IdArticulo)
+{
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM ARTICULOS_TIENDA WHERE ID=".$IdArticulo);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured getArticuloFromId ! ".$ex->getMessage());
   } 
   return $fila;
 }
@@ -2373,7 +2481,45 @@ function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
    mi_info_log( "An Error occured! setNowUltimaFechaNotiGeneralAlumno ".$ex->getMessage());
   }   
 }
-
+function modificarDiaCromDiarioAsignatura($db,$IdAsignatura,$dia)
+{
+  try 
+  {
+    $sql = "UPDATE ASIGNATURAS SET DIA_CROM_DIARIO='".$dia."' WHERE ID=".$IdAsignatura;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarDiaCromDiarioAsignatura ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarEstadoCompraFromCompraId($db,$IdCompra,$estado)
+{
+  try 
+  {
+    $sql = "UPDATE ARTICULOS_COMPRADORES SET ESTADO='".$estado."' WHERE ID=".$IdCompra;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarEstadoCompraArticuloAlumno ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarComentarioCompraFromCompraId($db,$IdCompra,$coment)
+{
+  try 
+  {
+    $sql = "UPDATE ARTICULOS_COMPRADORES SET COMENTARIO='".$coment."' WHERE ID=".$IdCompra;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarComentarioCompraFromCompraId ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
 function modificarDesactivarJuicios($db,$IdAsignatura)
 {
   try 
@@ -2613,6 +2759,18 @@ function modificarListaJugadasPPT($db,$id, $listajugadas)
    mi_info_log( "An Error occured! modificarListaJugadasPPT ".$ex->getMessage());
   }   
 }
+function modificarLocalizacionBot($db,$correo, $mapaInicio, $posX, $posY)
+{
+  try 
+  {
+    $sql = "UPDATE MIBOT SET ID_MAPA_INICIO=".$mapaInicio.",POS_X_INICIO=".$posX.",POS_Y_INICIO=".$posY." WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarLocalizacionBot ".$ex->getMessage());
+  }   
+}
 function modificarListaUtilizacionesEvento($db,$id, $nListaUtils)
 {
   try 
@@ -2789,6 +2947,32 @@ function modificarCalas($db,$correo,$cantidad)
    mi_info_log( "An Error occured! modificarCalas ".$ex->getMessage());
   }   
 }
+/* por ahora no se utiliza
+function modificarEstadoArticulo($db,$IdArticulo,$estado)
+{
+  try 
+  {
+    $sql = "UPDATE ARTICULOS_TIENDA SET ESTADO='".$estado."' WHERE ID =".$IdArticulo;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarEstadoArticulo ".$ex->getMessage());
+  }   
+}
+*/
+function modificarCantidadArticulo($db,$IdArticulo,$cantidad)
+{
+  try 
+  {
+    $sql = "UPDATE ARTICULOS_TIENDA SET CANTIDAD= CANTIDAD + (".$cantidad.")  WHERE ID =".$IdArticulo;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarCantidadArticulo ".$ex->getMessage());
+  }   
+}
 function modificarBot($db,$correo, $saludo,$palabra_clave,$movilidad,$velocidad,$fantasma,$saltando,$personaje,$porcentajesPPT,$postura1,$postura2,$postura3,$ID_MAPA_INICIO,$POS_X_INICIO,$POS_Y_INICIO)
 {
   try 
@@ -2855,6 +3039,25 @@ function insertarElegIDosEnFantasma($db,$IDAsignatura,$dia,$listaElegIDos)
    mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
+function insertarArticuloAlumno($db,$idProducto,$alumnoID,$estado,$descripcion)
+{
+    $sentencia= "INSERT INTO ARTICULOS_COMPRADORES(ID_ALUMNO, ID_ARTICULO, ESTADO, DESCRIPCION) VALUES (:ID_ALUMNO, :ID_ARTICULO, :ESTADO, :DESCRIPCION)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':ID_ALUMNO',$alumnoID);
+  $stmt->bindParam(':ID_ARTICULO',$idProducto);
+  $stmt->bindParam(':ESTADO',$estado);
+  $stmt->bindParam(':DESCRIPCION',$descripcion);
+  $stmt->execute();
+    }
+catch (PDOException $ex)
+{
+    mi_info_log( "Error insertarArticuloAlumno:".$ex->getMessage());
+}  
+
+}
+
 function getElegIDosFromAsignaturaDia($db,$IDAsignatura,$dia)
 {
   try 
@@ -2917,6 +3120,21 @@ function getJuiciosComoClase($db){
     }
   }catch(PDOException $ex){
      mi_info_log( "Error getJuiciosComoClase:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+
+function getArticulosFromTienda($db,$id_tienda){
+  try{
+    $vectorTotal = array();
+    $stmt = $db->query
+    ("select * from ARTICULOS_TIENDA WHERE ID_TIENDA=".$id_tienda);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getArticulosFromTienda:".$ex->getMessage());
   }
   return $vectorTotal;
 }

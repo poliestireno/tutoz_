@@ -533,6 +533,20 @@ echo "</ol>";
 </div> 
 
 </form>
+<form target="_blank" action="gestionar_articulos.php" id="form11" method="post">
+    <input type="hidden" name="idc7" id="idc7" />
+
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Gestionar Compras Artículos</h3>
+</div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="gestionarArticulos();" class="btn btn-success btn-outline btn-wrap-text">Gestionar</a>
+</div> 
+
+</form>
 <form target="_blank" action="../mimercado.php?idc=<?php echo $idCur;?>" id="form8" method="post">
     <input type="hidden" name="idc3" id="idc3" />
 
@@ -816,6 +830,11 @@ if (Count($aToConcursos)>0)
   {
     document.getElementById('idc6').value = <?php echo $idCur?>;
     document.getElementById('form10').submit();  
+  }
+  function gestionarArticulos()
+  {
+    document.getElementById('idc7').value = <?php echo $idCur?>;
+    document.getElementById('form11').submit();  
   }
 
   function verMercadoGlobal()
