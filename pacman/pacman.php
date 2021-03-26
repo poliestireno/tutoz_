@@ -7,7 +7,10 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
     {   
 header('location:index.php');
 }
-
+if (!isset($_SESSION['idCromo']))
+{
+    header('location:../index.php');
+}
 ?>
 <html>
     <head>

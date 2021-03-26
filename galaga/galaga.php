@@ -4,10 +4,13 @@ session_start();
 include('../includes/config.php');
 require_once("../UTILS/dbutils.php");
 if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
-    {   
-header('location:index.php');
+{   
+    header('location:index.php');
 }
-
+if (!isset($_SESSION['idCromo']))
+{
+    header('location:../index.php');
+}
 ?>
 <!DOCTYPE html>
 <html>

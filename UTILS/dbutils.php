@@ -3039,9 +3039,9 @@ function insertarElegIDosEnFantasma($db,$IDAsignatura,$dia,$listaElegIDos)
    mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
-function insertarArticuloAlumno($db,$idProducto,$alumnoID,$estado,$descripcion)
+function insertarArticuloAlumno($db,$idProducto,$alumnoID,$estado,$descripcion,$comentario)
 {
-    $sentencia= "INSERT INTO ARTICULOS_COMPRADORES(ID_ALUMNO, ID_ARTICULO, ESTADO, DESCRIPCION) VALUES (:ID_ALUMNO, :ID_ARTICULO, :ESTADO, :DESCRIPCION)";
+    $sentencia= "INSERT INTO ARTICULOS_COMPRADORES(ID_ALUMNO, ID_ARTICULO, ESTADO, DESCRIPCION,COMENTARIO) VALUES (:ID_ALUMNO, :ID_ARTICULO, :ESTADO, :DESCRIPCION, :COMENTARIO)";
   try
   {
   $stmt = $db->prepare($sentencia);
@@ -3049,6 +3049,7 @@ function insertarArticuloAlumno($db,$idProducto,$alumnoID,$estado,$descripcion)
   $stmt->bindParam(':ID_ARTICULO',$idProducto);
   $stmt->bindParam(':ESTADO',$estado);
   $stmt->bindParam(':DESCRIPCION',$descripcion);
+  $stmt->bindParam(':COMENTARIO',$comentario);
   $stmt->execute();
     }
 catch (PDOException $ex)

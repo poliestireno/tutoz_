@@ -211,7 +211,7 @@ else
 
                             <label class="col-sm-1 control-label">DESCRIPCIÓN<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" maxlength = "499" name="descrip" class="form-control" required>
+                            <input type="text" maxlength = "499" name="descrip" class="form-control" value="[ver documento adjunto]" required/>
                             </div>
                             </div>
 
