@@ -2759,6 +2759,19 @@ function modificarListaJugadasPPT($db,$id, $listajugadas)
    mi_info_log( "An Error occured! modificarListaJugadasPPT ".$ex->getMessage());
   }   
 }
+
+function modificarVersionAvisada($db,$correo,$nuevaVersion)
+{
+  try 
+  {
+    $sql = "UPDATE MIBOT SET VERSION_AVISADA=".$nuevaVersion." WHERE ID = (SELECT ID_MIBOT FROM ALUMNOS WHERE CORREO='".$correo."')";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarVersionAvisada ".$ex->getMessage());
+  }   
+}
 function modificarLocalizacionBot($db,$correo, $mapaInicio, $posX, $posY)
 {
   try 

@@ -460,11 +460,10 @@ $idSeleccionado = ((isset($aQuieroMercado[2]))?$aQuieroMercado[2]['QUIERO_ESTREL
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-default">
-									<div class="panel-heading">MERCADO GLOBAL</div>
+									<div class="panel-heading">OFRECEN</div>
 <?php if($msg2){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg2); ?> </div><?php }?>
 
-<div class="panel-body">
-
+<div  style="background: #FFF9AA;" class="panel-body">
 
 
 <div class="form-group">
@@ -530,8 +529,25 @@ echo'<label >'.  $sTexto.'</label>';
 
 
 </div>
-<div class="panel-body">
 
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-default">
+									<div class="panel-heading">QUIEREN</div>
+<?php if($msg2){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg2); ?> </div><?php }?>
+
+<div style="background: #FFB9B3;" class="panel-body">
 
 
 <div class="form-group">

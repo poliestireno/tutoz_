@@ -40,6 +40,9 @@ switch ($funcion) {
 	case 'modificarCalas':
 		echo modificarCalasJS();
 		break;
+	case 'modificarVersionAvisada':
+		echo modificarVersionAvisadaJS();
+		break;
 	case 'getEventosRetosJugador':
 		echo getEventosRetosJugadorJS();
 		break;
@@ -55,6 +58,10 @@ switch ($funcion) {
 	case 'getSitioFromMapId':
 		echo getSitioFromMapIdJS();
 		break;
+	case 'getConfGeneral':
+		echo getConfGeneralJS();
+		break;
+
 	default:
 		# code...
 		break;
@@ -83,6 +90,12 @@ function getPregunta()
 
 	$result = json_encode($aPreguntas[$randomPre]);
 	return $result;
+}
+function getConfGeneralJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	return getConfGeneral($dbh, $_POST["param01"]);
 }
 function mi_info_log2()
 {
@@ -249,6 +262,18 @@ function modificarEstadoRetoJS()
 	if(!isset($_POST["param03"])) die("No param03 found");
 	$estado = $_POST["param03"];
 	modificarEstadoReto($dbh,$correo,$idTarea,$estado);
+	return "";
+}
+
+
+function modificarVersionAvisadaJS()
+{
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+	if(!isset($_POST["param02"])) die("No param02 found");
+	$nuevaVersion = $_POST["param02"];
+	modificarVersionAvisada($dbh,$correo,$nuevaVersion);
 	return "";
 }
 function modificarCalasJS()

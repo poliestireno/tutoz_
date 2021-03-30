@@ -7,6 +7,29 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 {   
     header('location:index.php');
 } 
+if (!isset($_SESSION['jugando']))
+{
+    header('location:index.php');
+}
+function url()
+{
+  return sprintf(
+    "%s://%s%s",
+    isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+    $_SERVER['SERVER_NAME'],
+    $_SERVER['REQUEST_URI']
+  );
+}
+function getAsteriscos($n)
+{
+  $sAsteriscos = "";
+  for ($i=0; $i < $n ; $i++) 
+  { 
+    $sAsteriscos = $sAsteriscos ."*";
+  }
+  return $sAsteriscos;
+}
+
 
 $alumno =getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
 $actor = getMiActorFromAlumnoID($dbh,$alumno['ID']);
@@ -45,13 +68,13 @@ $aArticulos = getArticulosFromTienda($dbh,getTiendaFromAsignatura($dbh,$asignatu
 
 <head>
     <title>Tienda Susi</title>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-	
+  
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -177,6 +200,43 @@ function init()
 ?>
 
 <div class="text-center" style="padding-bottom:10px;">
+  <?php 
+  if (($articulo['ID_CROMO'])!=NULL)
+  {
+    $cromo = getCromoFromID($dbh,$articulo['ID_CROMO']);
+ ?>
+
+  <h2 style="color: #c9cccf;"><?php echo $articulo['NOMBRE'].' '.$cromo['name']." | ".$cromo['power']." | ".getAsteriscos($cromo['mana_w']).'<span style="font-size=10px"> ('.$disponible.') </span>'?></h2>
+  <div style="background-color:white; border-color: #131921; border-radius: 10px;height: 300px;width: 500px;border: 2px solid; text-align: center; margin: 0 auto;padding: 30px" class="vcenter center-block">
+    <div class="text-center" style="padding-bottom:10px;">
+
+<img src='https://www.mtgcardmaker.com/mcmaker/createcard.php?name=<?php echo $cromo['name'];?>&color=<?php echo $cromo['color'];?>&mana_w=<?php echo $cromo['mana_w'];?>&picture=<?php echo htmlentities(substr(url(),0,strrpos(url(), '/')).'/imagesCromos/'.$cromo['picture'])?>&cardtype=<?php echo $cromo['cardtype'];?>&rarity=<?php echo $cromo['rarity'];?>&cardtext=<?php echo $cromo['cardtext'];?>&power=<?php echo $cromo['power'];?>&toughness=<?php echo $cromo['toughness'];?>&artist=<?php echo $cromo['artist'];?>&bottom=<?php echo $cromo['bottom'];?>' width="150px" height="230px" />
+
+    <h5><?php echo $articulo['DESCRIPCION'];                                                                ;
+if (strpos($articulo['NOMBRE'], 'Donaci')!==false) 
+{
+  echo ' La recaudación actual es de <b>'.$asignatura['TOTAL_DONACION'].'</b> calas.';
+}
+    ?></h5>
+    </div>
+    <div class="text-center" style="padding-bottom:10px;">
+
+      <a onclick="submitComprar(<?php echo $articulo['ID']?>)" style="<?php echo ((!$dispo)?'pointer-events: none;cursor: default;':'')?>  background: #131921;color: white" class="btn btn-squared-default">
+                    <!--i class="fa fa-money fa-3x"></i-->
+                    <span class="badge badge-warning"><?php echo $articulo['PRECIO']?> calas</span>
+                    <br />
+                
+                <span style="color: #c9cccf;"><?php echo (($dispo)?'comprar':'agotado')?></span>
+                </a>
+    </div>
+  </div>
+
+  <?php   
+  }
+else
+{
+
+  ?>
   <h2 style="color: #c9cccf;"><?php echo $articulo['NOMBRE'].'<span style="font-size=10px"> ('.$disponible.') </span>'?></h2>
   <div style="background-color:white; border-color: #131921; border-radius: 10px;height: 300px;width: 500px;border: 2px solid; text-align: center; margin: 0 auto;padding: 30px" class="vcenter center-block">
     <div class="text-center" style="padding-bottom:10px;">
@@ -209,6 +269,8 @@ if (strpos($articulo['NOMBRE'], 'Donaci')!==false)
                 </a>
     </div>
   </div>
+
+<?php } ?>
 </div><br/>
 <?php } 
 
@@ -283,17 +345,9 @@ $artiAux= getArticuloFromId($dbh,$compraI['ID_ARTICULO']);
 ?>
 
                   </div>
-
-
-
-
-
                   </div>
                 </div>              
-
-
               </div>
- 
 </div>
 
 </body>
