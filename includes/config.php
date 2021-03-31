@@ -1,7 +1,7 @@
  <?php 
  
-//Pongo 15 minutos para que expire la sesión en inactivo.
-$expireAfter = 15;
+//Pongo 60 minutos para que expire la sesión en inactivo.
+$expireAfter = 60;
 
 //var_export($_SESSION);
 
