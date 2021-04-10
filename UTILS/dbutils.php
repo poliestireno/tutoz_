@@ -1,5 +1,23 @@
 <?php
 
+/*
+
+SQLs varias:
+
+documento 20 monoterminos aleatorios de ASIR1
+SELECT PREGUNTA,RESPUESTA FROM PREGUNTAS WHERE `ID_SETPREGUNTA`=4 ORDER BY RAND() LIMIT 20
+
+Borrar clanes de un curso: 
+Primero: 
+DELETE FROM `ALUMNOS_CLANES` WHERE `ID_CLAN` IN (SELECT `ID_CLAN` FROM `ALUMNOS_CLANES` where `ID_ALUMNO` IN (SELECT ID FROM ALUMNOS WHERE ID_CURSO= )) 
+Segundo: 
+DELETE FROM `CLANES` WHERE id NOT IN (SELECT `ID_CLAN` FROM `ALUMNOS_CLANES`)
+
+Borrar mercado de una asignatura
+DELETE FROM `MERCADO` WHERE `ID_ASIGNATURA`=XX
+
+*/
+
 $array_ini = parse_ini_file($_SERVER['DOCUMENT_ROOT'].'/sallez.ini');
 
 //print_r($array_ini);
@@ -754,6 +772,7 @@ function getMonoterminosFromIdCurso($db,$IdCurso){
 function getArticulosFromIdTienda($db,$IdTienda){
   $vectorTotal = array();
   try{
+
   $stmt = $db->query("SELECT * FROM ARTICULOS_TIENDA WHERE ID_TIENDA=".$IdTienda);
 
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
@@ -793,10 +812,44 @@ function getComprasFromAlumno($db,$IdAlumno){
   }
   return $vectorTotal;
 }
-function getComprasFromArticulosYEstado($db,$aArticulos,$estado)
+function cmpFecha($a, $b)
+{
+    if ($a['FECHA_COMPRA'] < $b['FECHA_COMPRA']) {
+        return 1;
+    }
+    else
+    {
+      return -1;
+    }  
+}
+function cmpComprador($a, $b)
+{
+    if ($a['ID_ALUMNO'] == $b['ID_ALUMNO']) {
+        return 0;
+    }
+    else if ($a['ID_ALUMNO'] < $b['ID_ALUMNO']) {
+        return 1;
+    }
+    else
+    {
+      return -1;
+    }  
+}
+
+
+function getComprasFromArticulosYEstadoOrderBy($db,$aArticulos,$estado,$orderBy)
 {
   $vectorTotal = array();
   try{
+    $funcionComp = "cmpFecha";
+    switch ($orderBy) {
+      case 'FECHA_COMPRA':
+        $funcionComp = "cmpFecha";
+        break;
+      case 'COMPRADOR':
+        $funcionComp = "cmpComprador";
+        break;
+    }
   foreach ($aArticulos as $articulo) 
   {
     $aComprasArt = getComprasFromArticuloYEstado($db,$articulo['ID'],$estado);
@@ -805,6 +858,8 @@ function getComprasFromArticulosYEstado($db,$aArticulos,$estado)
   }catch(PDOException $ex){
      mi_info_log( "Error getComprasPentientesFromArticulos:".$ex->getMessage());
   }
+
+  usort($vectorTotal, "cmpFecha");
   return $vectorTotal;
 }
 

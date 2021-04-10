@@ -160,8 +160,9 @@ modificarComentarioCompraFromCompraId($dbh,$_POST['compraI'],$_POST['texa']);
  $tienda = getTiendaFromAsignatura($dbh,getAsignaturasFromCurso($dbh,$idCur)[0]['ID']);
     $aArticulos = getArticulosFromIdTienda($dbh,$tienda['ID']);
 
-    $aComprasPentientes = getComprasFromArticulosYEstado($dbh,$aArticulos,'pendiente');    $aComprasEntregadas = getComprasFromArticulosYEstado($dbh,$aArticulos,'entregado');
-          $aComprasDevueltas = getComprasFromArticulosYEstado($dbh,$aArticulos,'devuelto');
+    $aComprasPentientes = getComprasFromArticulosYEstadoOrderBy($dbh,$aArticulos,'pendiente','FECHA_COMPRA');    
+    $aComprasEntregadas = getComprasFromArticulosYEstadoOrderBy($dbh,$aArticulos,'entregado','FECHA_COMPRA');
+      $aComprasDevueltas = getComprasFromArticulosYEstadoOrderBy($dbh,$aArticulos,'devuelto','FECHA_COMPRA');
 
   ?>
     
@@ -199,9 +200,6 @@ $contCompra++;
   <div class="col-sm-4">
   </div>
 </div>
-
-
-
 <div class="form-group">
   <label class="col-sm-2 control-label"><?php echo 'Pedido nº '.$compraI['ID']; ?></label>
   <div class="col-sm-9">
@@ -213,6 +211,7 @@ $artiAux= getArticuloFromId($dbh,$compraI['ID_ARTICULO']);
 
 
     echo "</b><br/>ARTÍCULO:<b>".$artiAux['NOMBRE']
+    ."</b><br/>FECHA:<b>".$compraI['FECHA_COMPRA']
     ."</b><br/>PRECIO:".$artiAux['PRECIO']."<br/>DESCRIPCIÓN:".$artiAux['DESCRIPCION']."<br/>COMENTARIO:";
     ?>
     
@@ -293,6 +292,7 @@ $artiAux= getArticuloFromId($dbh,$compraI['ID_ARTICULO']);
 
 
     echo "</b><br/>ARTÍCULO:<b>".$artiAux['NOMBRE']
+    ."</b><br/>FECHA:<b>".$compraI['FECHA_COMPRA']
     ."</b><br/>PRECIO:".$artiAux['PRECIO']."<br/>DESCRIPCIÓN:".$artiAux['DESCRIPCION']."<br/>COMENTARIO:";
     ?>
     
@@ -375,6 +375,7 @@ $artiAux= getArticuloFromId($dbh,$compraI['ID_ARTICULO']);
 
 
     echo "</b><br/>ARTÍCULO:<b>".$artiAux['NOMBRE']
+    ."</b><br/>FECHA:<b>".$compraI['FECHA_COMPRA']
     ."</b><br/>PRECIO:".$artiAux['PRECIO']."<br/>DESCRIPCIÓN:".$artiAux['DESCRIPCION']."<br/>COMENTARIO:";
     ?>
     
