@@ -50,9 +50,13 @@ if ($decrypted)
 			{
 				header('location:galaga/galaga.php');
 			}
-			else if ($alumnoAux['NUMERO_NIVEL']>4)
+			else if ($alumnoAux['NUMERO_NIVEL']==5)
 			{
 				header('location:pacman/pacman.php');
+			}
+			else if ($alumnoAux['NUMERO_NIVEL']>5)
+			{
+				header('location:mario/mario.php');
 			}
 			else
 			{
