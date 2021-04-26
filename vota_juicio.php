@@ -24,7 +24,7 @@ if(isset($_POST['opcionSel']))
 	
 	if (existeAlumnoJuicio($dbh,$juicioActivo['ID'],$alumnoDB['ID']))
 	{
-		$numRows = modificarAlumnoJuicio($dbh,$juicioActivo['ID'],$alumnoDB['ID'],$_POST['opcionSel']);
+		$numRows = modificarAlumnoJuicio($dbh,$juicioActivo['ID'],$alumnoDB['ID'],strtoupper($_POST['opcionSel']));
 		if ($numRows>0)
 		{
 
@@ -37,7 +37,7 @@ if(isset($_POST['opcionSel']))
 	}
 	else
 	{
-		insertarAlumnoJuicio($dbh,$juicioActivo['ID'],$alumnoDB['ID'],$_POST['opcionSel']);
+		insertarAlumnoJuicio($dbh,$juicioActivo['ID'],$alumnoDB['ID'],strtoupper($_POST['opcionSel']));
 		$lastInsertId = $dbh->lastInsertId();
 	    if($lastInsertId)
 	    {

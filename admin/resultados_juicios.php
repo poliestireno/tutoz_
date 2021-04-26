@@ -180,9 +180,13 @@ echo '<div class="form-group"><label class="col-sm-8 control-label" style="text-
 	//var_export($hOpcionesNumero);
 
 	$aVotaAlumJui = getVotacionesAlumnosJuicio($dbh,$_POST['sJuicioId']);
+	//var_export($aVotaAlumJui);
 	$totalVotos = 0;
 	foreach ($aVotaAlumJui as $votaI) {
-		$hOpcionesNumero[$votaI['OPCION']]++;
+		if (isset($hOpcionesNumero[$votaI['OPCION']]))
+		{
+			$hOpcionesNumero[$votaI['OPCION']]++;
+		}
 		$totalVotos++;
 	}
 	//var_export($hOpcionesNumero);
