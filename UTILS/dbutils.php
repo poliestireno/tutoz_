@@ -19,6 +19,10 @@ DELETE FROM `CLANES` WHERE id NOT IN (SELECT `ID_CLAN` FROM `ALUMNOS_CLANES`)
 Borrar mercado de una asignatura
 DELETE FROM `MERCADO` WHERE `ID_ASIGNATURA`=XX
 
+
+Modificar calas +150 de un curso:
+UPDATE MIACTOR SET CALAS = CALAS + 150 WHERE ID in (SELECT ID_MIACTOR FROM `ALUMNOS` WHERE ID_CURSO=31)
+
 */
 
 $array_ini = parse_ini_file($_SERVER['DOCUMENT_ROOT'].'/sallez.ini');
@@ -2538,6 +2542,22 @@ function setNowUltimaFechaNotiGeneralAlumno($db,$correo)
   {    
    mi_info_log( "An Error occured! setNowUltimaFechaNotiGeneralAlumno ".$ex->getMessage());
   }   
+}
+function modificarIdGanadorTesoro($db,$correo)
+{
+  try 
+  {
+    $alumno = getAlumnoFromCorreo($db,$correo);
+  $asignaturas = getAsignaturasFromCurso($db,$alumno['ID_CURSO']);
+
+    $sql = "UPDATE ASIGNATURAS SET ID_GANADOR_TESORO=".$alumno['ID']." WHERE ID=".$asignaturas[0]['ID']." AND ID_GANADOR_TESORO IS NULL";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarIdGanadorTesoro ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
 }
 function modificarDiaCromDiarioAsignatura($db,$IdAsignatura,$dia)
 {

@@ -37,9 +37,13 @@ switch ($funcion) {
 	case 'iniciarPartidaPPTJS':
 		echo iniciarPartidaPPTJS();
 		break;
+	case 'modificarIdGanadorTesoro':
+		echo modificarIdGanadorTesoroJS();
+		break;
 	case 'modificarCalas':
 		echo modificarCalasJS();
 		break;
+
 	case 'modificarVersionAvisada':
 		echo modificarVersionAvisadaJS();
 		break;
@@ -286,7 +290,15 @@ function modificarCalasJS()
 	modificarCalas($dbh,$correo,$cantidad);
 	return "";
 }
-
+function modificarIdGanadorTesoroJS()
+{
+	
+	global $dbh;
+	if(!isset($_POST["param01"])) die("No param01 found");
+	$correo = $_POST["param01"];
+	modificarIdGanadorTesoro($dbh,$correo);
+	return "";
+}
 function getAlumnoFromCorreoJS()
 {
 	global $dbh;
