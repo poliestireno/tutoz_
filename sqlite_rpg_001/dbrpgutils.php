@@ -296,6 +296,7 @@ function modificarIdGanadorTesoroJS()
 	global $dbh;
 	if(!isset($_POST["param01"])) die("No param01 found");
 	$correo = $_POST["param01"];
+	mi_info_log('mi correo es:'.$correo);
 	modificarIdGanadorTesoro($dbh,$correo);
 	return "";
 }

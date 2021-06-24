@@ -600,7 +600,6 @@ foreach ($setsCromos as $seti) {
 
   <!-- Loading Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-    <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap-select.min.js"></script>
   <script src="js/bootstrap.min.js"></script>

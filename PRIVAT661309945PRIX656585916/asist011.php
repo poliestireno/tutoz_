@@ -219,7 +219,7 @@ else
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <!-- SWAL -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-    <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+    <script src="js/zxing.js"></script>
   <script type="text/javascript">
     /*function decodeOnce(codeReader, selectedDeviceId) {
       codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
