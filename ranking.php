@@ -578,13 +578,13 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
 if ($confAsig!='MENU_BASICA')
 {
 ?>
-<h3>Mis Retos</h3>
+<h3>Mis Retos & Mandangas</h3>
 <table class="table table-striped w-auto table-bordered">
 
   <!--Table head-->
   <thead>
     <tr>
-      <th>Reto</th>
+      <th>Reto/Mandanga</th>
       <th>Estado</th>
       <th>Estrellas conseguidas</th>
       <th>Máximo estrellas</th>
@@ -632,18 +632,29 @@ foreach ($aToRetos as $reto)
 	  	  // no sale si tiene activado el bot, lo tienen que hacer por SalleZ
 	      if (!opcionMenuOk($dbh,$_SESSION['alogin'],"Mi bot"))
 	      {
-	      echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a> '.$reto['NOMBRE'].'</td>';
+	      
+
+	      if (strpos($reto['NOMBRE'], 'MANDANGA'))
+	      {
+			echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a> '.$reto['NOMBRE'].'</td>';
+	      }
+	      else
+	      {
+	      	echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a> '.$reto['NOMBRE'].'</td>';
+	      }
+
 	  		}
 	  		else
 	  		{
 	  		echo '<td>'.$reto['NOMBRE'].'</td>';	
 	  		}
-	      echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
+
+	      echo '<td>'.(strpos($reto['NOMBRE'], 'MANDANGA')?"-":$datosAlumnoTarea['ESTADO']).'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
-	      echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
+	      echo '<td>'.(strpos($reto['NOMBRE'], 'MANDANGA')?"-":$reto['TOTAL_ESTRELLAS']).'</td>';
 	      echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';
 	      echo '<td>'.$fechaCreacionReto.'</td>';
-	      echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
+	      echo '<td>'.(strpos($reto['NOMBRE'], 'MANDANGA')?"-":(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE'])).'</td>';
 	      //echo '<td>'.$reto['DESCRIPCION'].'</td>';
 	    echo '</tr>';
 }
