@@ -70,8 +70,6 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
 	<!-- Bootstrap social button library -->
 	<link rel="stylesheet" href="css/bootstrap-social.css">
-	<!-- Bootstrap select -->
-	<link rel="stylesheet" href="css/bootstrap-select.css">
 	<!-- Bootstrap file input -->
 	<link rel="stylesheet" href="css/fileinput.min.css">
 	<!-- Awesome Bootstrap checkbox -->
@@ -189,7 +187,7 @@ if (Count($aToConcursos)>0)
  <?php
 }
 ?>
-      <th>Retos</th><th>Ganas</th>
+      <th>Retos</th><th>Ganas</th><th>Bonus</th><th>Estrellas Total</th>
 <?php
 }
 
@@ -359,7 +357,7 @@ foreach ($aTotalAlumnos as $alum)
      }
 if ($confAsig=='MENU_SIMPLON_RETOS')
 {
-echo ''.((Count($aToConcursos)>0)?'<th>Concursos</th>':'').'<th>Retos</th><th>Ganas</th>';
+echo ''.((Count($aToConcursos)>0)?'<th>Concursos</th>':'').'<th>Retos</th><th>Ganas</th><th>Bonus</th><th>Estrellas Total</th>';
 }  
 else if ($confAsig!='MENU_BASICA')
 {      
@@ -401,6 +399,15 @@ if (Count($aToConcursos)>0)
 
 	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Retos']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
 	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Comportamiento']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+		$valorBonus = ($fechaInicioCampActual!=NULL)?$alum['totalBonusActual']:$alum['Suerte'];
+	      echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$valorBonus:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+
+	    if ($fechaInicioCampActual!=NULL)
+       	{
+       	echo '<td>'.iniNegrita($loginAux, $alum['CORREO']).(($loginAux==$alum['CORREO'])?$alum['Total']:'').finNegrita($loginAux, $alum['CORREO']).'</td>';
+       	}
+
+
 }
 else if ($confAsig!='MENU_BASICA')
 {      
@@ -471,7 +478,7 @@ if (Count($aToConcursos)>0)
  <?php
 }
 ?>
-      <th>Retos</th><th>Ganas</th>
+      <th>Retos</th><th>Ganas</th><th>Bonus</th><th>Estrellas Total</th>
 <?php
 }
 else if ($confAsig!='MENU_BASICA')
@@ -578,13 +585,13 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
 if ($confAsig!='MENU_BASICA')
 {
 ?>
-<h3>Mis Retos & Mandangas</h3>
+<h3>Mis Retos & <span style="color:red;	">Mandangas</span></h3>
 <table class="table table-striped w-auto table-bordered">
 
   <!--Table head-->
   <thead>
     <tr>
-      <th>Reto/Mandanga</th>
+      <th>Reto/<span style="color:red;	">Mandanga</span></th>
       <th>Estado</th>
       <th>Estrellas conseguidas</th>
       <th>Máximo estrellas</th>
@@ -636,11 +643,11 @@ foreach ($aToRetos as $reto)
 
 	      if (strpos($reto['NOMBRE'], 'MANDANGA'))
 	      {
-			echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a> '.$reto['NOMBRE'].'</td>';
+			echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><span style="color:red;	"> '.$reto['NOMBRE'].'</span></td>';
 	      }
 	      else
 	      {
-	      	echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a> '.$reto['NOMBRE'].'</td>';
+	      	echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a> [RETO] '.$reto['NOMBRE'].'</td>';
 	      }
 
 	  		}
@@ -709,7 +716,7 @@ foreach ($aToCompor as $compor)
 
 </table>
 <?php
-if (($confAsig!='MENU_BASICA')&&($confAsig!='MENU_SIMPLON_RETOS'))
+if (($confAsig!='MENU_BASICA'))
 {
 ?>
 <h3>Mis Bonus</h3>
