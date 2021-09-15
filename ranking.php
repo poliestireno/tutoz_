@@ -585,13 +585,13 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
 if ($confAsig!='MENU_BASICA')
 {
 ?>
-<h3>Mis Retos & <span style="color:red;	">Mandangas</span></h3>
+<h3>Mis Retos & <span style="color:red;	">Materiales</span></h3>
 <table class="table table-striped w-auto table-bordered">
 
   <!--Table head-->
   <thead>
     <tr>
-      <th>Reto/<span style="color:red;	">Mandanga</span></th>
+      <th>Reto/<span style="color:red;	">Material</span></th>
       <th>Estado</th>
       <th>Estrellas conseguidas</th>
       <th>Máximo estrellas</th>
@@ -641,7 +641,7 @@ foreach ($aToRetos as $reto)
 	      {
 	      
 
-	      if (strpos($reto['NOMBRE'], 'MANDANGA'))
+	      if (strpos($reto['NOMBRE'], 'MATERIAL'))
 	      {
 			echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><span style="color:red;	"> '.$reto['NOMBRE'].'</span></td>';
 	      }
@@ -656,12 +656,12 @@ foreach ($aToRetos as $reto)
 	  		echo '<td>'.$reto['NOMBRE'].'</td>';	
 	  		}
 
-	      echo '<td>'.(strpos($reto['NOMBRE'], 'MANDANGA')?"-":$datosAlumnoTarea['ESTADO']).'</td>';
+	      echo '<td>'.(strpos($reto['NOMBRE'], 'MATERIAL')?"-":$datosAlumnoTarea['ESTADO']).'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
-	      echo '<td>'.(strpos($reto['NOMBRE'], 'MANDANGA')?"-":$reto['TOTAL_ESTRELLAS']).'</td>';
+	      echo '<td>'.(strpos($reto['NOMBRE'], 'MATERIAL')?"-":$reto['TOTAL_ESTRELLAS']).'</td>';
 	      echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';
 	      echo '<td>'.$fechaCreacionReto.'</td>';
-	      echo '<td>'.(strpos($reto['NOMBRE'], 'MANDANGA')?"-":(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE'])).'</td>';
+	      echo '<td>'.(strpos($reto['NOMBRE'], 'MATERIAL')?"-":(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE'])).'</td>';
 	      //echo '<td>'.$reto['DESCRIPCION'].'</td>';
 	    echo '</tr>';
 }
