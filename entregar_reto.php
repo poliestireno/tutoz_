@@ -143,6 +143,10 @@ $numeroEntregas=$datosAT['NUMERO_ENTREGAS']+1;
 $filaTarea = getTareaFromID($dbh,$idTarea);
 $dateActual = date("Y-m-d H:i:s");
 $entregaFueraTiempo= ($dateActual>$filaTarea['FECHA_LIMITE']);
+if ($filaTarea['FECHA_LIMITE']==NULL)
+{
+$entregaFueraTiempo= false;
+}
 $sDiferenciaFueraTiempo = "";
 if ($entregaFueraTiempo)
 {
@@ -315,6 +319,10 @@ if ($numEntregasInterador>0)
     $time = strtotime(substr($files[0], $postIniFecha, 19));
         $newformat = date('Y-m-d H:i:s',$time);
         $entregaFueraTiempo2= ($newformat>$filaTarea['FECHA_LIMITE']);
+        if ($filaTarea['FECHA_LIMITE']==NULL)
+{
+$entregaFueraTiempo2= false;
+}
 $sDiferenciaFueraTiempo2 = "";
 if ($entregaFueraTiempo2)
 {

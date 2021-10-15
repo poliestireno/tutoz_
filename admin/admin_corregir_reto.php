@@ -234,6 +234,10 @@ if ($numEntregasInterador>0)
     $time = strtotime(substr($files[0], $postIniFecha, 19));
         $newformat = date('Y-m-d H:i:s',$time);
         $entregaFueraTiempo2= ($newformat>$filaTarea['FECHA_LIMITE']);
+        if ($filaTarea['FECHA_LIMITE']==NULL)
+{
+$entregaFueraTiempo2= false;
+}
 $sDiferenciaFueraTiempo2 = "";
 if ($entregaFueraTiempo2)
 {
@@ -273,6 +277,10 @@ foreach ($files as $ficheroI)
         $time = strtotime(substr($ficheroI, $postIniFecha, 19));
         $newformat = date('Y-m-d H:i:s',$time);
         $entregaFueraTiempo2= ($newformat>$filaTarea['FECHA_LIMITE']);
+        if ($filaTarea['FECHA_LIMITE']==NULL)
+{
+$entregaFueraTiempo2= false;
+}
         $sDiferenciaFueraTiempo2 = "";
         if ($entregaFueraTiempo2)
         {
