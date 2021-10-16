@@ -647,7 +647,8 @@ foreach ($aToRetos as $reto)
 	      }
 	      else
 	      {
-	      	echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a> [RETO] '.$reto['NOMBRE'].'</td>';
+	$result=getClanFromCorreo($dbh,$_SESSION['alogin']);
+	      	echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a>'.(($result!=NULL)?'<a href="evaluar_reto.php?idt='.$retoId.'&ida='.getAlumnoFromCorreo($dbh,$loginAux)['ID'].'" target="_blank" rel="noopener"> [EVALUAR]</a>':'').' [RETO] '.$reto['NOMBRE'].'</td>';
 	      }
 
 	  		}

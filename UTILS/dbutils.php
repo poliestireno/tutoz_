@@ -146,6 +146,40 @@ catch (PDOException $ex)
     mi_info_log( "Error inserción estrella:".$ex->getMessage());
 }  
 }
+function insertarAutoEvaAlumno($db,$idAutoEva,$idAlumno,$nota)
+{
+  $sentencia= "INSERT INTO AUTOEVALUACION_ALUMNOS (ID_AUTOEVALUACION, ID_ALUMNO, NOTA)
+              VALUES (:ID_AUTOEVALUACION, :ID_ALUMNO, :NOTA)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':ID_AUTOEVALUACION',$idAutoEva);
+  $stmt->bindParam(':ID_ALUMNO',$idAlumno);
+  $stmt->bindParam(':NOTA',$nota);
+  $stmt->execute();
+    }
+catch (PDOException $ex)
+{
+    mi_info_log( "Error inserción insertarAutoEvaAlumno:".$ex->getMessage());
+}  
+}
+function insertarAutoEvaluacion($db,$idAlumno,$idTarea)
+{
+  $sentencia= "INSERT INTO AUTOEVALUACION (ID_ALUMNO, ID_TAREA)
+              VALUES (:ID_ALUMNO, :ID_TAREA)";
+  try
+  {
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':ID_ALUMNO',$idAlumno);
+  $stmt->bindParam(':ID_TAREA',$idTarea);
+  $stmt->execute();
+    }
+catch (PDOException $ex)
+{
+    mi_info_log( "Error inserción insertarAutoEvacion:".$ex->getMessage());
+}  
+return $db->lastInsertId();
+}
 function insertarPregunta($db,$idSetPregunta,$sPregunta,$sRespuesta)
 {
   $sentencia= "INSERT INTO PREGUNTAS (ID_SETPREGUNTA, PREGUNTA, RESPUESTA)
@@ -762,6 +796,20 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   }
   return $vectorTotal;
 }
+function getAutoEvaAlumnos($db,$idAutoEva){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM AUTOEVALUACION_ALUMNOS WHERE ID_AUTOEVALUACION=".$idAutoEva);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getAutoEvaAlumnos:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+
 function getMonoterminosFromIdCurso($db,$IdCurso){
   $vectorTotal = array();
   try{
@@ -1818,7 +1866,18 @@ function opcionMenuOk($db,$CORREO,$opcion)
 }
 
 
-
+function getAutoevaluacion($db,$id_tarea,$id_alumno)
+{
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM AUTOEVALUACION WHERE ID_ALUMNO=".$id_alumno." AND ID_TAREA=".$id_tarea);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured getAutoevaluacion ! ".$ex->getMessage());
+  } 
+  return $fila;
+}
 function getClanFromCorreo($db,$CORREO)
 {
   $fila = NULL;
@@ -2608,6 +2667,19 @@ function modificarDesactivarJuicios($db,$IdAsignatura)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarDesactivarJuicios ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarAutoEvaAlumno($db,$idAutoEva,$idAlumno,$nota)
+{
+  try 
+  {
+    $sql = "UPDATE AUTOEVALUACION_ALUMNOS SET NOTA=".$nota." WHERE ID_AUTOEVALUACION=".$idAutoEva." AND ID_ALUMNO=".$idAlumno;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarAutoEvaAlumno ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
