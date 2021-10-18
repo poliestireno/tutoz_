@@ -5,19 +5,6 @@ include('includes/config.php');
 require_once("UTILS/dbutils.php");
 $msg=0;
 //var_export($_POST);
-//var_export($_FILES['image']);
-
-function getAsteriscos($nBin)
-{
-	$sBin  = $nBin."";
-	$arrayB = str_split($sBin);
-	$sRe = "";
-	foreach ($arrayB as $charB) 
-	{
- 		$sRe.="*";
-	}
-	return $sRe;
-} 
 
 if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 {	
@@ -30,16 +17,23 @@ if(isset($_POST['submitGuardar']))
 	$CORREO = $_SESSION['alogin'];
 	$result=getClanFromCorreo($dbh,$CORREO);
 	$aIntegrantes = getAlumnosClan($dbh,$result['ID']);
-
-	for ($i=0; $i <count($aIntegrantes) ; $i++) 
+	if (count($aIntegrantes)>0)
 	{
-	 if ($_POST["integrante".$i]!='')
-	 {
-	 	modificarAutoEvaAlumno($dbh,$_POST["idAutoEva"],$_POST["idAlumno".$i],$_POST["integrante".$i]);
-	 }	 
+		for ($i=0; $i <count($aIntegrantes) ; $i++) 
+		{
+		 if ($_POST["integrante".$i]!='')
+		 {
+		 	modificarAutoEvaAlumno($dbh,$_POST["idAutoEva"],$_POST["idAlumno".$i],$_POST["integrante".$i]);
+		 }	 
+		}
+	}
+	else
+	{
+modificarAutoEvaAlumno($dbh,$_POST["idAutoEva"],$_GET['ida'],$_POST["integrante0"]);
 	}
 	$msg = "Evaluaciones modificadas";
 }
+
 
 
 $filaAutoEva = getAutoevaluacion($dbh,$_GET['idt'],$_GET['ida']);
@@ -52,8 +46,16 @@ if (!$filaAutoEva)
 	$result=getClanFromCorreo($dbh,$CORREO);
 	$aIntegrantes = getAlumnosClan($dbh,$result['ID']);
 	$idAutoEva = insertarAutoEvaluacion($dbh,$_GET['ida'],$_GET['idt']);
-	foreach ($aIntegrantes as $inteI) {
-	    insertarAutoEvaAlumno($dbh,$idAutoEva,$inteI['ID_ALUMNO'],-1);
+	if (count($aIntegrantes)>0)
+	{
+		foreach ($aIntegrantes as $inteI) 
+		{
+	    	insertarAutoEvaAlumno($dbh,$idAutoEva,$inteI['ID_ALUMNO'],-1);
+		}
+	}
+	else
+	{
+		insertarAutoEvaAlumno($dbh,$idAutoEva,$_GET['ida'],-1);
 	}
 }
 else
