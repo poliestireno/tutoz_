@@ -215,6 +215,7 @@ $reto = getTareaFromID($dbh,$idReto);
  $alumnos = getAlumnosFromAsignaturaID($dbh,$reto['ID_ASIGNATURA']);
  $filaTarea = getTareaFromID($dbh,$reto['ID']);
 //var_dump($aToRetos);
+ $numeroDeEntregados = 0;
 foreach ($alumnos as $alumno) 
 {
 $datosAT = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$reto['ID']);
@@ -230,6 +231,7 @@ if ($numEntregasInterador>0)
 {
     if (count($files)>0)
     {
+       $numeroDeEntregados++; 
     $postIniFecha = strpos($files[0], "__")+2;
     $time = strtotime(substr($files[0], $postIniFecha, 19));
         $newformat = date('Y-m-d H:i:s',$time);
@@ -306,6 +308,7 @@ $entregaFueraTiempo2= false;
 }
 }
 
+echo "<h1>Número de alumnos que han entregado: ".$numeroDeEntregados."</h1>";
    ?>
       
 
