@@ -10,7 +10,7 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 {	
 	header('location:index.php');
 }
-else{
+else if ($_GET['ida']==getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID']) {
 
 if(isset($_POST['submitGuardar']))
 {	
@@ -78,7 +78,7 @@ $aIntegrantes = getAutoEvaAlumnos($dbh,$idAutoEva);
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Editar Clan</title>
+	<title>Autoevaluación</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -158,6 +158,10 @@ $aIntegrantes = getAutoEvaAlumnos($dbh,$idAutoEva);
 	<div class="col-sm-4">
 
 	</div>
+	<?php
+	if (count($aIntegrantes)>1)
+	{
+	?>
 	<div class="col-sm-4 text-center">
 		<img src="images/<?php 
 
@@ -171,9 +175,14 @@ $aIntegrantes = getAutoEvaAlumnos($dbh,$idAutoEva);
 		{
 			echo "anonimous_clan.jpg";
 		}
+
 		?>" style="width:200px; border-radius:50%; margin:10px;">
 		
 	</div>
+	<?php
+	}
+	?>
+
 	<div class="col-sm-4">
 	</div>
 </div>
@@ -219,6 +228,7 @@ $i++;
 </div>
 
 </form>
+
 <!--<form method="post" class="form-horizontal" onsubmit="return validateForm3()">
 
 <div class="form-group">
@@ -245,7 +255,9 @@ $i++;
 					</div>
 				</div>
 			</div>
+			<label>   [Información casi totalmente confidencial] [solo la ve el profesor]</label>
 		</div>
+
 	</div>
 
 	<!-- Loading Scripts -->
