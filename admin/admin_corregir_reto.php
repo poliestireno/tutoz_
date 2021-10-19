@@ -308,7 +308,7 @@ $entregaFueraTiempo2= false;
 }
 }
 
-echo "<h1>Número de alumnos que han entregado: ".$numeroDeEntregados."</h1>";
+echo "<h1>Número de alumnos que han entregado: ".$numeroDeEntregados."/".count($alumnos)."</h1>";
    ?>
       
 
