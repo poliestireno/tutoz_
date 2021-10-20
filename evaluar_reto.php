@@ -21,9 +21,9 @@ if(isset($_POST['submitGuardar']))
 	{
 		for ($i=0; $i <count($aIntegrantes) ; $i++) 
 		{
-		 if ($_POST["integrante".$i]!='')
-		 {
-		 	modificarAutoEvaAlumno($dbh,$_POST["idAutoEva"],$_POST["idAlumno".$i],$_POST["integrante".$i]);
+		 if ((isset($_POST["integrante".$i]))&&($_POST["integrante".$i]!=''))
+		{
+		 		 	modificarAutoEvaAlumno($dbh,$_POST["idAutoEva"],$_POST["idAlumno".$i],$_POST["integrante".$i]);
 		 }	 
 		}
 	}
@@ -152,7 +152,7 @@ $aIntegrantes = getAutoEvaAlumnos($dbh,$idAutoEva);
 
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
-<h1 class="Oli2"><?php echo ($result==NULL)?'':'Evaluación de mi clan '.$result['NOMBRE'].'</h1><h1 class="Oli2">sobre el reto '.getTareaFromID($dbh,$_GET['idt'])['NOMBRE'];?></h1>
+<h1 class="Oli2">Evaluación de<?php echo ($result==NULL)?'':' mi clan '.$result['NOMBRE'].'</h1><h1 class="Oli2">sobre e'; echo 'l reto '.getTareaFromID($dbh,$_GET['idt'])['NOMBRE'];?></h1>
 
 <div class="form-group">
 	<div class="col-sm-4">

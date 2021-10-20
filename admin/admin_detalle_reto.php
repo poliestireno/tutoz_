@@ -138,7 +138,8 @@ $reto = getTareaFromID($dbh,$idReto);
     <tr>
       <th>Nombre</th>
       <th>Estado</th>
-      <th>Estrellas conseguidas</th>
+      <th>Estrellas conseguidas</th>      
+      <th>Evaluación</th>
       <th>Entregado en fecha</th>
       <!--th>Descripción</th-->
     </tr>
@@ -153,6 +154,26 @@ $reto = getTareaFromID($dbh,$idReto);
 foreach ($alumnos as $alumno) 
 {
 
+$autoEva = getAutoevaluacion($dbh,$idReto,$alumno["ID"]);
+
+$alumnosEvaluados = getAutoEvaAlumnos($dbh,$autoEva["ID"]);
+$textoEval = "";
+foreach ($alumnosEvaluados as $alumnoEva) 
+{
+	$alumnoTo = getAlumnoFromID($dbh,$alumnoEva["ID_ALUMNO"]);
+	if ($alumnoEva["ID_ALUMNO"]==$alumno["ID"])
+	{
+		$textoEval = "<b>[".$alumnoEva["NOTA"]."]</b>	".$textoEval;
+	}
+	else
+	{
+		$textoEval = $textoEval."[".$alumnoTo["NOMBRE"]." ".$alumnoTo["APELLIDO1"].":<b>".$alumnoEva["NOTA"]."</b>]";
+	}
+}
+if (count($alumnosEvaluados)==0)
+{
+	$textoEval = "<span style='color:#FF0000';>FALTA</span>";
+}
 $datosAlumnoTarea = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$idReto);
     //var_export($datosAlumnoTarea);
 
@@ -161,7 +182,8 @@ $datosAlumnoTarea = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$idReto);
         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].'</a></td>';
         echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
-        echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';
+        echo '<td>'.$textoEval.'</td>';
+        echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';        
         //echo '<td>'.$reto['DESCRIPCION'].'</td>';
       echo '</tr>';
 }
