@@ -159,12 +159,14 @@ $autoEva = getAutoevaluacion($dbh,$idReto,$alumno["ID"]);
 $alumnosEvaluados = getAutoEvaAlumnos($dbh,$autoEva["ID"]);
 $textoEval = "";
 $textoOtras = "";
+$textoOtrasNombres = "";
+
 foreach ($alumnosEvaluados as $alumnoEva) 
 {
 	$alumnoTo = getAlumnoFromID($dbh,$alumnoEva["ID_ALUMNO"]);
 	if ($alumnoEva["ID_ALUMNO"]==$alumno["ID"])
 	{
-		$textoOtras = "<b>[".$alumnoEva["NOTA"]."]</b>	".$textoOtras;
+		$textoOtras = "<b>[[".$alumnoEva["NOTA"]."]]</b>	".$textoOtras;
 	}
 	else
 	{
@@ -177,13 +179,15 @@ foreach ($alumnosEvaluados as $alumnoEva)
 			if ($alumnoEvaOtra["ID_ALUMNO"]==$alumno["ID"])
 			{
 				$alumnoToOtra = getAlumnoFromID($dbh,$alumnoEvaOtra["ID_ALUMNO"]);
-				$textoOtras = $textoOtras."<b>[".$alumnoEvaOtra["NOTA"]."]</b>(".$alumnoTo["NOMBRE"]." ".$alumnoTo["APELLIDO1"].")";
+				$textoOtras = $textoOtras."<b>[".$alumnoEvaOtra["NOTA"]."]</b>";
+				$textoOtrasNombres = $textoOtrasNombres."(".$alumnoTo["NOMBRE"]." ".$alumnoTo["APELLIDO1"].")";
+
 			}
 		}
 
 	}
 }
-$textoEval = $textoOtras ." <span style='color:#FF0000';>SU COEVA:</span> " .$textoEval ;
+$textoEval = $textoOtras .$textoOtrasNombres." <span style='color:#FF0000';>SU COEVA:</span> " .$textoEval ;
 if ((count($alumnosEvaluados)==0)||($alumnoEva["NOTA"]==-1))
 {
 	$textoEval = "<span style='color:#FF0000';>FALTA</span>";
