@@ -158,19 +158,33 @@ $autoEva = getAutoevaluacion($dbh,$idReto,$alumno["ID"]);
 
 $alumnosEvaluados = getAutoEvaAlumnos($dbh,$autoEva["ID"]);
 $textoEval = "";
+$textoOtras = "";
 foreach ($alumnosEvaluados as $alumnoEva) 
 {
 	$alumnoTo = getAlumnoFromID($dbh,$alumnoEva["ID_ALUMNO"]);
 	if ($alumnoEva["ID_ALUMNO"]==$alumno["ID"])
 	{
-		$textoEval = "<b>[".$alumnoEva["NOTA"]."]</b>	".$textoEval;
+		$textoOtras = "<b>[".$alumnoEva["NOTA"]."]</b>	".$textoOtras;
 	}
 	else
 	{
 		$textoEval = $textoEval."[".$alumnoTo["NOMBRE"]." ".$alumnoTo["APELLIDO1"].":<b>".$alumnoEva["NOTA"]."</b>]";
+
+		$autoEvaOtra = getAutoevaluacion($dbh,$idReto,$alumnoTo["ID"]);
+		$alumnosEvaluadosOtra = getAutoEvaAlumnos($dbh,$autoEvaOtra["ID"]);
+		foreach ($alumnosEvaluadosOtra as $alumnoEvaOtra) 
+		{
+			if ($alumnoEvaOtra["ID_ALUMNO"]==$alumno["ID"])
+			{
+				$alumnoToOtra = getAlumnoFromID($dbh,$alumnoEvaOtra["ID_ALUMNO"]);
+				$textoOtras = $textoOtras."<b>[".$alumnoEvaOtra["NOTA"]."]</b>(".$alumnoTo["NOMBRE"]." ".$alumnoTo["APELLIDO1"].")";
+			}
+		}
+
 	}
 }
-if (count($alumnosEvaluados)==0)
+$textoEval = $textoOtras ." <span style='color:#FF0000';>SU COEVA:</span> " .$textoEval ;
+if ((count($alumnosEvaluados)==0)||($alumnoEva["NOTA"]==-1))
 {
 	$textoEval = "<span style='color:#FF0000';>FALTA</span>";
 }
