@@ -131,9 +131,9 @@ $msg="Datos borrados correctamente";
                                                 <th>Apellido2</th>
                                                 <th>ID</th>
                                                 <th>Curso</th>
-                                                <th>Nivel</th> 
-                                                <th>Correo</th>
                                                 <th>Último login</th>
+                                                <th>Correo</th>
+                                                <th>Nivel</th> 
 												<th>Acción</th>	
 												<th>Calas</th>
                                                 <th>nº cromos</th>
@@ -181,11 +181,9 @@ foreach($results as $result)
                                             </td>
                                             <td><?php echo htmlentities($result->ID);?></td>
  <td><a  data-toggle="tooltip" title="Ver Ranking en otra ventana" href="admin_ranking.php?idc=<?php echo $result->ID_CURSO?>" target="_blank"><?php echo htmlentities(getNombreCursoFromID($dbh,$result->ID_CURSO));?></a></td>
- <td><?php echo htmlentities($result->NUMERO_NIVEL);?></td>
- 
- 
- <td><?php echo htmlentities($result->CORREO);?></td>
  <td><?php echo htmlentities($result->ULTIMA_FECHA_LOGIN);?></td>
+ <td><?php echo htmlentities($result->CORREO);?></td>
+ <td><?php echo htmlentities($result->NUMERO_NIVEL);?></td>
 <td>
 <a href="dar_calas.php?a=<?php echo $result->ID.'&c='.$result->ID_CURSO;?>" onclick="return confirm('¿Quieres modificar calas?');">&nbsp; <i class="fa fa-usd" style="color:orange"></i></a>&nbsp;&nbsp;
 <a href="dar_bono.php?a=<?php echo $result->ID.'&c='.$result->ID_CURSO;?>" onclick="return confirm('¿Quieres dar bono?');">&nbsp; <i class="fa fa-star"></i></a>&nbsp;&nbsp;
