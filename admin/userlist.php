@@ -125,18 +125,18 @@ $msg="Datos borrados correctamente";
 									<thead>
 										<tr>
 										<th>#</th>
-												<th>Imagen</th>
+												<!--th>Imagen</th-->
                                                 <th>Nombre</th>
                                                 <th>Apellido1</th>
                                                 <th>Apellido2</th>
                                                 <th>ID</th>
                                                 <th>Curso</th>
-                                                <th>Nivel</th>
-                                                <th>Calas</th>
-                                                <th>nº cromos</th>
+                                                <th>Nivel</th> 
                                                 <th>Correo</th>
                                                 <th>Último login</th>
 												<th>Acción</th>	
+												<th>Calas</th>
+                                                <th>nº cromos</th>
 										</tr>
 									</thead>
 									
@@ -162,8 +162,8 @@ foreach($results as $result)
 										<tr>
 
 											<td><?php echo htmlentities($cnt);?></td>
-											<td><img src="../images/<?php 
-		$dbImage = htmlentities($result->image);		
+											<!--td><img src="../images/<?php 
+		/*$dbImage = htmlentities($result->image);		
 		if (($dbImage!="")&&(file_exists("../images/".$dbImage)))
 		{   
 			echo $dbImage;
@@ -172,8 +172,8 @@ foreach($results as $result)
 		{
 			echo "anonimous_profile.jpg";
 		}
-
-											?>" style="width:50px; border-radius:50%;"/></td>
+*/
+											?>" style="width:50px; border-radius:50%;"/></td-->
                                             
                                             <td><?php echo htmlentities($result->NOMBRE);?></td>
                                              <td><?php echo htmlentities($result->APELLIDO1);?></td>
@@ -182,8 +182,7 @@ foreach($results as $result)
                                             <td><?php echo htmlentities($result->ID);?></td>
  <td><a  data-toggle="tooltip" title="Ver Ranking en otra ventana" href="admin_ranking.php?idc=<?php echo $result->ID_CURSO?>" target="_blank"><?php echo htmlentities(getNombreCursoFromID($dbh,$result->ID_CURSO));?></a></td>
  <td><?php echo htmlentities($result->NUMERO_NIVEL);?></td>
- <td><?php echo htmlentities(getMiActorFromAlumnoID($dbh,$result->ID)['CALAS']);?></td>
- <td><?php echo Count(getCromosDeAlbum($dbh,$result->CORREO));?></td>
+ 
  
  <td><?php echo htmlentities($result->CORREO);?></td>
  <td><?php echo htmlentities($result->ULTIMA_FECHA_LOGIN);?></td>
@@ -194,6 +193,8 @@ foreach($results as $result)
 <a href="edit-user.php?edit=<?php echo $result->ID;?>" onclick="return confirm('¿Quieres editar?');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 <a href="userlist.php?del=<?php echo $result->ID;?>&name=<?php echo htmlentities($result->CORREO);?>" onclick="return confirm('¿Quieres borrarlo?');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>
+<td><?php echo htmlentities(getMiActorFromAlumnoID($dbh,$result->ID)['CALAS']);?></td>
+ <td><?php echo Count(getCromosDeAlbum($dbh,$result->CORREO));?></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
 										

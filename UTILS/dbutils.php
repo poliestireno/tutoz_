@@ -510,6 +510,30 @@ function borrarBotFromId($db,$idBot)
    mi_info_log( "An Error occured! borrarBotFromId".$ex->getMessage());
   } 
 }
+function borrarAutoevaluacion($db,$idAlumno,$idTarea)
+{
+ try 
+  {
+   $sql = "DELETE FROM AUTOEVALUACION WHERE ID_ALUMNO=".$idAlumno." AND ID_TAREA=".$idTarea;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarAutoevaluacion".$ex->getMessage());
+  } 
+}
+function borrarAutoevaluacionAlumnos($db,$idAutoevaluacion)
+{
+ try 
+  {
+   $sql = "DELETE FROM AUTOEVALUACION_ALUMNOS WHERE ID_AUTOEVALUACION=".$idAutoevaluacion;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarAutoevaluacionAlumnos".$ex->getMessage());
+  } 
+}
+
+
 function borrarCompraFromId($db,$idCompra)
 {
  try 

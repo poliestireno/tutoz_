@@ -20,6 +20,17 @@ if (isset($_GET['idr']))
 {
   $idReto=$_GET['idr'];
 }
+else if (isset($_POST['idr']))
+{
+  $idReto=$_POST['idr'];
+  if (isset($_POST['bBorrar']))
+  {
+  	$aex = getAutoevaluacion($dbh,$idReto,$_POST['idAlumn']);
+  	$idAlu = $_POST['idAlumn'];
+  	borrarAutoevaluacion($dbh,$idAlu,$idReto);
+  	borrarAutoevaluacionAlumnos($dbh,$aex['ID']);
+  }
+}
 
 
 
@@ -74,7 +85,15 @@ if (isset($_GET['idr']))
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 		</style>
+<script type="text/javascript">
+	function borrarEva(idAlumn)
+	{ 
+		//document.getElementById("form1").action="mimercado.php";
+      	document.getElementById("idAlumn").value=idAlumn;
+      	document.getElementById("form1").submit(); 
 
+	}
+</script>
 </head>
 
 <body>
@@ -148,6 +167,10 @@ $reto = getTareaFromID($dbh,$idReto);
 
   <!--Table body-->
   <tbody>
+  	<form method="post" id="form1" action="admin_detalle_reto.php" method="post">
+
+  		<input type="hidden" id="idAlumn" name="idAlumn"/>
+  		<input type="hidden" name="idr" value="<?php echo $idReto;?>"/>
     <?php
  $alumnos = getAlumnosFromAsignaturaID($dbh,$reto['ID_ASIGNATURA']);
 //var_dump($aToRetos);
@@ -200,14 +223,19 @@ $datosAlumnoTarea = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$idReto);
         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].'</a></td>';
         echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
-        echo '<td>'.$textoEval.'</td>';
+        echo '<td><div class="pull-left">'.$textoEval.'</div>
+  <div class="pull-right"><button onclick="borrarEva('.$alumno['ID'].')" class="btn btn-warning btn-xs" name="bBorrar">borrar eva</button></div></td>';
         echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';        
         //echo '<td>'.$reto['DESCRIPCION'].'</td>';
       echo '</tr>';
+
+
+
+
 }
 
    ?>
-    
+    </form>
   </tbody>
   <!--Table body-->
 
