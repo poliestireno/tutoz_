@@ -822,8 +822,10 @@ function getAlumnosFromAsignaturaID($db,$IDAsignatura){
 }
 function getAutoEvaAlumnos($db,$idAutoEva){
   $vectorTotal = array();
+  if ($idAutoEva=="") return $vectorTotal;
   try{
     $stmt = $db->query("SELECT * FROM AUTOEVALUACION_ALUMNOS WHERE ID_AUTOEVALUACION=".$idAutoEva);
+
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $vectorTotal [] = $fila;
