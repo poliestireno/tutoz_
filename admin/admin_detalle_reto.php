@@ -32,7 +32,31 @@ else if (isset($_POST['idr']))
   }
 }
 
+if (isset($_POST['actualizarEs'])&&($_POST['actualizarEs']=='A'))
+{
+	foreach($_POST as $key => $value)
+	{
+	    if ((substr( $key, 0, 4 ) === "eccc")&& is_numeric($value))
+	    {
+	    	$idAlu = substr($key, 4, strlen($key) - 4);
+	    	$correoAlumno = getAlumnoFromID($dbh,$idAlu)['CORREO'];
+modificarEstadoReto($dbh,$correoAlumno,$idReto,'corregido');
+  modificarEstrellasConseguidasReto($dbh,$correoAlumno,$idReto,$value);
 
+	    }
+	    else if ((substr( $key, 0, 4 ) === "eccc")&& ($value=="-"))
+	    {
+	    	$idAlu = substr($key, 4, strlen($key) - 4);
+	    	$correoAlumno = getAlumnoFromID($dbh,$idAlu)['CORREO'];
+  			modificarEstrellasConseguidasReto($dbh,$correoAlumno,$idReto,'NULL');
+	    }
+	}
+	
+
+}
+
+
+//var_export($_POST);
 
  
 ?>
@@ -93,13 +117,21 @@ else if (isset($_POST['idr']))
       	document.getElementById("form1").submit(); 
 
 	}
+
+function actualizarEstrellas()
+  {
+    document.getElementById('actualizarEs').value = 'A';
+    document.getElementById('form5').submit();  
+  }
+
 </script>
 </head>
 
 <body>
+<form id="form5" action="admin_detalle_reto.php" method="post">
 
 
-
+<input type='hidden' name='actualizarEs' id='actualizarEs' value='0'/>
 
 <?php 
 $reto = getTareaFromID($dbh,$idReto);
@@ -148,7 +180,9 @@ $reto = getTareaFromID($dbh,$idReto);
 
 
 
-
+ <div class="form-group">
+  <a onclick="actualizarEstrellas();" class="btn btn-success btn-outline btn-wrap-text">Actualizar estrellas conseguidas</a>
+</div>
 <h3>Alumnos</h3>
 <table class="table table-striped w-auto table-bordered">
 
@@ -222,7 +256,7 @@ $datosAlumnoTarea = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$idReto);
       echo '<tr class="table-info">';
         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].'</a></td>';
         echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
-echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
+echo '<td><input style="font-weight: bold;" class="form-control" type="text" name="eccc'.$alumno['ID'].'" value="'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'"/></td>';
         echo '<td><div class="pull-left">'.$textoEval.'</div>
   <div class="pull-right"><button onclick="borrarEva('.$alumno['ID'].')" class="btn btn-warning btn-xs" name="bBorrar">borrar eva</button></div></td>';
         echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';        
@@ -264,7 +298,7 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
 	</script>
 	
 
-
+</form>
 </body>
 </html>
 <?php 
