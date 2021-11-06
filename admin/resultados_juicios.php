@@ -171,11 +171,10 @@ $tamDesc = strlen($juicioElegido['DESCRIPCION']);
 echo '<div class="form-group"><label class="col-sm-8 control-label" style="text-align:left;font-family:Courier; font-size:'.(60-$tamDesc).'px;" > '.$juicioElegido['DESCRIPCION'].'</label></div>';
 	
 	$aOpciones = explode(",", $juicioElegido['OPCIONES']);
-
 	$hOpcionesNumero = array();
 	foreach ($aOpciones as $opcionI) 
 	{
-		$hOpcionesNumero[$opcionI]=0;
+		$hOpcionesNumero[strtoupper($opcionI)]=0;
 	}
 	//var_export($hOpcionesNumero);
 
