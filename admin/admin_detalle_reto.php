@@ -143,7 +143,8 @@ $reto = getTareaFromID($dbh,$idReto);
 ?>
 <h3><?php echo $reto['NOMBRE']?><a  data-toggle="tooltip" title="Corregir reto en otra ventana" href="admin_corregir_reto.php?idr=<?php echo $idReto?>" target="_blank"> [Corregir]</a></h3>
 <table class="table table-striped w-auto table-bordered">
-
+  
+  
   <!--Table head-->
   <thead>
     <tr>
@@ -184,12 +185,13 @@ $reto = getTareaFromID($dbh,$idReto);
   <a onclick="actualizarEstrellas();" class="btn btn-success btn-outline btn-wrap-text">Actualizar estrellas conseguidas</a>
 </div>
 <h3>Alumnos</h3>
-<table class="table table-striped w-auto table-bordered">
-
+<table ID="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <!--Table head-->
   <thead>
     <tr>
       <th>Nombre</th>
+      <th>Apellidos</th>
+      <th>Clan</th>
       <th>Estado</th>
       <th>Estrellas conseguidas</th>      
       <th>Evaluación</th>
@@ -252,10 +254,14 @@ if ((count($alumnosEvaluados)==0)||($alumnoEva["NOTA"]==-1))
 $datosAlumnoTarea = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$idReto);
     //var_export($datosAlumnoTarea);
 
-
+$clan = getClanFromCorreo($dbh,$alumno['CORREO']);
+$nombreClan = ($clan==NULL)?"z(No Tiene)":$clan['NOMBRE'];
       echo '<tr class="table-info">';
-        echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].' '.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].'</a></td>';
-        echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
+        echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].'</a></td>';
+         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].'</a></td>';
+         echo '<td>'.$nombreClan.'</td>';
+
+       echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
 echo '<td><input style="font-weight: bold;" class="form-control" type="text" name="eccc'.$alumno['ID'].'" value="'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'"/></td>';
         echo '<td><div class="pull-left">'.$textoEval.'</div>
   <div class="pull-right"><button onclick="borrarEva('.$alumno['ID'].')" class="btn btn-warning btn-xs" name="bBorrar">borrar eva</button></div></td>';
@@ -290,6 +296,14 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
 	<script type="text/javascript">
+
+$('#zctb').DataTable( {
+    scrollY: 300,
+    paging: false,
+    scrollCollapse: true,
+    "order": [[ 1, "asc" ]]
+} );
+
 				 $(document).ready(function () {          
 					setTimeout(function() {
 						$('.succWrap').slideUp("slow");
