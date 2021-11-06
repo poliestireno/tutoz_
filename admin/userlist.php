@@ -217,7 +217,8 @@ foreach($results as $result)
 		$('#zctb').DataTable( {
     scrollY: 300,
     paging: false,
-    scrollCollapse: true
+    scrollCollapse: true,
+        "order": [[ 5, "asc" ]]
 } );
 				 $(document).ready(function () {          
 					setTimeout(function() {
