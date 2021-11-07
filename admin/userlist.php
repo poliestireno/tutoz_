@@ -215,7 +215,7 @@ foreach($results as $result)
 	<script type="text/javascript">
 
 		$('#zctb').DataTable( {
-    scrollY: 300,
+    scrollY: 600,
     paging: false,
     scrollCollapse: true,
         "order": [[ 5, "asc" ]]

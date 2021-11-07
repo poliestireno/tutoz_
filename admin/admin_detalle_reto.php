@@ -298,7 +298,7 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
 	<script type="text/javascript">
 
 $('#zctb').DataTable( {
-    scrollY: 300,
+    scrollY: 600,
     paging: false,
     scrollCollapse: true,
     "order": [[ 1, "asc" ]]
