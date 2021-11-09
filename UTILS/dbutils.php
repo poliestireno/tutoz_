@@ -2115,6 +2115,26 @@ function getDatosAlumnoTareaEntregados($db,$idTarea)
   }
   return $vectorTotal;  
 }
+function getAlumnosTareasFromTarea($db,$idTarea)
+{
+  $vectorTotal = array();
+  try
+  {
+
+    $stmt = $db->query
+    ("SELECT * FROM ALUMNOS_TAREAS WHERE ID_TAREA=".$idTarea);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getAlumnosTareasFromTarea:".$ex->getMessage());
+  }
+  return $vectorTotal;  
+}
 function getTareasFromAlumnoEstado($db,$correo,$estado)
 {
   $vectorTotal = array();
@@ -2780,6 +2800,33 @@ function modificarComentarioReto($db,$correo,$idTarea,$comentario)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarComentarioReto ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarAlumnosTareasIncognitoANull($db,$idTarea)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET ID_ALUMNO_A_CORREGIR=NULL WHERE ID_TAREA=".$idTarea;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarAlumnosTareasIncognitoANull ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+
+function modificarAlumnoTareaIncognito($db,$idTarea,$alumId,$alumIdAcorregir)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET ID_ALUMNO_A_CORREGIR=".$alumIdAcorregir." WHERE ID_TAREA=".$idTarea." AND ID_ALUMNO=".$alumId;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarAlumnoTareaIncognito ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }

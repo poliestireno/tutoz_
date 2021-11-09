@@ -294,7 +294,7 @@ echo "Swal.fire({
                             </div>
                             <label class="col-sm-1 control-label">COMENTARIO<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" name="comentt" class="form-control" maxlength = "499" required>
+                            <input type="text" name="comentt" class="form-control" maxlength = "999" required>
                             </div>
                             </div>
 

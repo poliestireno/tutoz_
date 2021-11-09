@@ -1,4 +1,24 @@
 <?php
+
+function modificarParesIncognito($dbh,$tareaId,$aNull)
+{
+  if ($aNull)
+  {
+    modificarAlumnosTareasIncognitoANull($dbh,$tareaId);
+  }
+  else
+  {
+    // se recalculan todos los pares
+    $aAlumRetos = getAlumnosTareasFromTarea($dbh,$tareaId);
+    shuffle($aAlumRetos);
+    for ($i=0; $i < count($aAlumRetos); $i++) 
+    { 
+      $alumId=$aAlumRetos[$i]['ID_ALUMNO'];
+      $alumIdAcorregir=$aAlumRetos[($i+1)%count($aAlumRetos)]['ID_ALUMNO'];
+      modificarAlumnoTareaIncognito($dbh,$tareaId,$alumId,$alumIdAcorregir);
+    }
+  }
+}
 function enviarCorreo($in_to,$in_subject,$in_message)
 {
 // enviar correo
