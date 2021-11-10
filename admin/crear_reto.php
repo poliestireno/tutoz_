@@ -36,6 +36,7 @@ if(isset($_POST['sel11']))
   $posy=$_POST['posy'];
   $haySitio=true;
   $sExamen = $_POST['sexamen'];
+  $rubrica = $_POST['textComent'];
   if ($selSitios=='')
   {
     $selSitios=NULL;
@@ -74,7 +75,7 @@ if ($haySitio)
 {
   $asignaturas = getAsignaturasFromCurso($dbh,$sel11);
   
-  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$sExamen);
+  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$sExamen,$rubrica);
   
     $lastInsertId = $dbh->lastInsertId();
     if($lastInsertId)
@@ -127,19 +128,8 @@ else
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<link rel="stylesheet" href="css/style.css">
         <!-- Loading Scripts -->
-        <script src="js/jquery.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap-select.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.dataTables.min.js"></script>
@@ -148,11 +138,20 @@ else
     <script src="js/fileinput.js"></script>
     <script src="js/chartData.js"></script>
     <script src="js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript">
 
 
-
+    $(document).ready(function() {
+        $('#summernote').summernote();
+    });
         
 </script>
 </head>
@@ -307,7 +306,13 @@ else
 
 
                             </div>
+<div class="form-group">
+    <label class="col-sm-4 ">Rúbrica</label>
+</div>
+  <div> 
+        <textarea name="textComent" id="summernote" class="form-control"><div><b>50% Funcionamiento</b> (Si el funcionamiento es completo sería un 50% si no se va decrementando el porcentaje en función de lo que falte).</div><div><b>20% Estrategias de programación</b> (Se han aplicado bien algoritmos y la lógica de programación).</div><div><b>10% Claro y estructurado</b> (Proyecto y códigos bien estructurados, legibles, limpios).</div><div><b>20% Bonito bonito</b> (La parte visual es bonita y elegante, user friendly).</div></textarea>  
 
+</div>
 								<br>
 
                                 <button class="btn btn-primary" name="submit" type="submit">Crear Reto</button>

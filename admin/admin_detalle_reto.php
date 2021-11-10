@@ -43,7 +43,16 @@ if (isset($_POST['incognito'])&&($_POST['incognito']=='A'))
 	modificarParesIncognito($dbh,$idReto,$aNull);
 }
 $aAlumRetos = getAlumnosTareasFromTarea($dbh,$idReto);
-$incognitoNoActivado=(count($aAlumRetos)>1)?(($aAlumRetos[0]['ID_ALUMNO_A_CORREGIR']==NULL)&&($aAlumRetos[1]['ID_ALUMNO_A_CORREGIR']==NULL)):($aAlumRetos[0]['ID_ALUMNO_A_CORREGIR']==NULL);
+//var_export($aAlumRetos);
+if (count($aAlumRetos)==0)
+{
+	$incognitoNoActivado=true;
+}
+else
+{
+	$incognitoNoActivado=(count($aAlumRetos)>1)?(($aAlumRetos[0]['ID_ALUMNO_A_CORREGIR']==NULL)&&($aAlumRetos[1]['ID_ALUMNO_A_CORREGIR']==NULL)):($aAlumRetos[0]['ID_ALUMNO_A_CORREGIR']==NULL);
+}
+
 
 if (isset($_POST['actualizarEs'])&&($_POST['actualizarEs']=='A'))
 {

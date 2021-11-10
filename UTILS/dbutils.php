@@ -129,8 +129,8 @@ function modificarEstrella($db,$IDAlumno,$IDAsignatura,$nEstrellas,$dia)
 
 function insertarAlumnoTarea($db,$idAlumno,$tareaidselect,$estado, $estrellasconseguidas,$fecha)
 {
-  $sentencia= "INSERT INTO ALUMNOS_TAREAS (ID_ALUMNO, ID_TAREA, ESTADO, ESTRELLAS_CONSEGUIDAS, FECHA)
-              VALUES ( :alumno, :tarea, :estado, :estrellas, :fecha)";
+  $sentencia= "INSERT INTO ALUMNOS_TAREAS (ID_ALUMNO, ID_TAREA, ESTADO, ESTRELLAS_CONSEGUIDAS, FECHA,ID_ALUMNO_A_CORREGIR,NOTA_CORREGIDA,COMENT_CORRECCION)
+              VALUES ( :alumno, :tarea, :estado, :estrellas, :fecha,NULL,0,'')";
   try
   {
   $stmt = $db->prepare($sentencia);
@@ -352,10 +352,10 @@ function insertarFastest($db,$asignatura,$name,$descrip)
       mi_info_log( "Error insertarFastest:".$ex->getMessage());
   }  
 }
-function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen)
+function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen,$rubrica)
 {
-  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN)
-              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, now(),:FECHA_LIMITE,:EXAMEN)";
+  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN,RUBRICA)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, now(),:FECHA_LIMITE,:EXAMEN,:RUBRICA)";
   try
   {
     $stmt = $db->prepare($sentencia);
@@ -370,6 +370,7 @@ function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,
     $stmt->bindParam(':LINK_DOCUMENTO',$linkdocumento);
     $stmt->bindParam(':FECHA_LIMITE',$fechalimite);
     $stmt->bindParam(':EXAMEN',$examen);
+    $stmt->bindParam(':RUBRICA',$rubrica);
     $stmt->execute();
   }
   catch (Exception $ex)
@@ -2807,7 +2808,7 @@ function modificarAlumnosTareasIncognitoANull($db,$idTarea)
 {
   try 
   {
-    $sql = "UPDATE ALUMNOS_TAREAS SET ID_ALUMNO_A_CORREGIR=NULL WHERE ID_TAREA=".$idTarea;
+    $sql = "UPDATE ALUMNOS_TAREAS SET ID_ALUMNO_A_CORREGIR=NULL,NOTA_CORREGIDA=0,COMENT_CORRECCION='' WHERE ID_TAREA=".$idTarea;
     $stmt = $db->prepare($sql);
     $stmt->execute();
   } catch(PDOException $ex) 
@@ -2827,6 +2828,32 @@ function modificarAlumnoTareaIncognito($db,$idTarea,$alumId,$alumIdAcorregir)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarAlumnoTareaIncognito ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarAlumnoTareaNotaCorregida($db,$idTarea,$alumId,$nota)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET NOTA_CORREGIDA=".$nota." WHERE ID_TAREA=".$idTarea." AND ID_ALUMNO=".$alumId;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarAlumnoTareaNotaCorregida ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarAlumnoTareaComentCorreccion($db,$idTarea,$alumId,$coment)
+{
+  try 
+  {
+    $sql = "UPDATE ALUMNOS_TAREAS SET COMENT_CORRECCION='".$coment."' WHERE ID_TAREA=".$idTarea." AND ID_ALUMNO=".$alumId;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarAlumnoTareaComentCorreccion ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }
