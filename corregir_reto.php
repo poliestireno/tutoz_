@@ -159,17 +159,17 @@ $datosReto = getTareaFromID($dbh,$_GET['idt']);
 </div>
 <div class="form-group">
 	<div class="col-sm-4">
-<input type="number" min="0" max="10" placeholder="nota entre 0 y 10" id="idNota" name="nameNota" class="form-control" value="<?php echo $alumnoTareaYo['NOTA_CORREGIDA'];?>">
+<input type="number" min="0" max="10" placeholder="nota entre 0 y 10" id="idNota" name="nameNota" class="form-control" value="<?php echo $alumnoTareaYo['NOTA_CORREGIDA'];?>" required min="0" step=".01">
 </div>
 
 </div>
 <div class="form-group">
-	<label class="col-sm-4 ">Comentarios sobre la corrección</label>
+	<label class="col-sm-12 ">Comentarios sobre la corrección (lo que se ha puesto en cada % de las instrucciones y porqué)</label>
 </div>
   <div>
     <!-- para el texto enriquecido, pero no lo pongo porque en el post envia etiquetas de formato <b> ... textarea name="textComent" id="summernote"></textarea-->  
 
-        <textarea name="textComent" class="form-control"><?php echo $alumnoTareaYo['COMENT_CORRECCION'];?></textarea>  
+        <textarea required name="textComent" class="form-control"><?php echo $alumnoTareaYo['COMENT_CORRECCION'];?></textarea>  
 
 </div>
 <div class="form-group">
