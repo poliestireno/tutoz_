@@ -1349,6 +1349,19 @@ function getDatosAlumnoTarea($db,$correo,$idTarea)
   } 
   return $fila;
 }
+function getCorrectorAlumnoTarea($db,$idAlumno,$idTarea)
+{
+  try 
+  {
+  $sql="SELECT * FROM ALUMNOS_TAREAS WHERE ID_ALUMNO_A_CORREGIR=".$idAlumno." AND ID_TAREA = ".$idTarea;
+  $stmt = $db->query($sql);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! getCorrectorAlumnoTarea".$ex->getMessage());
+  } 
+  return $fila;
+}
 
 
 function getAsignaturasConCurso($db)

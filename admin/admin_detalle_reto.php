@@ -110,10 +110,13 @@ modificarEstadoReto($dbh,$correoAlumno,$idReto,'corregido');
 	<link rel="stylesheet" href="css/fileinput.min.css">
 	<!-- Awesome Bootstrap checkbox -->
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap2/bootstrap-switch.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"/>
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
 
 	<style>
+
 	.errorWrap {
     padding: 10px;
     margin: 0 0 20px 0;
@@ -155,8 +158,31 @@ function init(argument) {
 	{
 		echo 'document.getElementById("cbPares").checked=true;';
 	}
+
 	?>
+				var inEva = document.getElementById('verEva');
+				var inComent = document.getElementById('verComen');
+				var aCo = document.getElementById('aCorre');
+				var coPo = document.getElementById('correPor');
+			
+				$(".toggle-vis").bootstrapSwitch();
+				var table = $('#zctb').DataTable();
+
+        event.preventDefault();
+        var column = table.column($(inEva).attr('data-column'));
+        column.visible( false);
+        var column = table.column($(inComent).attr('data-column'));
+        column.visible( false);
+        var column = table.column($(aCo).attr('data-column'));
+        column.visible( false);
+        var column = table.column($(coPo).attr('data-column'));
+        column.visible( false);
+
 }
+
+
+
+
 </script>
 </head>
 
@@ -177,6 +203,7 @@ $reto = getTareaFromID($dbh,$idReto);
 //$folder="../retos/".getAsignaturaFromAsignaturaID($dbh,$reto['ID_ASIGNATURA'])['NOMBRE']."/".$reto['NOMBRE'];
 ?>
 <h3><?php echo $reto['NOMBRE']?><a  data-toggle="tooltip" title="Corregir reto en otra ventana" href="admin_corregir_reto.php?idr=<?php echo $idReto?>" target="_blank"> [Corregir]</a></h3>
+
 <table class="table table-striped w-auto table-bordered">
   
   
@@ -219,6 +246,34 @@ $reto = getTareaFromID($dbh,$idReto);
  <div class="form-group">
   <a onclick="actualizarEstrellas();" class="btn btn-success btn-outline btn-wrap-text">Actualizar estrellas conseguidas</a>
 </div>
+
+     <input id="verEva" name="verEva"
+      type="checkbox" 
+      data-column="5" 
+      class="toggle-vis" 
+      data-label-text="Evaluación" />
+<input id="verComen" name="verComen"
+      type="checkbox" 
+      data-column="6" 
+      class="toggle-vis" 
+      data-label-text="Comentario" />
+      <?php
+      if (!$incognitoNoActivado)
+  	{
+  		?>
+<input id="aCorre" name="aCorre"
+      type="checkbox" 
+      data-column="7" 
+      class="toggle-vis" 
+      data-label-text="Acorregir" />
+<input id="correPor" name="CorrePor"
+      type="checkbox" 
+      data-column="8" 
+      class="toggle-vis" 
+      data-label-text="CoPor" />
+      <?php
+      }
+  		?>
 <h3>Alumnos</h3>
 <table ID="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <!--Table head-->
@@ -231,7 +286,8 @@ $reto = getTareaFromID($dbh,$idReto);
       <th>Estrellas conseguidas</th>      
       <th>Evaluación</th>
       <th>Comentario</th>
-      <?php echo ($incognitoNoActivado)?"":"<th data-toggle='tooltip' title='a corregir de incognito' >?</th>"?>
+      <?php echo ($incognitoNoActivado)?"":"<th data-toggle='tooltip' title='a corregir de incognito' >A corregir</th>"?>
+      <?php echo ($incognitoNoActivado)?"":"<th data-toggle='tooltip' title='corregido por' >Corregido por</th>"?>
       <th>Entregado en fecha</th>
       <!--th>Descripción</th-->
     </tr>
@@ -304,8 +360,14 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
   	{
   		$alToCo = getAlumnoFromID($dbh,$datosAlumnoTarea['ID_ALUMNO_A_CORREGIR']);
   		$nombreACorregir = $alToCo['NOMBRE']." ".$alToCo['APELLIDO1']." ".$alToCo['APELLIDO2'];
+  		$nota = $datosAlumnoTarea['NOTA_CORREGIDA'];
+  		$comentCo = $datosAlumnoTarea['COMENT_CORRECCION'];
+  		$alumnoCorrector = getAlumnoFromID($dbh,getCorrectorAlumnoTarea($dbh,$alumno['ID'],$idReto)['ID_ALUMNO']);
+  		$nombreCorrector = $alumnoCorrector['NOMBRE']." ".$alumnoCorrector['APELLIDO1']." ".$alumnoCorrector['APELLIDO2'];
+  		
   	}
-   echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$nombreACorregir."' >?</td>";
+   echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$nombreACorregir."' >".$nombreACorregir."</td>";
+   echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$comentCo."' >".(($comentCo=='')?"<span style='color:#FF0000';>FALTA</span>":$nota)." (".$nombreCorrector.")</td>";
         echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';        
         //echo '<td>'.$reto['DESCRIPCION'].'</td>';
       echo '</tr>';
@@ -336,7 +398,22 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.js" data-turbolinks-track="true"></script>
+
 	<script type="text/javascript">
+
+$(function(){
+
+    $(".toggle-vis").bootstrapSwitch();
+		var table = $('#zctb').DataTable();
+    $('.toggle-vis').on('switchChange.bootstrapSwitch', function(event, state) {
+        event.preventDefault();
+        var column = table.column($(this).attr('data-column'));
+        column.visible( ! column.visible() );
+    });
+});
+
+
 
 $('#zctb').DataTable( {
     scrollY: 600,
