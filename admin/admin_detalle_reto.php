@@ -85,7 +85,10 @@ modificarEstadoReto($dbh,$correoAlumno,$idReto,'corregido');
 
 <!doctype html>
 <html lang="en" class="no-js">
-
+<?php 
+$reto = getTareaFromID($dbh,$idReto);
+//$folder="../retos/".getAsignaturaFromAsignaturaID($dbh,$reto['ID_ASIGNATURA'])['NOMBRE']."/".$reto['NOMBRE'];
+?>
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -135,6 +138,9 @@ modificarEstadoReto($dbh,$correoAlumno,$idReto,'corregido');
 }
 		</style>
 <script type="text/javascript">
+
+
+
 	function borrarEva(idAlumn)
 	{ 
 		//document.getElementById("form1").action="mimercado.php";
@@ -180,7 +186,27 @@ function init(argument) {
 
 }
 
+function cambioNota(a) {
+	var maxEstrellas = <?php echo $reto['TOTAL_ESTRELLAS']?>;
+	var n = parseFloat(document.getElementById('eccN'+a).value);
+	var sVal = "";
+	if (isNaN(n))
+	{
+		document.getElementById('eccc'+a).value = "";
+	}
+	else
+	{
+		if (n>10)
+		{
+			alert('nota entre 0 y 10');
+			document.getElementById('eccN'+a).value = Math.trunc(n / 10);
+			n = parseFloat(document.getElementById('eccN'+a).value);
+		}
+		document.getElementById('eccc'+a).value = Math.round((n*maxEstrellas)/10);
+	}
+	
 
+}
 
 
 </script>
@@ -194,14 +220,7 @@ function init(argument) {
 <input type='hidden' name='incognito' id='incognito' value='0'/>
   		<input type="hidden" name="idr" value="<?php echo $idReto;?>"/>
   		  		<input type="hidden" id="idAlumn" name="idAlumn"/>
-<?php 
-$reto = getTareaFromID($dbh,$idReto);
 
-
-
-
-//$folder="../retos/".getAsignaturaFromAsignaturaID($dbh,$reto['ID_ASIGNATURA'])['NOMBRE']."/".$reto['NOMBRE'];
-?>
 <h3><?php echo $reto['NOMBRE']?><a  data-toggle="tooltip" title="Corregir reto en otra ventana" href="admin_corregir_reto.php?idr=<?php echo $idReto?>" target="_blank"> [Corregir]</a></h3>
 
 <table class="table table-striped w-auto table-bordered">
@@ -249,12 +268,12 @@ $reto = getTareaFromID($dbh,$idReto);
 
      <input id="verEva" name="verEva"
       type="checkbox" 
-      data-column="5" 
+      data-column="6" 
       class="toggle-vis" 
       data-label-text="Evaluación" />
 <input id="verComen" name="verComen"
       type="checkbox" 
-      data-column="6" 
+      data-column="7" 
       class="toggle-vis" 
       data-label-text="Comentario" />
       <?php
@@ -263,12 +282,12 @@ $reto = getTareaFromID($dbh,$idReto);
   		?>
 <input id="aCorre" name="aCorre"
       type="checkbox" 
-      data-column="7" 
+      data-column="8" 
       class="toggle-vis" 
       data-label-text="Acorregir" />
 <input id="correPor" name="CorrePor"
       type="checkbox" 
-      data-column="8" 
+      data-column="9" 
       class="toggle-vis" 
       data-label-text="CoPor" />
       <?php
@@ -283,7 +302,8 @@ $reto = getTareaFromID($dbh,$idReto);
       <th>Apellidos</th>
       <th>Clan</th>
       <th>Estado</th>
-      <th>Estrellas conseguidas</th>      
+      <th>Nota</th>
+      <th>Estrellas</th>   
       <th>Evaluación</th>
       <th>Comentario</th>
       <?php echo ($incognitoNoActivado)?"":"<th data-toggle='tooltip' title='a corregir de incognito' >A corregir</th>"?>
@@ -297,6 +317,13 @@ $reto = getTareaFromID($dbh,$idReto);
   <!--Table body-->
   <tbody>
     <?php
+
+function calcularNota($estrellas,$reto)
+{
+	$maxEstrellas = $reto['TOTAL_ESTRELLAS'];
+	return ($estrellas * 10)/(($maxEstrellas>0)?$maxEstrellas:1);
+}
+
  $alumnos = getAlumnosFromAsignaturaID($dbh,$reto['ID_ASIGNATURA']);
 //var_dump($aToRetos);
 foreach ($alumnos as $alumno) 
@@ -346,12 +373,24 @@ $datosAlumnoTarea = getDatosAlumnoTarea($dbh,$alumno['CORREO'],$idReto);
 $clan = getClanFromCorreo($dbh,$alumno['CORREO']);
 $nombreClan = ($clan==NULL)?"z(No Tiene)":$clan['NOMBRE'];
       echo '<tr class="table-info">';
+
         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].'</a></td>';
-         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].'</a></td>';
+         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].', '.$alumno['NOMBRE'].'</a></td>';
          echo '<td>'.$nombreClan.'</td>';
 
-       echo '<td>'.$datosAlumnoTarea['ESTADO'].'</td>';
-echo '<td><input style="font-weight: bold;" class="form-control" type="text" name="eccc'.$alumno['ID'].'" value="'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'"/></td>';
+         $bgColor = "white";
+         if ($datosAlumnoTarea['ESTADO']=='corregido')
+         {
+         		$bgColor = "#b9fbc0";
+         }
+         else if ($datosAlumnoTarea['ESTADO']=='entregado')
+         {
+						$bgColor = "#f4a261";
+         }
+         
+       echo '<td style="background-color: '.$bgColor.';" >'.$datosAlumnoTarea['ESTADO'].'</td>';
+       echo '<td><input type="number" min="0" max="10" placeholder="[0..10]" name="eccN'.$alumno['ID'].'" id="eccN'.$alumno['ID'].'" class="form-control" value="'.calcularNota(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'0':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'],$reto).'" onKeyUp="cambioNota('.$alumno['ID'].')" step=".01"></td>';
+echo '<td><input style="font-weight: bold;" class="form-control" type="text" name="eccc'.$alumno['ID'].'" id="eccc'.$alumno['ID'].'" readonly="readonly" value="'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'"/></td>';
         echo '<td><div class="pull-left">'.$textoEval.'</div>
   <div class="pull-right"><button onclick="borrarEva('.$alumno['ID'].')" class="btn btn-warning btn-xs" name="bBorrar">borrar eva</button></div></td>';
   echo '<td>'.$datosAlumnoTarea['COMENTARIO'].'</td>';
@@ -360,10 +399,14 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
   	{
   		$alToCo = getAlumnoFromID($dbh,$datosAlumnoTarea['ID_ALUMNO_A_CORREGIR']);
   		$nombreACorregir = $alToCo['NOMBRE']." ".$alToCo['APELLIDO1']." ".$alToCo['APELLIDO2'];
-  		$nota = $datosAlumnoTarea['NOTA_CORREGIDA'];
-  		$comentCo = $datosAlumnoTarea['COMENT_CORRECCION'];
+  		//coger datos de alumno tarea de alToCo y coger la nota corregida y el comentario
+
   		$alumnoCorrector = getAlumnoFromID($dbh,getCorrectorAlumnoTarea($dbh,$alumno['ID'],$idReto)['ID_ALUMNO']);
   		$nombreCorrector = $alumnoCorrector['NOMBRE']." ".$alumnoCorrector['APELLIDO1']." ".$alumnoCorrector['APELLIDO2'];
+  		$datosAlumnoTareaToCo = getDatosAlumnoTarea($dbh,$alumnoCorrector['CORREO'],$idReto);
+
+  		$nota = $datosAlumnoTareaToCo['NOTA_CORREGIDA'];
+  		$comentCo = $datosAlumnoTareaToCo['COMENT_CORRECCION'];
   		
   	}
    echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$nombreACorregir."' >".$nombreACorregir."</td>";

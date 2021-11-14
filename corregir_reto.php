@@ -30,7 +30,7 @@ $CORREO = $_SESSION['alogin'];
 
 if(isset($_POST['submitGuardar']))
 {
-	var_export($_POST);
+	//var_export($_POST);
 	modificarAlumnoTareaNotaCorregida($dbh,$_GET['idt'],getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID'],$_POST['nameNota']);
 	modificarAlumnoTareaComentCorreccion($dbh,$_GET['idt'],getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID'],$_POST['textComent']);	
 }
