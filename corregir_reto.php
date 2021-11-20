@@ -33,6 +33,7 @@ if(isset($_POST['submitGuardar']))
 	//var_export($_POST);
 	modificarAlumnoTareaNotaCorregida($dbh,$_GET['idt'],getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID'],$_POST['nameNota']);
 	modificarAlumnoTareaComentCorreccion($dbh,$_GET['idt'],getAlumnoFromCorreo($dbh,$_SESSION['alogin'])['ID'],$_POST['textComent']);	
+	$msg = "Corrección modificada";
 }
 	$alumnoTareaYo = getDatosAlumnoTarea($dbh,$CORREO,$_GET['idt']);
 	$alumnoAcorregir = getAlumnoFromID($dbh,$alumnoTareaYo['ID_ALUMNO_A_CORREGIR']);

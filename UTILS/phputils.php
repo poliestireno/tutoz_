@@ -19,6 +19,38 @@ function modificarParesIncognito($dbh,$tareaId,$aNull)
     }
   }
 }
+
+function getMediaFromRetoIdClanId($dbh,$idTarea,$clanId)
+{
+  $aAlumnosIdClan = getAlumnosIdFromClanId($dbh,$clanId);
+  $nTotalNotas = 0;
+  foreach ($aAlumnosIdClan as $acAux) 
+  {
+    $alum = getAlumnoFromId($dbh,$acAux['ID_ALUMNO']);
+    $dataAT = getDatosAlumnoTarea($dbh,$alum['CORREO'],$idTarea);
+    $nTotalNotas += $dataAT['ESTRELLAS_CONSEGUIDAS'];
+  }
+  return $nTotalNotas/((count($aAlumnosIdClan)>0)?count($aAlumnosIdClan):1);
+}
+
+function modificarParesIncognitoAPropio($dbh,$tareaId,$aNull)
+{
+  if ($aNull)
+  {
+    modificarAlumnosTareasIncognitoANull($dbh,$tareaId);
+  }
+  else
+  {
+    // se recalculan todos los pares y se asignan al propio
+    $aAlumRetos = getAlumnosTareasFromTarea($dbh,$tareaId);
+    for ($i=0; $i < count($aAlumRetos); $i++) 
+    { 
+      $alumId=$aAlumRetos[$i]['ID_ALUMNO'];
+      modificarAlumnoTareaIncognito($dbh,$tareaId,$alumId,$alumId);
+    }
+  }
+}
+
 function enviarCorreo($in_to,$in_subject,$in_message)
 {
 // enviar correo

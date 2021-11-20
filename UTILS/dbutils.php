@@ -1207,7 +1207,30 @@ function getAlumnosFromCursoID($db,$idCurso)
   }
     return $vectorTotal;
 }
+function getIdsClanFromIdCurso($db,$idCurso)
+{
+  $vectorTotal = array();
+  try
+  {  
+   
+    $aAlumnos = getAlumnosFromCursoID($db,$idCurso);
+    $alumn = array();
+    foreach ($aAlumnos as $all) {
+      $alumn[]=$all['ID'];
+    }
+    $stmt = $db->query("SELECT  ID_CLAN FROM ALUMNOS_CLANES WHERE ID_ALUMNO IN (".implode (", ", $alumn).")");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+          $vectorTotal [] = $fila;
+    }
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getIdsClanFromIdCurso:".$ex->getMessage());
+  } 
 
+    return $vectorTotal;
+}
 function getAlumnosGradoNivel($db,$grado,$nivel)
 {
   $vectorTotal = array();

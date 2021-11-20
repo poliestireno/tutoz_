@@ -17,6 +17,13 @@ else{
 
 //var_export($_POST);
 
+if (isset($_GET['idc']))
+{
+  $_POST['idc']=$_GET['idc'];
+}
+
+
+
 $idReto="";
 if (isset($_GET['idr']))
 {
@@ -40,7 +47,14 @@ if (isset($_POST['incognito'])&&($_POST['incognito']=='A'))
 	{
 		$aNull=false;
 	}
-	modificarParesIncognito($dbh,$idReto,$aNull);
+	if (isset($_POST['cbPropio']))
+	{
+		modificarParesIncognitoAPropio($dbh,$idReto,$aNull);
+	}
+	else
+	{
+		modificarParesIncognito($dbh,$idReto,$aNull);
+	}
 }
 $aAlumRetos = getAlumnosTareasFromTarea($dbh,$idReto);
 //var_export($aAlumRetos);
@@ -219,6 +233,7 @@ function cambioNota(a) {
 <input type='hidden' name='actualizarEs' id='actualizarEs' value='0'/>
 <input type='hidden' name='incognito' id='incognito' value='0'/>
   		<input type="hidden" name="idr" value="<?php echo $idReto;?>"/>
+ 		<input type="hidden" name="idc" value="<?php echo $_POST['idc'];?>"/>
   		  		<input type="hidden" id="idAlumn" name="idAlumn"/>
 
 <h3><?php echo $reto['NOMBRE']?><a  data-toggle="tooltip" title="Corregir reto en otra ventana" href="admin_corregir_reto.php?idr=<?php echo $idReto?>" target="_blank"> [Corregir]</a></h3>
@@ -259,7 +274,7 @@ function cambioNota(a) {
 
 </table>
  <div class="form-group">
-<h3>Correción incognito por pares <input type="checkbox" id="cbPares" name="cbPares" onchange="manageCbPares();" <?php if(isset($_POST['cbPares'])) { echo 'checked="checked"'; } ?>/></h3>
+<h3>Corrección incognito: por pares <input type="checkbox" id="cbPares" name="cbPares" onchange="manageCbPares();" <?php if(isset($_POST['cbPares'])) { echo 'checked="checked"'; } ?>/> al propio <input type="checkbox" id="cbPropio" name="cbPropio" /></h3>
 
 </div>
  <div class="form-group">
@@ -292,7 +307,31 @@ function cambioNota(a) {
       data-label-text="CoPor" />
       <?php
       }
+
+
+
+$aIdsClan = getIdsClanFromIdCurso($dbh,$_POST['idc']);
+
+$aIdClanMedia = array ();
+foreach ($aIdsClan as $idClan) 
+{
+	$med = getMediaFromRetoIdClanId($dbh,$idReto,$idClan['ID_CLAN']);
+	$aIdClanMedia[$idClan['ID_CLAN']]=$med;
+}
+
+
+arsort($aIdClanMedia);
+
+
+$cont =1;
+foreach ($aIdClanMedia as $idClan => $media) 
+{
+	echo $cont."º.-<b>".getClanFromClanId($dbh,$idClan)['NOMBRE']."</b>(".$media.") ";
+	$cont++;
+}
+
   		?>
+
 <h3>Alumnos</h3>
 <table ID="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <!--Table head-->
@@ -376,7 +415,15 @@ $nombreClan = ($clan==NULL)?"z(No Tiene)":$clan['NOMBRE'];
 
         echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['NOMBRE'].'</a></td>';
          echo '<td><a data-toggle="tooltip" title="Calificar reto al alumno" href="admin_cromos.php?ida='.$alumno['CORREO'].'&idr='.$idReto.'" target="_blank">'.$alumno['APELLIDO1'].' '.$alumno['APELLIDO2'].', '.$alumno['NOMBRE'].'</a></td>';
-         echo '<td>'.$nombreClan.'</td>';
+         $clanCero = getMediaFromRetoIdClanId($dbh,$idReto,$clan['ID']);
+         if ($clanCero!=0)
+         {
+         	echo '<td>'.$nombreClan.'(M='.$clanCero.')</td>';
+         }
+         else
+         {
+         	echo '<td>'.$nombreClan.'</td>';
+         }
 
          $bgColor = "white";
          if ($datosAlumnoTarea['ESTADO']=='corregido')
@@ -407,10 +454,27 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
 
   		$nota = $datosAlumnoTareaToCo['NOTA_CORREGIDA'];
   		$comentCo = $datosAlumnoTareaToCo['COMENT_CORRECCION'];
-  		
+  		$diferencia =" ";
+  		if (($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']!=NULL)&&($nota != NULL))
+  		{
+  			$diferencia =calcularNota($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'],$reto)-$nota;
+  			if ($diferencia==0)
+  			{
+  				$diferencia =number_format($diferencia, 2) .'&nbsp;<i class="fa fa-thumbs-up" style="color:green;"></i>';
+  			}
+  			else if ($diferencia>0)
+  			{
+  				$diferencia =number_format($diferencia, 2) .'&nbsp;<i class="fa fa-arrow-down"</i>';
+  			}
+  			else
+  			{
+					$diferencia =(-1*number_format($diferencia, 2)) .'&nbsp;<i class="fa fa-arrow-up" style="color:red;"</i>';
+  			}
+  		}
+  		 
   	}
    echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$nombreACorregir."' >".$nombreACorregir."</td>";
-   echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$comentCo."' >".(($comentCo=='')?"<span style='color:#FF0000';>FALTA</span>":$nota)." (".$nombreCorrector.")</td>";
+   echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$comentCo."' >".(($comentCo=='')?"<span style='color:#FF0000';>FALTA</span>":$nota)." (".$nombreCorrector.")".$diferencia."</td>";
         echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';        
         //echo '<td>'.$reto['DESCRIPCION'].'</td>';
       echo '</tr>';
@@ -483,7 +547,12 @@ $('#zctb').DataTable( {
           confirmButtonText: 'Sí, lo modifico!'
         }).then((result) => {
           if (result.value) {
- document.getElementById('incognito').value = 'A';         	
+ document.getElementById('incognito').value = 'A';
+ if (document.getElementById('cbPropio').checked)
+ {
+ 	alert("Cada alumno se corregirá a sí mismo")
+ }
+ 
 document.getElementById("form1").submit();
           }
           else
