@@ -40,6 +40,16 @@ else if (isset($_POST['idr']))
   	borrarAutoevaluacionAlumnos($dbh,$aex['ID']);
   }
 }
+
+if (isset($_POST['cambiaVisibilidad'])&&($_POST['cambiaVisibilidad']=='A'))
+{
+	$valuee=0;
+	if (isset($_POST['cbVisible']))
+	{
+		$valuee=1;
+	}
+	modificarVisibleWebFromRetoId($dbh,$idReto,$valuee);
+}
 if (isset($_POST['incognito'])&&($_POST['incognito']=='A'))
 {
 	$aNull=true;
@@ -232,6 +242,8 @@ function cambioNota(a) {
 
 <input type='hidden' name='actualizarEs' id='actualizarEs' value='0'/>
 <input type='hidden' name='incognito' id='incognito' value='0'/>
+<input type='hidden' name='cambiaVisibilidad' id='cambiaVisibilidad' value='0'/>
+
   		<input type="hidden" name="idr" value="<?php echo $idReto;?>"/>
  		<input type="hidden" name="idc" value="<?php echo $_POST['idc'];?>"/>
   		  		<input type="hidden" id="idAlumn" name="idAlumn"/>
@@ -244,11 +256,11 @@ function cambioNota(a) {
   <!--Table head-->
   <thead>
     <tr>
-      <th>Reto</th>
       <th>Máximo estrellas</th>
       <th>Fecha límite</th>
       <th>Descripción</th>
       <th>Documento</th>
+      <th>Visible</th>
     </tr>
   </thead>
   <!--Table head-->
@@ -257,11 +269,11 @@ function cambioNota(a) {
   <tbody>
     <?php
       echo '<tr class="table-info">';
-        echo '<td>'.$reto['NOMBRE'].'</td>';
         echo '<td>'.$reto['TOTAL_ESTRELLAS'].'</td>';
         echo '<td>'.(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE']).'</td>';
         echo '<td>'.$reto['DESCRIPCION'].'</td>';
         echo '<td>'.(($reto['LINK_DOCUMENTO']==NULL)?'-':'<a href="'.$reto['LINK_DOCUMENTO'].'" target="_blank" rel="noopener">[IR AL DOCUMENTO]</a>').'</td>';
+        echo '<td><input type="checkbox" id="cbVisible" name="cbVisible" onchange="managecbVisible();" '.(($reto['VISIBLE_WEB']==1)?'checked="checked"':'').'</td>';
       echo '</tr>';
     
 
@@ -559,6 +571,30 @@ document.getElementById("form1").submit();
           {
 
           	document.getElementById("cbPares").checked = !document.getElementById("cbPares").checked;
+          }
+        });
+    
+  }			 
+	 function managecbVisible()
+  {
+    
+  	Swal.fire({
+          title: '¿Seguro que quieres cambiar la visivilidad del reto?',
+          text: "...",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, la cambio!'
+        }).then((result) => {
+          if (result.value) {
+ document.getElementById('cambiaVisibilidad').value = 'A';
+document.getElementById("form1").submit();
+          }
+          else
+          {
+
+          	document.getElementById("cbVisible").checked = !document.getElementById("cbVisible").checked;
           }
         });
     

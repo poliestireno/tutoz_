@@ -30,6 +30,7 @@ if(isset($_POST['sel11']))
   $descrip=$_POST['descrip'];
   $selSitios=$_POST['selSitios'];
   $visible=$_POST['visible'];
+  $visible_web=$_POST['visible_web'];
   $fechalimite=$_POST['fechalimite'];
   $linkdocumento=$_POST['linkdocumento'];
   $posx=$_POST['posx'];
@@ -75,7 +76,7 @@ if ($haySitio)
 {
   $asignaturas = getAsignaturasFromCurso($dbh,$sel11);
   
-  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$sExamen,$rubrica);
+  insertarReto($dbh,$asignaturas[0]['ID'],$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$sExamen,$rubrica,$visible_web);
   
     $lastInsertId = $dbh->lastInsertId();
     if($lastInsertId)
@@ -235,6 +236,16 @@ else
 
                                 </script>                            
                             </div>
+                            <div class="form-group">
+                            
+                            <label class="col-sm-1 control-label">VISIBLE_WEB</label>
+                            <div class="col-sm-5">
+                            <select class="form-control" ID="visible_web" name="visible_web">
+        <option value="1">VISIBLE</option>
+        <option value="0">INVISIBLE</option>
+    </select>
+                            </div>                          
+                            </div>                            
         <div class="form-group">
                             
                                                         <label class="col-sm-1 control-label">SITIO<span style="color:red">*</span></label>
@@ -251,13 +262,18 @@ else
             //$posAs= strrpos($nombre,"*");
             //$nombre_sitio = substr($nombre,0,$posAs);
             //echo 'idas:'.$IDAs;
-            echo "<option value='".$IDAs."'>".$nombre."</option>";
+            $selected="";
+            if ($IDAs==11)
+            {
+                $selected=" selected='selected' ";
+            }
+            echo "<option ".$selected." value='".$IDAs."'>".$nombre."</option>";
         }
         ?>
     </select>
                 
                             </div>
-                                                        <label class="col-sm-1 control-label">VISIBLE<span style="color:red">*</span></label>
+                                                        <label class="col-sm-1 control-label">VISIBLE RPG<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                                 
                                 <select class="form-control" ID="sel11" name="visible">

@@ -352,10 +352,10 @@ function insertarFastest($db,$asignatura,$name,$descrip)
       mi_info_log( "Error insertarFastest:".$ex->getMessage());
   }  
 }
-function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen,$rubrica)
+function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen,$rubrica,$visible_web)
 {
-  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN,RUBRICA)
-              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE, :DESCRIPCION, :LINK_DOCUMENTO, now(),:FECHA_LIMITE,:EXAMEN,:RUBRICA)";
+  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE,VISIBLE_WEB, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN,RUBRICA)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE,:VISIBLE_WEB, :DESCRIPCION, :LINK_DOCUMENTO, now(),:FECHA_LIMITE,:EXAMEN,:RUBRICA)";
   try
   {
     $stmt = $db->prepare($sentencia);
@@ -366,6 +366,7 @@ function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,
     $stmt->bindParam(':POS_X',$posx);
     $stmt->bindParam(':POS_Y',$posy);
     $stmt->bindParam(':VISIBLE',$visible);
+    $stmt->bindParam(':VISIBLE_WEB',$visible_web);
     $stmt->bindParam(':DESCRIPCION',$descrip);
     $stmt->bindParam(':LINK_DOCUMENTO',$linkdocumento);
     $stmt->bindParam(':FECHA_LIMITE',$fechalimite);
@@ -2698,6 +2699,20 @@ function modificarIdGanadorTesoro($db,$correo)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarIdGanadorTesoro ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+
+function modificarVisibleWebFromRetoId($db,$idReto,$value)
+{
+  try 
+  {
+    $sql = "UPDATE TAREAS SET VISIBLE_WEB='".$value."' WHERE ID=".$idReto;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarVisibleWebFromRetoId ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }

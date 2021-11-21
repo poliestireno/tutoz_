@@ -612,6 +612,9 @@ $aToRetos = getTareasTotalesFromAlumno($dbh,$loginAux,0);
 $insertadoTituloCampanaActual=0;
 foreach ($aToRetos as $reto) 
 {
+		
+	if ($reto['VISIBLE_WEB']==1)
+	{
 		$fechaInicioCampActual = getAsignaturasFromCurso($dbh,getAlumnoFromCorreo($dbh,$loginAux)['ID_CURSO'])[0]['FECHA_INICIO_CAMP_ACTUAL'];
 		$fechaCreacionReto = (($reto['FECHA_CREACION']==NULL)?'-':date('Y-m-d', strtotime($reto['FECHA_CREACION'])));
 		if (($fechaInicioCampActual!=NULL)&&($fechaCreacionReto!='-')&&($fechaCreacionReto>$fechaInicioCampActual)&&($insertadoTituloCampanaActual==0))
@@ -669,6 +672,7 @@ echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datos
 	      echo '<td>'.(strpos($reto['NOMBRE'], 'MATERIAL')?"-":(($reto['FECHA_LIMITE']==NULL)?'-':$reto['FECHA_LIMITE'])).'</td>';
 	      //echo '<td>'.$reto['DESCRIPCION'].'</td>';
 	    echo '</tr>';
+	}
 }
 
 	 ?>
