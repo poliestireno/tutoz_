@@ -33,6 +33,57 @@ function getMediaFromRetoIdClanId($dbh,$idTarea,$clanId)
   return $nTotalNotas/((count($aAlumnosIdClan)>0)?count($aAlumnosIdClan):1);
 }
 
+function modificarParesIncognitoAClanes($dbh,$tareaId,$aNull)
+{
+  if ($aNull)
+  {
+    modificarAlumnosTareasIncognitoANull($dbh,$tareaId);
+  }
+  else
+  {
+    // se recalculan todos los pares y se asignan al propio
+    $aAlumRetos = getAlumnosTareasFromTarea($dbh,$tareaId);
+
+    $aClanesIntroducidos = array ();
+    foreach ($aAlumRetos as $alumnoR) 
+    {
+      $arrayAlumno=array();
+      $clanId = getClanIdFromAlumnoId($dbh,$alumnoR['ID_ALUMNO']);
+      if (($clanId!="")&&(!in_array($clanId, $aClanesIntroducidos)))
+      {
+        $aClanesIntroducidos[] = $clanId;
+      }
+    }
+    shuffle($aClanesIntroducidos);
+    for ($i=0; $i < count($aClanesIntroducidos); $i++) 
+    { 
+      $clanIdNext=$aClanesIntroducidos[($i+1)%count($aClanesIntroducidos)];
+      $aAlumClanesNext = getAlumnosIdFromClanId($dbh,$clanIdNext);
+      $idAlumnoConComent = -1;
+      foreach ($aAlumClanesNext as $alclNext) 
+      {
+        $alTa = getDatosAlumnoTarea($dbh,getAlumnoFromId($dbh,$alclNext['ID_ALUMNO'])['CORREO'],$tareaId);
+        if ($alTa['COMENTARIO']!=NULL AND $alTa['COMENTARIO']!='-')
+        {
+          $idAlumnoConComent = $alclNext['ID_ALUMNO'];
+          break;
+        }
+      }
+      if ($idAlumnoConComent == -1)
+      {
+        $idAlumnoConComent = $aAlumClanesNext[0]['ID_ALUMNO'];
+      }
+      $clanId=$aClanesIntroducidos[$i];
+      $aAlumClanes = getAlumnosIdFromClanId($dbh  ,$clanId);
+      foreach ($aAlumClanes as $alcl) 
+      {
+        modificarAlumnoTareaIncognito($dbh,$tareaId,$alcl['ID_ALUMNO'],$idAlumnoConComent);
+      }
+      
+    }
+
+  }
+}                                                                                                                            
 function modificarParesIncognitoAPropio($dbh,$tareaId,$aNull)
 {
   if ($aNull)
@@ -457,7 +508,6 @@ if (isset($_SESSION['alogin']))
       $aAlumnosCurso = getAlumnosCompanerosCursoFromCorreo($dbh,$_SESSION['alogin']);
       foreach ($aAlumnosCurso as $alumno) 
       {  
-        //var_export($alumno);
         $getPropsAlummo =  getPropsVisiblesbot($dbh,$alumno['CORREO']);
         if ($getPropsAlummo['movilidad']!=1)
         {

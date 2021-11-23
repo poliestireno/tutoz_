@@ -1373,18 +1373,22 @@ function getDatosAlumnoTarea($db,$correo,$idTarea)
   } 
   return $fila;
 }
-function getCorrectorAlumnoTarea($db,$idAlumno,$idTarea)
+function getCorrectoresAlumnoTarea($db,$idAlumno,$idTarea)
 {
+ $vectorTotal = array();
   try 
   {
   $sql="SELECT * FROM ALUMNOS_TAREAS WHERE ID_ALUMNO_A_CORREGIR=".$idAlumno." AND ID_TAREA = ".$idTarea;
   $stmt = $db->query($sql);
-  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
   } catch(PDOException $ex) 
   {    
-   mi_info_log( "An Error occured! getCorrectorAlumnoTarea".$ex->getMessage());
+   mi_info_log( "An Error occured! getCorrectoresAlumnoTarea".$ex->getMessage());
   } 
-  return $fila;
+  return $vectorTotal;
 }
 
 

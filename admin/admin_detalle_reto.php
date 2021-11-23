@@ -61,6 +61,10 @@ if (isset($_POST['incognito'])&&($_POST['incognito']=='A'))
 	{
 		modificarParesIncognitoAPropio($dbh,$idReto,$aNull);
 	}
+	else if (isset($_POST['cbClanes']))
+	{
+		modificarParesIncognitoAClanes($dbh,$idReto,$aNull);
+	}
 	else
 	{
 		modificarParesIncognito($dbh,$idReto,$aNull);
@@ -286,7 +290,7 @@ function cambioNota(a) {
 
 </table>
  <div class="form-group">
-<h3>Corrección incognito: por pares <input type="checkbox" id="cbPares" name="cbPares" onchange="manageCbPares();" <?php if(isset($_POST['cbPares'])) { echo 'checked="checked"'; } ?>/> al propio <input type="checkbox" id="cbPropio" name="cbPropio" /></h3>
+<h3>Corrección incognito: por pares <input type="checkbox" id="cbPares" name="cbPares" onchange="manageCbPares();" <?php if(isset($_POST['cbPares'])) { echo 'checked="checked"'; } ?>/> [ a si mismo <input type="checkbox" id="cbPropio" name="cbPropio" /> por clanes <input type="checkbox" id="cbClanes" name="cbClanes" /> ]</h3>
 
 </div>
  <div class="form-group">
@@ -430,7 +434,7 @@ $nombreClan = ($clan==NULL)?"z(No Tiene)":$clan['NOMBRE'];
          $clanCero = getMediaFromRetoIdClanId($dbh,$idReto,$clan['ID']);
          if ($clanCero!=0)
          {
-         	echo '<td>'.$nombreClan.'(M='.$clanCero.')</td>';
+         	echo '<td>'.$nombreClan.'(M='.number_format((float)$clanCero, 2, '.', '').')</td>';
          }
          else
          {
@@ -457,15 +461,38 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
   	if (!$incognitoNoActivado)
   	{
   		$alToCo = getAlumnoFromID($dbh,$datosAlumnoTarea['ID_ALUMNO_A_CORREGIR']);
-  		$nombreACorregir = $alToCo['NOMBRE']." ".$alToCo['APELLIDO1']." ".$alToCo['APELLIDO2'];
+  		if ($alToCo!='')
+  		{
+  			$nombreACorregir = $alToCo['NOMBRE']." ".$alToCo['APELLIDO1']." ".$alToCo['APELLIDO2'];
+  		}
+  		
   		//coger datos de alumno tarea de alToCo y coger la nota corregida y el comentario
 
-  		$alumnoCorrector = getAlumnoFromID($dbh,getCorrectorAlumnoTarea($dbh,$alumno['ID'],$idReto)['ID_ALUMNO']);
-  		$nombreCorrector = $alumnoCorrector['NOMBRE']." ".$alumnoCorrector['APELLIDO1']." ".$alumnoCorrector['APELLIDO2'];
+  		$comentCo ='';
+  		$nombreCorrector = '';
+  		$alumnoCorrector='';
+  		$nota = 0;
+  		$aCorrectores = getCorrectoresAlumnoTarea($dbh,$alumno['ID'],$idReto);
+  		if (count($aCorrectores)>0)
+  		{
+	  		
+	  		foreach ($aCorrectores as $coco) {
+	  			if ($coco['NOTA_CORREGIDA']>0)
+	  			{
+	  				$alumnoCorrector = getAlumnoFromID($dbh,   $coco['ID_ALUMNO']);
+	  				break;
+	  			}
+	  		}
+	  		
+  		}
+  		if ($alumnoCorrector!='')
+  		{
+  			$nombreCorrector = $alumnoCorrector['NOMBRE']." ".$alumnoCorrector['APELLIDO1']." ".$alumnoCorrector['APELLIDO2'];
   		$datosAlumnoTareaToCo = getDatosAlumnoTarea($dbh,$alumnoCorrector['CORREO'],$idReto);
 
   		$nota = $datosAlumnoTareaToCo['NOTA_CORREGIDA'];
   		$comentCo = $datosAlumnoTareaToCo['COMENT_CORRECCION'];
+  	}
   		$diferencia =" ";
   		if (($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']!=NULL)&&($nota != NULL))
   		{
@@ -563,6 +590,10 @@ $('#zctb').DataTable( {
  if (document.getElementById('cbPropio').checked)
  {
  	alert("Cada alumno se corregirá a sí mismo")
+ }
+ if (document.getElementById('cbClanes').checked)
+ {
+ 	alert("Se corregirán entre clanes, solo debe corregir uno de cada clan")
  }
  
 document.getElementById("form1").submit();
