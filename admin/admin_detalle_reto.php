@@ -512,7 +512,7 @@ echo '<td><input style="font-weight: bold;" class="form-control" type="text" nam
   		}
   		 
   	}
-   echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$nombreACorregir."' >".$nombreACorregir."</td>";
+   echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$nombreACorregir."' >".(($datosAlumnoTarea['COMENT_CORRECCION']=='')?"<span style='color:#FF0000';>[FALTA]</span>":"").$nombreACorregir."</td>";
    echo ($incognitoNoActivado)?"":"<td data-toggle='tooltip' title='".$comentCo."' >".(($comentCo=='')?"<span style='color:#FF0000';>FALTA</span>":$nota)." (".$nombreCorrector.")".$diferencia."</td>";
         echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';        
         //echo '<td>'.$reto['DESCRIPCION'].'</td>';
