@@ -310,7 +310,7 @@ function textToSpeech() {
 	// find voice by language locale "en-US"
 	// if not then select the first voice
 	for(var i=0; i<available_voices.length; i++) {
-		if(available_voices[i].lang === 'es') {
+		if((available_voices[i].lang === 'es')||(available_voices[i].lang === 'es-ES')||(available_voices[i].lang === 'es_ES')) {
 			english_voice = available_voices[i];
 			break;
 		}

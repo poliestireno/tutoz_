@@ -453,7 +453,7 @@ $nombreClan = ($clan==NULL)?"z(No Tiene)":$clan['NOMBRE'];
          
        echo '<td style="background-color: '.$bgColor.';" >'.$datosAlumnoTarea['ESTADO'].'</td>';
        echo '<td><input type="number" min="0" max="10" placeholder="[0..10]" name="eccN'.$alumno['ID'].'" id="eccN'.$alumno['ID'].'" class="form-control" value="'.calcularNota(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'0':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'],$reto).'" onKeyUp="cambioNota('.$alumno['ID'].')" step=".01"></td>';
-echo '<td><input style="font-weight: bold;" class="form-control" type="text" name="eccc'.$alumno['ID'].'" id="eccc'.$alumno['ID'].'" readonly="readonly" value="'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'"/></td>';
+echo '<td><input style="font-weight: bold;" class="form-control" type="text" name="eccc'.$alumno['ID'].'" id="eccc'.$alumno['ID'].'" readonly="readonly" value="'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'"/>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']).'</td>';
         echo '<td><div class="pull-left">'.$textoEval.'</div>
   <div class="pull-right"><button onclick="borrarEva('.$alumno['ID'].')" class="btn btn-warning btn-xs" name="bBorrar">borrar eva</button></div></td>';
   echo '<td>'.$datosAlumnoTarea['COMENTARIO'].'</td>';
