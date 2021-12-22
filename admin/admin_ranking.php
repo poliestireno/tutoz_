@@ -491,6 +491,20 @@ echo "</ol>";
 </div> 
 
 </form>
+<form target="_blank" action="admin_justificantes.php" id="form12" method="post">
+    <input type="hidden" name="idc3" id="idc3" />
+
+ <div class="form-group">
+  <div class="col-sm-12">
+
+ <h3>Justificantes</h3>
+</div>
+</div>
+<div class="form-group col-md-2">
+  <a onclick="justificantes();" class="btn btn-dark btn-outline btn-wrap-text">Ver justificantes</a>
+</div> 
+
+</form>
 <form target="_blank" action="resultados_juicios.php" id="form7" method="post">
     <input type="hidden" name="idc3" id="idc3" />
 
@@ -820,6 +834,11 @@ if (Count($aToConcursos)>0)
   {
     document.getElementById('idc3').value = <?php echo $idCur?>;
     document.getElementById('form7').submit();  
+  }
+  function justificantes()
+  {
+    document.getElementById('idc3').value = <?php echo $idCur?>;
+    document.getElementById('form12').submit();  
   }
   function resultadosTestRapidos()
   {

@@ -327,6 +327,11 @@ shuffle($aRespuestas2);
 	document.getElementById("form1").action="mandar_monotermino.php";
           	document.getElementById("form1").submit(); 
 	}
+	function mandarJus()
+	{       	
+	document.getElementById("form1").action="mandar_justificante.php";
+          	document.getElementById("form1").submit(); 
+	}
 
 	function testLento()
 	{ 
@@ -405,6 +410,7 @@ function getRandomNumber(min, max) {
 <input type="hidden" name="idPreguntaNext" id="idPreguntaNext" value=""/>
 <input type="hidden" name="ids_respuestas" id="ids_respuestas" value="<?php echo implode(",", $aRespuestas2); ?>"/>
 
+<div class="panel-body">
 		<div class="panel panel-default col-sm-2">
 		<div class="panel-heading">Test Rápido</div>
 		<div class="panel-body">
@@ -448,6 +454,7 @@ function getRandomNumber(min, max) {
 
 
 		</div>
+
 		<div class="panel panel-default col-sm-2 col-sm-offset-1">
 		<div class="panel-heading">Lanzar Dado</div>
 		<div class="panel-body">
@@ -469,9 +476,11 @@ function getRandomNumber(min, max) {
 
 
 		</div>
-		<div class="panel panel-default col-sm-2 col-sm-offset-1">
+</div>
+<div class="panel-body">
+		<div class="panel panel-default col-sm-2">
 		<div class="panel-heading">Monotérmino</div>
-		<div class="panel-body">
+	<div class="panel-body">
 
 		<div class="form-group">
 		<div class="col-sm-10">
@@ -491,6 +500,28 @@ function getRandomNumber(min, max) {
 
 		</div>
 
+		<div class="panel panel-default col-sm-2 col-sm-offset-1">
+		<div class="panel-heading">JUSTIFICANTES</div>
+		<div class="panel-body">
+
+		<div class="form-group">
+		<div class="col-sm-10">
+		<label class="control-label">Justificantes</label>
+		</div>
+		</div>
+		<div class="form-group">
+
+		<div class="col-md-4">
+		<a  target="_blank" onclick="mandarJus();" class="btn btn-warning btn-outline btn-wrap-text">Mandar</a>
+		</div> 
+
+		</div>
+
+		</div>
+
+
+		</div>
+</div>
 </form>
 									</div>
 

@@ -256,7 +256,28 @@ function insertarCambio($db,$iDAlumno1,$iDAlumno12,$iDCromo1,$iDCromo2,$dia)
       mi_info_log( "Error insertarCambio:".$ex->getMessage());
   }  
 }
- 
+
+function insertJustificante($db,$diadesde,$diahasta,$idAlumno,$comentario,$enlace)
+{
+
+  $sentencia= "INSERT INTO JUSTIFICANTES (ID_ALUMNO,DIA_DESDE, DIA_HASTA, COMENTARIO, ENLACE)
+              VALUES ( :ID_ALUMNO,:DIA_DESDE, :DIA_HASTA, :COMENTARIO, :ENLACE)";
+  try
+  {
+    $stmt = $db->prepare($sentencia);
+    $stmt->bindParam(':ID_ALUMNO',$idAlumno);
+    $stmt->bindParam(':DIA_DESDE',$diadesde);
+    $stmt->bindParam(':DIA_HASTA',$diahasta);
+    $stmt->bindParam(':COMENTARIO',$comentario);
+    $stmt->bindParam(':ENLACE',$enlace);
+    $stmt->execute();
+  }
+  catch (Exception $ex)
+  {
+
+      mi_info_log( "Error insertJustificante:".$ex->getMessage());
+  }  
+}  
 function insertMonotermino($db,$idPregunta,$idRespuesta,$idCurso,$idAlumno)
 {
   $sentencia= "INSERT INTO MONOTERMINOS ( PREGUNTA,  RESPUESTAS, ID_CURSO,ID_ALUMNO)
@@ -512,6 +533,18 @@ function borrarBotFromId($db,$idBot)
    mi_info_log( "An Error occured! borrarBotFromId".$ex->getMessage());
   } 
 }
+function borrarJustificanteFromId($db,$idJus)
+{
+ try 
+  {
+   $sql = "DELETE FROM JUSTIFICANTES WHERE ID=".$idJus;
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarJustificanteFromId".$ex->getMessage());
+  } 
+}
+
 function borrarAutoevaluacion($db,$idAlumno,$idTarea)
 {
  try 
@@ -809,6 +842,22 @@ catch (PDOException $ex)
 }  
 return $db->lastInsertId();
 }
+
+
+function getJustificantesFromAlumno($db,$idAlumno){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM JUSTIFICANTES WHERE ID_ALUMNO=".$idAlumno);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getJustificantesFromAlumno:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+
 function getAlumnosFromAsignaturaID($db,$IDAsignatura){
   $vectorTotal = array();
   try{
@@ -1569,6 +1618,19 @@ function getFastestActivo($db,$IdAsignatura)
   } 
   return $fila;
 }
+function getJustificanteFromId($db,$idJus)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SELECT * FROM JUSTIFICANTES WHERE ID=".$idJus);
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured on getJustificanteFromId! ".$ex->getMessage());
+  } 
+  return $fila;
+}
 function getJuicioFromId($db,$idJuicio)
 {
   $fila="";
@@ -1578,10 +1640,11 @@ function getJuicioFromId($db,$idJuicio)
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 
   {    
-   mi_info_log( "An Error occured! ".$ex->getMessage());
+   mi_info_log( "An Error occured on getJuicioFromId ! ".$ex->getMessage());
   } 
   return $fila;
 }
+
 function getFastestFromId($db,$idFT)
 {
   $fila="";
