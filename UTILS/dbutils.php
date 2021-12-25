@@ -544,7 +544,18 @@ function borrarJustificanteFromId($db,$idJus)
    mi_info_log( "An Error occured! borrarJustificanteFromId".$ex->getMessage());
   } 
 }
-
+function borrarFilaFromId($db,$sql)
+{
+ try 
+  {
+   $db->exec($sql);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! borrarFilaFromId".$ex->getMessage());
+   return 'ERROR: '.$ex->getMessage();
+  } 
+  return "borrado correctamente...";
+}
 function borrarAutoevaluacion($db,$idAlumno,$idTarea)
 {
  try 
@@ -843,6 +854,19 @@ catch (PDOException $ex)
 return $db->lastInsertId();
 }
 
+function ejecutarQuery($db,$sQuery){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query($sQuery);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error ejecutarQuery:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
 
 function getJustificantesFromAlumno($db,$idAlumno){
   $vectorTotal = array();
@@ -854,6 +878,19 @@ function getJustificantesFromAlumno($db,$idAlumno){
     }
   }catch(PDOException $ex){
      mi_info_log( "Error getJustificantesFromAlumno:".$ex->getMessage());
+  }
+  return $vectorTotal;
+}
+function getColumnasFromTabla($db,$nombreTabla  ){
+  $vectorTotal = array();
+  try{
+    $stmt = $db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME ='".$nombreTabla."'");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+  }catch(PDOException $ex){
+     mi_info_log( "Error getColumnasFromTabla:".$ex->getMessage());
   }
   return $vectorTotal;
 }
@@ -2896,6 +2933,20 @@ function modificarActivarJuicio($db,$idJuicio)
   } 
   return $stmt->rowCount();
 }
+function modificarQuery($db,$sql)
+{
+  try 
+  {
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+    mi_info_log( "An Error occured! modificarQuery ".$ex->getMessage());
+    return 'ERROR: '.$ex->getMessage();
+  } 
+  return "modificado correctamente...";
+}
+
 function modificarActivarFastest($db,$idFT)
 {
   try 
@@ -3420,6 +3471,20 @@ function insertarElegIDosEnFantasma($db,$IDAsignatura,$dia,$listaElegIDos)
    mi_info_log( "An Error occured! ".$ex->getMessage());
   } 
 }
+
+function insertarQuery($db,$sql)
+{
+ try
+  {
+    $count = $db->exec($sql);
+  }
+  catch (PDOException $ex)
+  {
+    return 'ERROR: '.$ex->getMessage();
+  } 
+  return "insertado correctamente..."; 
+}
+
 function insertarArticuloAlumno($db,$idProducto,$alumnoID,$estado,$descripcion,$comentario)
 {
     $sentencia= "INSERT INTO ARTICULOS_COMPRADORES(ID_ALUMNO, ID_ARTICULO, ESTADO, DESCRIPCION,COMENTARIO) VALUES (:ID_ALUMNO, :ID_ARTICULO, :ESTADO, :DESCRIPCION, :COMENTARIO)";
