@@ -252,7 +252,13 @@ function cambioNota(a) {
  		<input type="hidden" name="idc" value="<?php echo $_POST['idc'];?>"/>
   		  		<input type="hidden" id="idAlumn" name="idAlumn"/>
 
-<h3><?php echo $reto['NOMBRE']?><a  data-toggle="tooltip" title="Corregir reto en otra ventana" href="admin_corregir_reto.php?idr=<?php echo $idReto?>" target="_blank"> [Corregir]</a></h3>
+<h3><?php echo $reto['NOMBRE']?></h3>
+
+ <div class="form-group">
+ 	<a  data-toggle="tooltip" class="btn btn-info btn-outline btn-wrap-text" title="Corregir reto en otra ventana" href="admin_corregir_reto.php?idr=<?php echo $idReto?>" target="_blank">Corregir</a>
+ 	<a  data-toggle="tooltip" class="btn btn-warning btn-outline btn-wrap-text" title="Modificar reto en otra ventana" href="manageTabla.php?tabla=TAREAS&idSearch=<?php echo $idReto?>" target="_blank">Modificar reto</a>
+
+</div>
 
 <table class="table table-striped w-auto table-bordered">
   

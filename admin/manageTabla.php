@@ -1,15 +1,20 @@
 <?php
 session_start();
 //error_reporting(0);
-include('includes/config.php');
-require_once("UTILS/dbutils.php");
+include('../includes/config.php');
+require_once("../UTILS/dbutils.php");
 $msg="";
+//var_export($_POST);
+try
+  {
+$sql = "SELECT username from admin;";
+    $query = $dbh -> prepare($sql);
+    $query->execute();
+    $result=$query->fetch(PDO::FETCH_OBJ);
 
-
-
-if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
-{	
-	header('location:index.php');
+if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION['alogin']!=$result->username)))
+  { 
+header('location:index.php');
 }
 else{
 
@@ -21,6 +26,15 @@ if (isset($_POST['tabla']))
 {
   $nombreTabla=$_POST['tabla'];
 }
+$idSearch=-1;
+if (isset($_GET['idSearch']))
+{
+  $idSearch=$_GET['idSearch'];
+}
+if (isset($_POST['idSearch']))
+{
+  $idSearch=$_POST['idSearch'];
+}
 
 
 $alumno = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
@@ -31,6 +45,8 @@ $aColumnas = getColumnasFromTabla($dbh,$nombreTabla);
 
 if(isset($_POST['esInsertar'])&&($_POST['esInsertar']!=0))
 {   
+
+		
 		$comma2="";
 		$columnasEntreComas="";
 		$interrogaciones ="";
@@ -42,8 +58,10 @@ if(isset($_POST['esInsertar'])&&($_POST['esInsertar']!=0))
 							$nombreColll = substr($key,4,strlen($key));
 							$columnasEntreComas.=$comma2.$nombreColll;
 							$interrogaciones.=$comma2."'".$value."'";							
-							$comma2=",";					    
+							$comma2=",";
+					    
 				}
+
 		}  
 		$sql = "INSERT INTO ".$nombreTabla." (".$columnasEntreComas.") VALUES (".$interrogaciones.")"; 
 		$msg.=' Registro: '.insertarQuery($dbh,$sql);	
@@ -209,14 +227,11 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
   <thead>
     <tr>
 
-<th>Select</th>
 <?php
 
 foreach ($aColumnas as $columna) 
 {
 	echo ($columna['COLUMN_NAME']=='ID')?'':'<th>'.$columna['COLUMN_NAME'].'</th>';
-
-
 }
 
 ?>      
@@ -230,7 +245,6 @@ foreach ($aColumnas as $columna)
 <?php
 
 	echo '<tr class="table-info">';
-echo '<td></td>';
 //	 echo '<td onclick="manageDelete('.$fila['ID'].')" align="center" >&nbsp; <i class="fa fa-trash"></i></td>';
 	foreach ($aColumnas as $columna) 
 	{
@@ -272,14 +286,13 @@ echo '<td></td>';
   <thead>
     <tr>
 
+<th></th>
 <th>Select</th>
 <?php
 
 foreach ($aColumnas as $columna) 
 {
 	echo ($columna['COLUMN_NAME']=='ID')?'':'<th>'.$columna['COLUMN_NAME'].'</th>';
-
-
 }
 
 ?>      
@@ -296,6 +309,9 @@ $aDatosTabla = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTabla);
 foreach ($aDatosTabla as $fila) 
 {
 	echo '<tr class="table-info">';
+
+echo '<td><span style="visibility:hidden">_'.$fila['ID'].'_</span></td>';
+
 echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'"  name="cb__'.$fila['ID'].'" id="cb__'.$fila['ID'].'"></td>';
 //	 echo '<td onclick="manageDelete('.$fila['ID'].')" align="center" >&nbsp; <i class="fa fa-trash"></i></td>';
 	foreach ($aColumnas as $columna) 
@@ -383,11 +399,20 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 	}
 
 
-	$('#zctb').DataTable( {
-    "order": [[ 1, "asc" ]],
+	tabbb = $('#zctb').DataTable( {
+    "order": [[ 2, "asc" ]],
     "scrollX": true
 } );
+	<?php echo ($idSearch!=-1)?'tabbb.column(0).search("_'.$idSearch.'_").draw();':''?>
 	</script>
 </body>
 </html>
-<?php } ?>
+<?php } 
+}
+  catch (Exception $ex)
+  {
+      echo "Error:".$ex->getMessage();
+  }  
+
+
+?>
