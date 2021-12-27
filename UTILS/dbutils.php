@@ -781,6 +781,31 @@ catch (PDOException $ex)
     mi_info_log( "Error inserción falta:".$ex->getMessage());
 }  
 }
+
+function insertarFCTEmpresa($db,$nConvenio,$sNombre,$fechaRev)
+{
+  $sentencia= "INSERT INTO FCT_EMPRESAS(N_CONVENIO, NOMBRE, FECHA_REV, ENLACE_CONVENIO, CONTACTO, DIRECCION, OTROS) VALUES (:N_CONVENIO, :NOMBRE, :FECHA_REV, :ENLACE_CONVENIO, :CONTACTO, :DIRECCION, :OTROS)";
+  try
+  {
+  $vacia = "";
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':N_CONVENIO',$nConvenio);
+  $stmt->bindParam(':NOMBRE',$sNombre);
+  $stmt->bindParam(':FECHA_REV',$fechaRev);
+  $stmt->bindParam(':ENLACE_CONVENIO',$vacia);
+  $stmt->bindParam(':CONTACTO',$vacia);
+  $stmt->bindParam(':DIRECCION',$vacia);
+  $stmt->bindParam(':OTROS',$vacia);
+  $stmt->execute();
+    }
+    catch (PDOException $ex)
+    {
+        mi_info_log( "Error inserción insertarFCTEmpresa:".$ex->getMessage());
+    }  
+}
+
+
+
 function insertarAlumno($db,$nombre,$apellIDo1,$apellIDo2,$IDCurso)
 {
   $sentencia= "INSERT INTO ALUMNOS ( NOMBRE, APELLIDO1, APELLIDO2, ID_CURSO)

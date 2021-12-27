@@ -41,7 +41,7 @@ $alumno = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
 //var_export($_POST);
 
 $aColumnas = getColumnasFromTabla($dbh,$nombreTabla);
-//var_export($aColumnas);
+var_export($aColumnas);
 
 if(isset($_POST['esInsertar'])&&($_POST['esInsertar']!=0))
 {   
@@ -97,10 +97,11 @@ else if(isset($_POST['esModificar'])&&($_POST['esModificar']!=0))
 			$comma="";
 			foreach($_POST as $key => $value)
 			{	    
-					if	(substr( $key, 0, 4 + (strlen("".$idAux))) === "in__".$idAux)
+					if	(substr( $key, 0, 5 + (strlen((string)$idAux))) === "in__".$idAux."_")
 					{
 						
-						$nombreCol=substr($key,6 + (strlen("".$idAux)),strlen($key));
+						$nombreCol=substr($key,6 + (strlen((string)$idAux)),strlen($key));
+						//echo 'key:'.$key.' idaxu:'.$idAux.' lenAux:'.strlen((string)$idAux).' nombreCol:'.$nombreCol;
 						$setsColumnas.= " ".	$comma.$nombreCol."='".$value."' ";
 						$comma=",";
 
@@ -231,7 +232,7 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
 
 foreach ($aColumnas as $columna) 
 {
-	echo ($columna['COLUMN_NAME']=='ID')?'':'<th>'.$columna['COLUMN_NAME'].'</th>';
+	echo ($columna['COLUMN_NAME']=='ID')?'':'<th>'.$columna['COLUMN_NAME'].'['.$columna['COLUMN_TYPE'].']</th>';
 }
 
 ?>      

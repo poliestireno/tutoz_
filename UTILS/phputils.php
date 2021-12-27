@@ -488,6 +488,21 @@ function calcularNivelDeEstrellas($dbh,$estrellasTotales,$correo)
   return $nivelAux;
 }
 
+
+// Sanitizar el $_POST
+
+//var_export($_POST);
+foreach($_POST as $key => $value)
+{
+  $_POST[$key]=htmlentities($_POST[$key], ENT_COMPAT | ENT_HTML401, 'UTF-8');
+}
+//echo "DESPUESSSSSSSSSSSS";
+//var_export($_POST);
+
+
+
+
+
 // INI Recalcular nivel alumno, no se hace para un administrador
 
 
