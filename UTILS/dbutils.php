@@ -784,7 +784,7 @@ catch (PDOException $ex)
 
 function insertarFCTEmpresa($db,$nConvenio,$sNombre,$fechaRev)
 {
-  $sentencia= "INSERT INTO FCT_EMPRESAS(N_CONVENIO, NOMBRE, FECHA_REV, ENLACE_CONVENIO, CONTACTO, DIRECCION, OTROS) VALUES (:N_CONVENIO, :NOMBRE, :FECHA_REV, :ENLACE_CONVENIO, :CONTACTO, :DIRECCION, :OTROS)";
+  $sentencia= "INSERT INTO FCT_EMPRESAS(N_CONVENIO, NOMBRE, FECHA_REV, ENLACE_CONVENIO, CONTACTO, DIRECCION, INFO) VALUES (:N_CONVENIO, :NOMBRE, :FECHA_REV, :ENLACE_CONVENIO, :CONTACTO, :DIRECCION, :INFO)";
   try
   {
   $vacia = "";
@@ -795,7 +795,7 @@ function insertarFCTEmpresa($db,$nConvenio,$sNombre,$fechaRev)
   $stmt->bindParam(':ENLACE_CONVENIO',$vacia);
   $stmt->bindParam(':CONTACTO',$vacia);
   $stmt->bindParam(':DIRECCION',$vacia);
-  $stmt->bindParam(':OTROS',$vacia);
+  $stmt->bindParam(':INFO',$sNombre);
   $stmt->execute();
     }
     catch (PDOException $ex)
@@ -883,6 +883,7 @@ function ejecutarQuery($db,$sQuery){
   $vectorTotal = array();
   try{
     $stmt = $db->query($sQuery);
+    //var_export($sQuery);
     while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $vectorTotal [] = $fila;
@@ -1471,6 +1472,9 @@ function getNombreCursoFromID($db,$IDCurso)
   return $fila['GRADO'].$fila['NIVEL'];
 }
 
+
+
+
 function getDatosAlumnoTarea($db,$correo,$idTarea)
 {
   try 
@@ -1653,6 +1657,19 @@ function getFaltasAsignaturaClase($db,$diaPasado,$IDPasado)
     return $vectorTotal;  
 }
 
+function existeColumnaEnTabla($db,$nombreCol, $tabla)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("SHOW COLUMNS FROM ".$tabla." LIKE '".$nombreCol."'");
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! existeColumnaEnTabla ".$ex->getMessage());
+  } 
+  return $fila;
+}
 
 function getJuicioActivo($db,$IdAsignatura)
 {

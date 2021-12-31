@@ -18,6 +18,8 @@ header('location:index.php');
 }
 else{
 
+
+
 if (isset($_GET['tabla']))
 {
   $nombreTabla=$_GET['tabla'];
@@ -41,7 +43,7 @@ $alumno = getAlumnoFromCorreo($dbh,$_SESSION['alogin']);
 //var_export($_POST);
 
 $aColumnas = getColumnasFromTabla($dbh,$nombreTabla);
-var_export($aColumnas);
+//var_export($aColumnas);
 
 if(isset($_POST['esInsertar'])&&($_POST['esInsertar']!=0))
 {   
@@ -306,6 +308,37 @@ foreach ($aColumnas as $columna)
   <tbody>
 <?php
 
+function getInfoColumnaFromTablaId($dbh,$nombreCol,$idAux)
+{
+	$valor ="";
+
+	if (substr( $nombreCol, 0, 3 ) === "ID_")
+	{
+		$nombreTab=substr( $nombreCol, 3, strlen($nombreCol) )."S";
+
+		if (existeColumnaEnTabla($dbh,"INFO", $nombreTab))
+		{
+			$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$idAux);
+			if (Count($aData)>0)
+			{
+				$valor =$aData[0]['INFO'];
+			}
+		}
+		else if (existeColumnaEnTabla($dbh,"NOMBRE", $nombreTab))
+		{
+			$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$idAux);
+			if (Count($aData)>0)
+			{
+				$valor =$aData[0]['NOMBRE'];
+			}
+			
+		}
+	}
+
+	return $valor;
+}
+
+
 $aDatosTabla = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTabla);
 foreach ($aDatosTabla as $fila) 
 {
@@ -317,7 +350,7 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 //	 echo '<td onclick="manageDelete('.$fila['ID'].')" align="center" >&nbsp; <i class="fa fa-trash"></i></td>';
 	foreach ($aColumnas as $columna) 
 	{
-		echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span></td>';
+		echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span>'.getInfoColumnaFromTablaId($dbh,$columna['COLUMN_NAME'],$fila[$columna['COLUMN_NAME']]).'</td>';
 	}
 
   echo '</tr>';
@@ -405,6 +438,13 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
     "scrollX": true
 } );
 	<?php echo ($idSearch!=-1)?'tabbb.column(0).search("_'.$idSearch.'_").draw();':''?>
+
+
+
+
+	$('#zctb2').DataTable( {
+    "scrollX": true
+} );
 	</script>
 </body>
 </html>
