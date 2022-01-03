@@ -4,6 +4,7 @@ session_start();
 include('../includes/config.php');
 //require_once("../UTILS/dbutils.php");
 require_once ("../PHPWord-develop/bootstrap.php");
+require_once ("../UTILS/driveutils.php");
 $msg="";
 //var_export($_POST);
 try
@@ -29,7 +30,6 @@ else
 	$sTextoCarpetaAMostrar= $_POST['CLAVE_CICLO']."_".date("Ymd_His");
 	$folder="../docsFCT/".$_POST['CLAVE_CICLO']."/".$sTextoCarpetaAMostrar;
  	mkdir($folder, 0777,true);
- 	
 
 
 
@@ -150,7 +150,7 @@ else
     <?php
   	for ($i=1; $i <= $_POST['totalAlumnos']; $i++) 
 		{ 
-			echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$i).'</a>';
+			echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i).'</a>';
 		}
 
   ?> 
@@ -189,7 +189,7 @@ else
 <?php
 
 
-function generarAnexo21($folder, $num)
+function generarAnexo21($folder, $sTextoCarpetaAMostrar,$num)
 {
 
 $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo21.docx');
@@ -232,6 +232,9 @@ $templateProcessor->setValue('DIRECCION_EMPRESA', $_POST['DIRECCION_EMPRESA'.$nu
 $templateProcessor->setValue('NOMBRE_REPRESENTANTE_EMPRESA', $_POST['NOMBRE_REPRESENTANTE_EMPRESA'.$num]);
 
 $templateProcessor->saveAs($folder.'/anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx');
+$idCarpetaRaiz = '1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV';
+$idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idCarpetaRaiz);
+subirDocumentoWordDrive	($folder.'/anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx','anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx',"anexo21",$idFolder);
 return 'anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx';
 }
 
