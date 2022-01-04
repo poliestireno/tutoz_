@@ -148,11 +148,51 @@ else
   <a target="_blank" href="<?php echo $folder?>" class="list-group-item active"><b><?php echo $sTextoCarpetaAMostrar?></b></a>
   <div class="list-group">
     <?php
+
+    // INICIO ANEXO 21
+    $empresaAnterior=$_POST['NOMBRE_EMPRESA1'];
+    $aNombres = array();
+    $aNombresConApellido1 = array();
+   
+    $aDNIs = array();
+  	
   	for ($i=1; $i <= $_POST['totalAlumnos']; $i++) 
 		{ 
-			echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i).'</a>';
+			
+			if ($empresaAnterior == $_POST['NOMBRE_EMPRESA'.$i])
+			{
+				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
+				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
+				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
+				if ($i == $_POST['totalAlumnos'])
+				{
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs).'</a>';
+				}		
+			}
+			else
+			{
+				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs).'</a>';
+				$empresaAnterior = $_POST['NOMBRE_EMPRESA'.$i];
+				$aNombres = array();
+				$aNombresConApellido1 = array();
+    		$aDNIs = array();
+				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
+				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
+				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
+				if ($i == $_POST['totalAlumnos'])
+				{
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs).'</a>';
+				}		
+			}
 		}
 
+		// FIN ANEXO 21
+
+		// INICIO ANEXO 22
+
+		echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo22($folder, $sTextoCarpetaAMostrar).'</a>';
+
+		// FIN ANEXO 22
   ?> 
   </div> 
 </div> 
@@ -189,13 +229,13 @@ else
 <?php
 
 
-function generarAnexo21($folder, $sTextoCarpetaAMostrar,$num)
+function generarAnexo21($folder, $sTextoCarpetaAMostrar,$num,$aNombres,$aNombresConApellido1,$aDNIs)
 {
 
 $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo21.docx');
 
 // alumno
-$templateProcessor->setValue('NOMBRE_ALUMNO', $_POST['NOMBRE_ALUMNO'.$num]);
+$templateProcessor->setValue('NOMBRE_ALUMNO', $_POST['NOMBRE_ALUMNO'.$num]." ".$_POST['APELLIDO1_ALUMNO'.$num]." ".$_POST['APELLIDO2_ALUMNO'.$num]);
 $templateProcessor->setValue('DNI_ALUMNO', $_POST['DNI_ALUMNO'.$num]);
 
 // tutor colegio
@@ -231,11 +271,162 @@ $templateProcessor->setValue('LOCALIDAD_EMPRESA', $_POST['LOCALIDAD_EMPRESA'.$nu
 $templateProcessor->setValue('DIRECCION_EMPRESA', $_POST['DIRECCION_EMPRESA'.$num]);
 $templateProcessor->setValue('NOMBRE_REPRESENTANTE_EMPRESA', $_POST['NOMBRE_REPRESENTANTE_EMPRESA'.$num]);
 
-$templateProcessor->saveAs($folder.'/anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx');
-$idCarpetaRaiz = '1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV';
-$idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idCarpetaRaiz);
-subirDocumentoWordDrive	($folder.'/anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx','anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx',"anexo21",$idFolder);
-return 'anexo21_'.$_POST['NOMBRE_ALUMNO'.$num].'.docx';
+
+
+
+//Create table
+$document_with_table = new \PhpOffice\PhpWord\PhpWord();
+
+
+$styleCell =
+[
+    'borderTopColor' =>'000000',
+    'borderTopSize' => 6,
+    'borderRightColor' =>'000000',
+    'borderRightSize' => 6,
+    'borderBottomColor' =>'000000',
+    'borderBottomSize' => 6,
+    'borderLeftColor' =>'000000',
+    'borderLeftSize' => 6,
+    'align' => 'center', 
+     
+];
+$section = $document_with_table->addSection();
+$table = $section->addTable($styleCell);
+
+// cabecera de la tabla
+$table->addRow();
+$table->addCell(1750,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("D.N.I.",array('name'=>'Arial Narrow', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(3000,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("APELLIDOS Y NOMBRE",array('name'=>'Arial Narrow', 'size'=>9,'bold' => true,'align' => 'center'));
+
+// filas de la tabla
+$nombresNombreFichero= "";
+$barraBaja = "";
+for ($i=0; $i < Count($aNombres); $i++) 
+{ 
+		$table->addRow();
+		$table->addCell(1750,$styleCell)->addText($aDNIs[$i],array('name'=>'Arial Narrow', 'size'=>9));
+		$table->addCell(3000,$styleCell)->addText($aNombres[$i],array('name'=>'Arial Narrow', 'size'=>9));
+		if (Count($aNombres)>1)
+		{
+				$nombresNombreFichero.= $barraBaja.$aNombresConApellido1[$i];
+		}
+		else
+		{
+				$nombresNombreFichero.= $barraBaja.$aNombres[$i];
+		}
+		
+		$barraBaja="_";
+}
+
+
+// Create writer to convert document to xml
+$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($document_with_table, 'Word2007');
+
+// Get all document xml code
+$fullxml = $objWriter->getWriterPart('Document')->write();
+
+// Get only table xml code
+$tablexml = preg_replace('/^[\s\S]*(<w:tbl\b.*<\/w:tbl>).*/', '$1', $fullxml);
+
+
+
+$templateProcessor->setValue('table1', $tablexml);
+
+
+
+
+
+
+
+$templateProcessor->saveAs($folder.'/anexo21_'.$nombresNombreFichero.'.docx');
+
+// subir a drive
+//$idCarpetaRaiz = '1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV';
+//$idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idCarpetaRaiz);
+//subirDocumentoWordDrive	($folder.'/anexo21_'.$_POST['NOMBRE_ALUMNO'.$num]." ".$_POST['APELLIDO1_ALUMNO'.$num]." ".$_POST['APELLIDO2_ALUMNO'.$num].'.docx','anexo21_'.$_POST['NOMBRE_ALUMNO'.$num]." ".$_POST['APELLIDO1_ALUMNO'.$num]." ".$_POST['APELLIDO2_ALUMNO'.$num].'.docx',"anexo21",$idFolder);
+
+return 'anexo21_'.$nombresNombreFichero.'.docx';
+}
+
+
+function generarAnexo22($folder, $sTextoCarpetaAMostrar)
+{
+
+$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo22.docx');
+
+$templateProcessor->setValue('CLAVE_CICLO', $_POST['CLAVE_CICLO']);
+$templateProcessor->setValue('NOMBRE_CICLO', $_POST['NOMBRE_CICLO']);
+$templateProcessor->setValue('FECHA_FIRMA_DOC', $_POST['FECHA_FIRMA_DOC']);
+$templateProcessor->setValue('FAMILIA_PROFESIONAL', $_POST['FAMILIA_PROFESIONAL']);
+
+//Create table
+$document_with_table = new \PhpOffice\PhpWord\PhpWord();
+$styleCell =
+[
+    'borderTopColor' =>'000000',
+    'borderTopSize' => 6,
+    'borderRightColor' =>'000000',
+    'borderRightSize' => 6,
+    'borderBottomColor' =>'000000',
+    'borderBottomSize' => 6,
+    'borderLeftColor' =>'000000',
+    'borderLeftSize' => 6,
+     
+];
+$section = $document_with_table->addSection();
+$table = $section->addTable($styleCell);
+
+// cabecera de la tabla
+$table->addRow();
+$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Tutor Empresa",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1750,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Tutor Centro",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Total Horas",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1750,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Horas/día",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Final",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Inicio",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1600,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Localidad",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1200,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nº convenio",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("NIF/NIE",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nombre",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(2700,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Apellidos",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(650,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nº.",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+
+// filas de la tabla
+for ($i=1; $i <= $_POST['totalAlumnos']; $i++) 
+{ 
+	$table->addRow();
+	$table->addCell(1500,$styleCell)->addText($_POST['NOMBRE_TUTOR_EMPRESA'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1750,$styleCell)->addText($_POST['NOMBRE_TUTOR_COLEGIO'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1500,$styleCell)->addText($_POST['TOTAL_HORAS'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1750,$styleCell)->addText($_POST['HORAS_DIA'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_TERMINACION'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_INICIO'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1600,$styleCell)->addText($_POST['LOCALIDAD_EMPRESA'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1200,$styleCell)->addText($_POST['N_CONVENIO'.$i]."CM",array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1500,$styleCell)->addText($_POST['DNI_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['NOMBRE_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(2700,$styleCell)->addText($_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(650,$styleCell)->addText($i,array('name'=>'Arial Narrow', 'size'=>8));
+}
+
+
+// Create writer to convert document to xml
+$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($document_with_table, 'Word2007');
+
+// Get all document xml code
+$fullxml = $objWriter->getWriterPart('Document')->write();
+
+// Get only table xml code
+$tablexml = preg_replace('/^[\s\S]*(<w:tbl\b.*<\/w:tbl>).*/', '$1', $fullxml);
+
+
+$templateProcessor->setValue('table1', $tablexml);
+
+$templateProcessor->saveAs($folder.'/anexo22_'.$_POST['NOMBRE_CICLO'].'.docx');
+
+
+return 'anexo22_'.$_POST['NOMBRE_CICLO'].'.docx';
 }
 
 

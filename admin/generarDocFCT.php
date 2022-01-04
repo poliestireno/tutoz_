@@ -42,7 +42,7 @@ $aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS WHERE ID =".$idCiclo);
 
 $NOMBRE_CICLO = $aCiclos[0]['NOMBRE'];
 $CLAVE_CICLO = $aCiclos[0]['CLAVE_CICLO'];
-
+$FAMILIA_PROFESIONAL = $aCiclos[0]['FAMILIA_PROFESIONAL'];
 $aTutoresCole = ejecutarQuery($dbh,"SELECT * FROM FCT_TUTORES_PROFES WHERE ID_FCT_CICLO =".$idCiclo);
 
 $NOMBRE_TUTOR_COLEGIO = $aTutoresCole[0]['NOMBRE']." ".$aTutoresCole[0]['APELLIDO1']." ".$aTutoresCole[0]['APELLIDO2'];
@@ -59,7 +59,7 @@ $HORAS_DIA = $periodo['HORAS_DIA'];
 $TOTAL_HORAS = $periodo['TOTAL_HORAS'];
 
 
-$aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIODO =".$idPeriodo); 
+$aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIODO =".$idPeriodo." ORDER BY ID_FCT_EMPRESA"); 
 
 
 //var_export($aPracticas);
@@ -178,9 +178,9 @@ $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIO
   <input type="text" name="CURSO_ACADEMICO" class="form-control" value="<?php echo $CURSO_ACADEMICO?>" required>
   </div>
 
-  <label class="col-sm-2 control-label">FECHA_FIRMA_DOC<span style="color:red">*</span></label>
+  <label class="col-sm-2 control-label">FAMILIA_PROFESIONAL<span style="color:red">*</span></label>
   <div class="col-sm-4">
-  <input type="text" name="FECHA_FIRMA_DOC" class="form-control" value="<?php echo $FECHA_FIRMA_DOC?>" required/>
+  <input type="text" name="FAMILIA_PROFESIONAL" class="form-control" value="<?php echo $FAMILIA_PROFESIONAL?>" required/>
   </div>
   </div>
 
@@ -219,6 +219,15 @@ $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIO
   <input type="text" name="NIF_TUTOR_COLEGIO" class="form-control" value="<?php echo $NIF_TUTOR_COLEGIO?>" required/>
   </div>
   </div>
+  
+<div class="form-group col-sm-12">
+ <label class="col-sm-2 control-label">FECHA_FIRMA_DOC<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="FECHA_FIRMA_DOC" class="form-control" value="<?php echo $FECHA_FIRMA_DOC?>" required/>
+  </div>
+
+
+  </div>
 
 	</div>
 </div>
@@ -231,7 +240,9 @@ foreach ($aPracticas as $practica)
 
   $aAlumnosAux = ejecutarQuery($dbh,"SELECT * FROM FCT_ALUMNOS WHERE ID =".$practica['ID_FCT_ALUMNO']);
   $alumno = $aAlumnosAux[0];
-  $NOMBRE_ALUMNO = $alumno['NOMBRE']." ".$alumno['APELLIDO1']." ".$alumno['APELLIDO2'];
+  $NOMBRE_ALUMNO = $alumno['NOMBRE'];
+  $APELLIDO1_ALUMNO = $alumno['APELLIDO1'];
+  $APELLIDO2_ALUMNO = $alumno['APELLIDO2'];
   $DNI_ALUMNO = $alumno['DNI'];
   $aEmpresasAux = ejecutarQuery($dbh,"SELECT * FROM FCT_EMPRESAS WHERE ID =".$practica['ID_FCT_EMPRESA']);
   $empresa = $aEmpresasAux[0];
@@ -246,7 +257,7 @@ foreach ($aPracticas as $practica)
 
 ?>
 <div class="panel panel-default">							
-	<div class="panel-heading"><?php echo $NOMBRE_ALUMNO." (".$contAlumnos."/".$totalAlumnos.")"?></div>
+	<div class="panel-heading"><?php echo $NOMBRE_ALUMNO." ".$APELLIDO1_ALUMNO." ".$APELLIDO2_ALUMNO." (".$contAlumnos."/".$totalAlumnos.")"?></div>
 
 <div class="container-fluid">
 	  <div class="form-group">
@@ -258,8 +269,11 @@ foreach ($aPracticas as $practica)
   <div class="form-group col-sm-12">
   <label class="col-sm-2 control-label">NOMBRE_ALUMNO<span style="color:red">*</span></label>
   <div class="col-sm-4">
-  <input type="text" name="NOMBRE_ALUMNO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $NOMBRE_ALUMNO?>" required>
+  <input type="text" name="NOMBRE_ALUMNO_COMPLETO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $NOMBRE_ALUMNO." ".$APELLIDO1_ALUMNO." ".$APELLIDO2_ALUMNO?>" required>
   </div>
+<input type="hidden" name="NOMBRE_ALUMNO<?php echo $contAlumnos?>" id="NOMBRE_ALUMNO<?php echo $contAlumnos?>" value="<?php echo $NOMBRE_ALUMNO?>"/>
+<input type="hidden" name="APELLIDO1_ALUMNO<?php echo $contAlumnos?>" id="APELLIDO1_ALUMNO<?php echo $contAlumnos?>" value="<?php echo $APELLIDO1_ALUMNO?>"/>
+<input type="hidden" name="APELLIDO2_ALUMNO<?php echo $contAlumnos?>" id="APELLIDO2_ALUMNO<?php echo $contAlumnos?>" value="<?php echo $APELLIDO2_ALUMNO?>"/>
 
   <label class="col-sm-2 control-label">DNI_ALUMNO<span style="color:red">*</span></label>
   <div class="col-sm-4">
@@ -329,18 +343,6 @@ $contAlumnos++;
     <div class="form-group">
   <label class="col-sm-1 control-label"></label>
   <div class="col-sm-5">
-  </div>
-  </div>
-
-  <div class="form-group col-sm-12">
-  <label class="col-sm-1 control-label">NOMBRE_ALUMNO<span style="color:red">*</span></label>
-  <div class="col-sm-5">
-  <input type="text" name="NOMBRE_ALUMNO" class="form-control" value="<?php echo $NOMBRE_ALUMNO?>" required>
-  </div>
-
-  <label class="col-sm-1 control-label">DNI_ALUMNO<span style="color:red">*</span></label>
-  <div class="col-sm-5">
-  <input type="text" name="DNI_ALUMNO" class="form-control" value="<?php echo $DNI_ALUMNO?>" required/>
   </div>
   </div>
 
