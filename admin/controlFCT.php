@@ -7,7 +7,7 @@ $msg="";
 //var_export($_POST);
 try
   {
-$sql = "SELECT username from admin;";
+$sql = "SELECT username from admin where username='ADMIN_FCT'";
     $query = $dbh -> prepare($sql);
     $query->execute();
     $result=$query->fetch(PDO::FETCH_OBJ);
@@ -38,11 +38,11 @@ $aTutoresCole = ejecutarQuery($dbh,"SELECT * FROM FCT_TUTORES_PROFES WHERE ID_FC
 
 $nombreTutorCole = $aTutoresCole[0]['NOMBRE']." ".$aTutoresCole[0]['APELLIDO1']." ".$aTutoresCole[0]['APELLIDO2'];
 
-$aPeriodos = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID_FCT_CICLO =".$idCiclo);
+$aAlumnos = ejecutarQuery($dbh,"SELECT * FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo);
 $aPracticas = array();
-foreach ($aPeriodos as $periodoAux) 
+foreach ($aAlumnos as $alumnoAux) 
 {
-	$aPracticas = array_merge($aPracticas, ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIODO =".$periodoAux['ID'])); 
+	$aPracticas = array_merge($aPracticas, ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO =".$alumnoAux['ID'])); 
 }
 
 //var_export($aPracticas);

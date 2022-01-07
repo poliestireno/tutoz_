@@ -1,6 +1,9 @@
 	<nav class="ts-sidebar">
 			<ul class="ts-sidebar-menu">
-			
+		<?php
+		if ($_SESSION['alogin']=='ADMIN')
+		{
+		?>	
 				<li class="ts-label">Main</li>
 				<li><a href="../PRIVAT661309945PRIX656585916/asist00.php"><i class="fa fa-dashboard"></i> Asist</a></li>
 
@@ -32,6 +35,23 @@
 			</li>
 			<li><a href="download.php"><i class="fa fa-download"></i> &nbsp;Descargar Lista Alumnos</a>
 			</li>
+		<?php
+		}
+		else if ($_SESSION['alogin']=='ADMIN_FCT')
+		{
+		?>	
+						<li class="ts-label">FCT</li>
+<li><a href="resumenFCT.php"><i class="fa fa-dashboard"></i>RESUMEN Y TABLAS</a></li>
+<?php
+	$aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS");
+	foreach ($aCiclos as $ciclo) 
+	{
+		echo '<li><a href="controlFCT.php?idCiclo='.$ciclo['ID'].'"><i class="fa fa-users"></i>'.$ciclo['INFO'].'</a></li>';
+	}
+?>
+		<?php
+		}
+		?>	
 			</ul>
 			<p class="text-center" style="color:#ffffff; margin-top: 100px;">© Gilbert</p>
 		</nav>

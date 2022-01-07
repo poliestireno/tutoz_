@@ -7,18 +7,174 @@ $msg="";
 //var_export($_POST);
 try
   {
-$sql = "SELECT username from admin;";
-    $query = $dbh -> prepare($sql);
-    $query->execute();
-    $result=$query->fetch(PDO::FETCH_OBJ);
-
-if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION['alogin']!=$result->username)))
+$sql = "SELECT username from admin where username='ADMIN_FCT' or username='ADMIN'";
+    $result = array();
+    $stmt = $dbh -> query($sql);
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $result [] = $fila;
+    }
+if(
+	((!isset($_SESSION['alogin']))
+	||
+	(strlen($_SESSION['alogin'])==0))
+	||(
+	($_SESSION['alogin']!=$result[0]['username'])
+	&&
+	($_SESSION['alogin']!=$result[1]['username'])
+))
   { 
 header('location:index.php');
 }
 else{
 
+function getInfoColumnaFromTablaId($dbh,$nombreCol,$idAux)
+{
+	$valor ="";
 
+	if (substr( $nombreCol, 0, 3 ) === "ID_")
+	{
+		$nombreTab=substr( $nombreCol, 3, strlen($nombreCol) )."S";
+
+		if (existeColumnaEnTabla($dbh,"INFO", $nombreTab))
+		{
+			$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$idAux);
+			if (Count($aData)>0)
+			{
+				$valor =$aData[0]['INFO'];
+			}
+		}
+		else if (existeColumnaEnTabla($dbh,"NOMBRE", $nombreTab))
+		{
+			$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$idAux);
+			if (Count($aData)>0)
+			{
+				$valor =$aData[0]['NOMBRE'];
+			}
+			
+		}
+	}
+
+	return $valor;
+}
+
+
+function setCampoDeLista($dbh,$fila,$columna)
+{
+
+//echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span>'.getInfoColumnaFromTablaId($dbh,$columna['COLUMN_NAME'],$fila[$columna['COLUMN_NAME']]).'</td>';
+
+	$sTextSelect = "";
+	if (substr( $columna['COLUMN_NAME'], 0, 3 ) === "ID_")
+	{
+		$nombreTab=substr( $columna['COLUMN_NAME'], 3, strlen($columna['COLUMN_NAME']) )."S";
+
+		
+		$bEsisteInfo = existeColumnaEnTabla($dbh,"INFO", $nombreTab);
+		$bEsisteNombre = existeColumnaEnTabla($dbh,"NOMBRE", $nombreTab);
+
+		if ($bEsisteInfo || $bEsisteNombre)
+		{
+			$aDataTotal = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab);
+			$sTextSelect .='<td class="table-info"><select name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  class="form-control selectpicker" id="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  data-live-search="true" >';
+			$sValorSeleccionado = "";
+			foreach ($aDataTotal as $filaTabla) 
+			{
+				$bInfoOk = false;
+				$valor ="";
+				$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$filaTabla['ID']);
+				if ($bEsisteInfo)
+				{
+					if (Count($aData)>0)
+					{
+						$valor =$aData[0]['INFO'];
+						$bInfoOk = ($valor!="");
+					}
+				}
+				if (!$bInfoOk)
+				{
+					if ($bEsisteNombre)
+					{
+						$valor ="ID:".$aData[0]['ID']." NOMBRE:".$aData[0]['NOMBRE'].(($bEsisteInfo)?" (RELLENAR INFO)":"");
+					}
+					else
+					{
+						$valor ="ID:".$aData[0]['ID'].(($bEsisteInfo)?" (RELLENAR INFO)":"");
+					}
+				}
+				$sTextSelect .="<option ".(($aData[0]['ID']==$fila[$columna['COLUMN_NAME']])?" selected='selected' ":"")." value ='".$aData[0]['ID']."'>".$valor."</option>";
+				if ($aData[0]['ID']==$fila[$columna['COLUMN_NAME']])
+				{
+					$sValorSeleccionado = $valor;
+				}
+			}
+			$sTextSelect .='</select><span style="visibility:hidden">'.$sValorSeleccionado.'</span></td>';
+		}
+		else
+		{
+			$sTextSelect='<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span></td>';
+		}
+	}
+	else
+	{
+		$sTextSelect='<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span></td>';
+	}
+	return $sTextSelect;
+}
+function setCampoParaInsert($dbh,$nombreCol)
+{
+	$sTextSelect = "";
+	if (substr( $nombreCol, 0, 3 ) === "ID_")
+	{
+		$nombreTab=substr( $nombreCol, 3, strlen($nombreCol) )."S";
+
+		
+		$bEsisteInfo = existeColumnaEnTabla($dbh,"INFO", $nombreTab);
+		$bEsisteNombre = existeColumnaEnTabla($dbh,"NOMBRE", $nombreTab);
+
+		if ($bEsisteInfo || $bEsisteNombre)
+		{
+			$aDataTotal = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab);
+			$sTextSelect .='<td class="table-info"><select  class="form-control selectpicker" id="gg__'.$nombreCol.'" data-live-search="true" name="gg__'.$nombreCol.'" >';
+			foreach ($aDataTotal as $filaTabla) 
+			{
+				$bInfoOk = false;
+				$valor ="";
+				$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$filaTabla['ID']);
+				if ($bEsisteInfo)
+				{
+					if (Count($aData)>0)
+					{
+						$valor =$aData[0]['INFO'];
+						$bInfoOk = ($valor!="");
+					}
+				}
+				if (!$bInfoOk)
+				{
+					if ($bEsisteNombre)
+					{
+						$valor ="ID:".$aData[0]['ID']." NOMBRE:".$aData[0]['NOMBRE'].(($bEsisteInfo)?" (RELLENAR INFO)":"");
+					}
+					else
+					{
+						$valor ="ID:".$aData[0]['ID'].(($bEsisteInfo)?" (RELLENAR INFO)":"");
+					}
+				}
+				$sTextSelect .="<option value ='".$aData[0]['ID']."'>".$valor."</option>";
+			}
+			$sTextSelect .="</select></td>";
+		}
+		else
+		{
+			$sTextSelect='<td><input name="gg__'.$nombreCol.'" class="form-control" type="text" value="" /></td>';
+		}
+	}
+	else
+	{
+		$sTextSelect='<td><input name="gg__'.$nombreCol.'" class="form-control" type="text" value="" /></td>';
+	}
+	return $sTextSelect;
+}
 
 if (isset($_GET['tabla']))
 {
@@ -163,9 +319,10 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
     <script src="js/chartData.js"></script>
     <script src="js/main.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
+
 	<style>
 	.errorWrap {
     padding: 10px;
@@ -225,7 +382,7 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
 	<div class="col-sm-4">
 	</div>
 </div>
-<table ID="zctb2" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+<table ID="zctb2" class="display table table-hover" cellspacing="0" width="100%">
   <!--Table head-->
   <thead>
     <tr>
@@ -248,14 +405,13 @@ foreach ($aColumnas as $columna)
 <?php
 
 	echo '<tr class="table-info">';
-//	 echo '<td onclick="manageDelete('.$fila['ID'].')" align="center" >&nbsp; <i class="fa fa-trash"></i></td>';
 	foreach ($aColumnas as $columna) 
 	{
-		echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="gg__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="" /></td>';
+		echo (($columna['COLUMN_NAME']=='ID')?'':setCampoParaInsert($dbh,$columna['COLUMN_NAME']));
 	}
-
-  echo '</tr>';
-
+  echo '</tr>';	
+	
+	
 ?>
   </tbody>
   <!--Table body-->
@@ -308,35 +464,7 @@ foreach ($aColumnas as $columna)
   <tbody>
 <?php
 
-function getInfoColumnaFromTablaId($dbh,$nombreCol,$idAux)
-{
-	$valor ="";
 
-	if (substr( $nombreCol, 0, 3 ) === "ID_")
-	{
-		$nombreTab=substr( $nombreCol, 3, strlen($nombreCol) )."S";
-
-		if (existeColumnaEnTabla($dbh,"INFO", $nombreTab))
-		{
-			$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$idAux);
-			if (Count($aData)>0)
-			{
-				$valor =$aData[0]['INFO'];
-			}
-		}
-		else if (existeColumnaEnTabla($dbh,"NOMBRE", $nombreTab))
-		{
-			$aData = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab." WHERE ID =".$idAux);
-			if (Count($aData)>0)
-			{
-				$valor =$aData[0]['NOMBRE'];
-			}
-			
-		}
-	}
-
-	return $valor;
-}
 
 
 $aDatosTabla = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTabla);
@@ -350,9 +478,10 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 //	 echo '<td onclick="manageDelete('.$fila['ID'].')" align="center" >&nbsp; <i class="fa fa-trash"></i></td>';
 	foreach ($aColumnas as $columna) 
 	{
-		echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span>'.getInfoColumnaFromTablaId($dbh,$columna['COLUMN_NAME'],$fila[$columna['COLUMN_NAME']]).'</td>';
-	}
+		//echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span>'.getInfoColumnaFromTablaId($dbh,$columna['COLUMN_NAME'],$fila[$columna['COLUMN_NAME']]).'</td>';
+		echo ($columna['COLUMN_NAME']=='ID')?'':setCampoDeLista($dbh,$fila,$columna);
 
+	}
   echo '</tr>';
 }
 ?>
@@ -374,7 +503,15 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 
 	<!-- Loading Scripts -->
 	<script type="text/javascript">
-				 $(document).ready(function () {          
+
+
+$(function() {
+  $('.selectpicker').selectpicker({
+      container: 'body'
+    });
+});
+
+			 $(document).ready(function () {          
 					setTimeout(function() {
 						$('.succWrap').slideUp("slow");
 					}, 5000);

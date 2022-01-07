@@ -7,7 +7,14 @@
 			<li class="ts-account">
 				<a href="#"><img src="img/rompecabezas.png" class="ts-avatar hidden-side" alt=""> Mi cuenta <i class="fa fa-angle-down hidden-side"></i></a>
 				<ul>
-					<li><a href="change-password.php">Cambiar contraseña</a></li>
+					<?php
+		if ($_SESSION['alogin']=='ADMIN')
+		{
+		?>	
+		<li><a href="change-password.php">Cambiar contraseña</a></li>
+		<?php
+		}
+		?>
 					<li><a href="logout.php">Salir</a></li>
 				</ul>
 			</li>

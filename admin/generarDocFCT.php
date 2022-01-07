@@ -7,7 +7,7 @@ $msg="";
 //var_export($_POST);
 try
   {
-$sql = "SELECT username from admin;";
+$sql = "SELECT username from admin where username='ADMIN_FCT'";
     $query = $dbh -> prepare($sql);
     $query->execute();
     $result=$query->fetch(PDO::FETCH_OBJ);
