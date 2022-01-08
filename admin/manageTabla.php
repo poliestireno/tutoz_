@@ -165,7 +165,7 @@ function setCampoParaInsert($dbh,$nombreCol)
 			$sTextSelect .="</select></td>";
 		}
 		else
-		{
+		{						
 			$sTextSelect='<td><input name="gg__'.$nombreCol.'" class="form-control" type="text" value="" /></td>';
 		}
 	}
@@ -375,6 +375,20 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
 	<div class="col-sm-4">
 	</div>
 </div>
+<div class="panel panel-default">
+						
+	<div class="panel-heading">INSERTAR</div>
+
+<div class="container-fluid">
+
+<div class="form-group">
+	<div class="col-sm-4">
+	</div>
+	<div class="col-sm-4 text-center">
+	</div>
+	<div class="col-sm-4">
+	</div>
+</div>
 <div class="col-md-12">
 	<button type="button" class="btn btn-success" onclick="manageInsertar()">Insertar</button>
 </div>
@@ -415,9 +429,17 @@ foreach ($aColumnas as $columna)
 ?>
   </tbody>
   <!--Table body-->
-
-
 </table>
+
+</div>
+</div>
+
+
+<div class="panel panel-default">
+						
+	<div class="panel-heading">DATOS</div>
+
+<div class="container-fluid">
 
 <div class="form-group">
 	<div class="col-sm-4">
@@ -427,10 +449,11 @@ foreach ($aColumnas as $columna)
 	<div class="col-sm-4">
 	</div>
 </div>
-
 <div class="col-md-12">
-	<button type="button" class="btn btn-danger" onclick="manageDelete()">Borrar</button>
-	<button type="button" class="btn btn-warning" onclick="manageModificar()">Modificar</button>
+	<button type="button" class="btn btn-danger pull-left" onclick="manageDelete()">Borrar</button>
+	<button type="button" class="btn btn-warning pull-left" onclick="manageModificar()">Modificar</button>
+	<span class="text-right"><a type="button" href="manageTabla.php?tabla=<?php echo $nombreTabla?>" class="btn btn-primary pull-right" >Ver todos los datos de la tabla</a></span>
+
 </div>
 <div class="form-group">
 	<div class="col-sm-4">
@@ -491,6 +514,9 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 
 </table>
 
+</div>
+</div>
+
 </form>
 
 							</div>
@@ -534,6 +560,11 @@ $(function() {
           }
         });
 	}
+
+	function manageVerTodosDatos()
+	{
+		document.getElementById("form1").submit(); 
+	}
 	function manageModificar()
 	{
 				Swal.fire({
@@ -570,17 +601,25 @@ $(function() {
 	}
 
 
+$.fn.dataTableExt.ofnSearch['html-input'] = function(value) {
+	alert('devuelve: '.$(value).val());
+    return $(value).val();
+};
+
+
 	tabbb = $('#zctb').DataTable( {
     "order": [[ 2, "asc" ]],
     "scrollX": true
+    
 } );
 	<?php echo ($idSearch!=-1)?'tabbb.column(0).search("_'.$idSearch.'_").draw();':''?>
 
 
-
-
 	$('#zctb2').DataTable( {
-    "scrollX": true
+    "scrollX": true,
+    columnDefs: [
+       { "type": "html-input", "targets": [1, 2, 3,4,5,6,7,8,9] }
+    ] 
 } );
 	</script>
 </body>

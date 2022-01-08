@@ -11,10 +11,9 @@ $sql = "SELECT username from admin where username='ADMIN_FCT'";
     $query = $dbh -> prepare($sql);
     $query->execute();
     $result=$query->fetch(PDO::FETCH_OBJ);
-
 if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION['alogin']!=$result->username)))
   { 
-header('location:index.php');
+  header('location:index.php');
 }
 else{
 
@@ -51,6 +50,8 @@ $NIF_TUTOR_COLEGIO = $aTutoresCole[0]['DNI'];
 $aPeriodos = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID =".$idPeriodo);
 $periodo = $aPeriodos[0];
 
+$nombrePeriodo = $periodo['FECHA_INICIO']." / ".$periodo['FECHA_TERMINACION'].(($periodo['INFO']=="")?"":" (".$periodo['INFO'].")");
+
 $CURSO_ACADEMICO = $periodo['CURSO_ACADEMICO'];
 $FECHA_FIRMA_DOC = $periodo['FECHA_FIRMA_DOC'];
 $FECHA_INICIO = $periodo['FECHA_INICIO'];
@@ -76,7 +77,7 @@ $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIO
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>FCT: <?php echo $NOMBRE_CICLO?></title>
+	<title>FCT DOC PERIODO <?php echo $nombrePeriodo?></title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -141,12 +142,15 @@ $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIO
 			<div class="container-fluid">
 
 <h1>Documentación para <?php echo $NOMBRE_CICLO?></h1>
+<h2>Periodo: <?php echo $nombrePeriodo?></h2>
 <h5>(Nota: Se pueden modificar los siguientes datos y se tendrán en cuenta al generar estos documentos, pero las modificaciones no persistirán en base de datos)</h5>
 
 <form target="_blank" method="post" action="generacionAnexosFCT.php" id="form1" class="form-horizontal" enctype="multipart/form-data" >
 <input type="hidden" name="idCiclo" id="idCiclo" value="<?php echo $idCiclo?>"/>
 <input type="hidden" name="idPeriodo" id="idPeriodo" value="<?php echo $idPeriodo?>"/>
 <input type="hidden" name="totalAlumnos" id="totalAlumnos" value=""/>
+<input type="hidden" name="nombrePeriodo" id="nombrePeriodo" value="<?php echo $nombrePeriodo?>"/>
+
 <div class="panel panel-default">
 	<?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>								
 	<div class="panel-heading">GENERAL</div>

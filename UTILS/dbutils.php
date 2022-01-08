@@ -1656,12 +1656,29 @@ function getFaltasAsignaturaClase($db,$diaPasado,$IDPasado)
   }
     return $vectorTotal;  
 }
+function existeTablaEnDB($db,$tabla)
+{
+  $fila="";
+  try 
+  {
+  $stmt = $db->query("select * from information_schema.tables where table_name ='".$tabla."'");
+  $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! existeTablaEnDB ".$ex->getMessage());
+  } 
+  return $fila;
+}
 
 function existeColumnaEnTabla($db,$nombreCol, $tabla)
 {
   $fila="";
   try 
   {
+  if (!existeTablaEnDB($db,$tabla))
+  {
+    return false;
+  }
   $stmt = $db->query("SHOW COLUMNS FROM ".$tabla." LIKE '".$nombreCol."'");
   $fila = $stmt->fetch(PDO::FETCH_ASSOC);
   } catch(PDOException $ex) 

@@ -33,13 +33,14 @@ if (isset($_POST['idCiclo']))
 $aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS WHERE ID =".$idCiclo);
 
 $nombreCiclo = $aCiclos[0]['NOMBRE'];
-
+var_export($aCiclos[0]);
+$claveCiclo = $aCiclos[0]['CLAVE_CICLO'];
 $aTutoresCole = ejecutarQuery($dbh,"SELECT * FROM FCT_TUTORES_PROFES WHERE ID_FCT_CICLO =".$idCiclo);
 
 $nombreTutorCole = $aTutoresCole[0]['NOMBRE']." ".$aTutoresCole[0]['APELLIDO1']." ".$aTutoresCole[0]['APELLIDO2'];
 
 $aAlumnos = ejecutarQuery($dbh,"SELECT * FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo);
-$aPracticas = array();
+$aPracticas = array();	
 foreach ($aAlumnos as $alumnoAux) 
 {
 	$aPracticas = array_merge($aPracticas, ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO =".$alumnoAux['ID'])); 
@@ -131,14 +132,55 @@ foreach ($aAlumnos as $alumnoAux)
 <div class="container-fluid">
 	
 
-<form method="post" id="form1" class="form-horizontal" enctype="multipart/form-data" >
+<form target="_blank" action="generarDocFCT.php" method="post" id="form1" class="form-horizontal" enctype="multipart/form-data" >
 <input type="hidden" name="idCiclo" id="idCiclo" value="<?php echo $idCiclo?>"/>
 
-<h1>CICLO: <?php echo '<a data-toggle="tooltip" title="CLAVE CICLO:'.$aCiclos[0]['CLAVE_CICLO'].' Pincha para más detalle" href="manageTabla.php?tabla=FCT_CICLOS&idSearch='.$idCiclo.'" target="_blank">'.$nombreCiclo.'</a>'?></h1>
+<h1>CICLO: <?php echo '<a data-toggle="tooltip" title="CLAVE CICLO:'.$claveCiclo.' Pincha para más detalle" href="manageTabla.php?tabla=FCT_CICLOS&idSearch='.$idCiclo.'" target="_blank">'.$nombreCiclo.'</a>'?></h1>
+<h1>CLAVE: <?php echo $claveCiclo?></h1>
 <h2>TUTOR: <?php echo '<a data-toggle="tooltip" title="DNI:'.$aTutoresCole[0]['DNI'].' Pincha para más detalle" href="manageTabla.php?tabla=FCT_TUTORES_PROFES&idSearch='.$aTutoresCole[0]['ID'].'" target="_blank">'.$nombreTutorCole.'</a>'?></h2>
 
+<div class="panel panel-default">
+						
+	<div class="panel-heading">GENERAR DOCUMENTACIÓN DE PERIODO DE CICLO</div>
 
- 	<a  data-toggle="tooltip" class="btn btn-warning btn-outline " title="Modificar reto en otra ventana" href="manageTabla.php?tabla=TAREAS" target="_blank">Generar Documentación</a>
+<div class="container-fluid">
+<div class="form-group">
+	<div class="col-sm-4">
+	</div>
+	<div class="col-sm-4 text-center">
+	</div>
+	<div class="col-sm-4">
+	</div>
+</div>
+<div class="container">
+<div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" id="idPeriodo" name="idPeriodo">
+                        	<?php
+                        	$aPeriodosAux2 = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID IN (SELECT ID_FCT_PERIODO FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO IN (SELECT ID FROM FCT_ALUMNOS WHERE ID_FCT_CICLO=".$idCiclo.")) ORDER BY FECHA_TERMINACION DESC");
+                        	foreach ($aPeriodosAux2 as $periAux) 
+                        	{
+                        		$nombrePeriodoAux2 = $periAux['FECHA_INICIO']." / ".$periAux['FECHA_TERMINACION'].(($periAux['INFO']=="")?"":" (".$periAux['INFO'].")");
+                        		echo '<option value="'.$periAux['ID'].'">'.$nombrePeriodoAux2.'</option>';
+                        	}
+                        	
+                        	?>
+                            
+                        </select>
+                    </div>
+                </div> 
+                	<div class="col-sm-offset-1 col-sm-4">
+                    <div class="form-group">
+                        <a onclick="generarDoc();"  data-toggle="tooltip" class="btn btn-warning btn-outline btn-wrap-text" title="Generar documentación del periodo" >Generar Documentación</a>
+                </div>
+            </div>
+
+
+</div>
+</div>
+</div>
+</div>
 
 <div class="form-group">
 	<div class="col-sm-4">
@@ -176,7 +218,7 @@ foreach ($aPracticas as $practicaAux)
 {
 	echo '<tr>';
 		$aPeriodosAux = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID =".$practicaAux['ID_FCT_PERIODO']);
-	  $nombrePeriodoAux = $aPeriodosAux[0]['FECHA_INICIO']." / ".$aPeriodosAux[0]['FECHA_TERMINACION']." (".$aPeriodosAux[0]['INFO'].")";
+	  $nombrePeriodoAux = $aPeriodosAux[0]['FECHA_INICIO']." / ".$aPeriodosAux[0]['FECHA_TERMINACION'].(($aPeriodosAux[0]['INFO']=="")?"":" (".$aPeriodosAux[0]['INFO'].")");
 	   echo '<td>'.'<a data-toggle="tooltip" title="HORAS/DIA:'.$aPeriodosAux[0]['HORAS_DIA'].' TOTAL HORAS:'.$aPeriodosAux[0]['TOTAL_HORAS'].' Pincha para más detalle" href="manageTabla.php?tabla=FCT_PERIODOS&idSearch='.$aPeriodosAux[0]['ID'].'" target="_blank">'.$nombrePeriodoAux.'</a></td>';
 		$aAlumnosAux = ejecutarQuery($dbh,"SELECT * FROM FCT_ALUMNOS WHERE ID =".$practicaAux['ID_FCT_ALUMNO']);
 	  $nombreAlumnoAux = $aAlumnosAux[0]['NOMBRE']." ".$aAlumnosAux[0]['APELLIDO1']." ".$aAlumnosAux[0]['APELLIDO2'];
@@ -186,7 +228,13 @@ foreach ($aPracticas as $practicaAux)
 echo '<td>'.'<a data-toggle="tooltip" title="Nº CONVENIO:'.$aEmpresasAux[0]['N_CONVENIO'].' CONTACTO:'.$aEmpresasAux[0]['CONTACTO'].' Pincha para más detalle" href="manageTabla.php?tabla=FCT_EMPRESAS&idSearch='.$aEmpresasAux[0]['ID'].'" target="_blank">'.$aEmpresasAux[0]['NOMBRE'].'</a></td>';
 		
 	  echo '<td>'.$practicaAux['NOMBRE_TUTOR_EMPRESA'].'('.$practicaAux['CONTACTO_TUTOR_EMPRESA'].')</td>';
-	  echo '<td>'.$practicaAux['ENLACE_DOCUMENTOS'].'</td>';
+
+$folderServidor="../docsFCT/".$claveCiclo;
+$folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV";
+	  echo '<td align="center" >'.
+'<a target="_blank" title="carpeta servidor" href="'.$folderServidor.'">&nbsp; <i class="fa fa-file"></i></a>'.
+'<a target="_blank" title="Google drive" href="'.$folderDrive.'">&nbsp; <img src="img/drive.png" width="16" height="16"/></a>'
+        .'</td>';
   echo '</tr>';
 }
 
@@ -223,7 +271,10 @@ echo '<td>'.'<a data-toggle="tooltip" title="Nº CONVENIO:'.$aEmpresasAux[0]['N_
     "scrollX": true
 } );
 
-
+  function generarDoc()
+  {
+    document.getElementById('form1').submit();  
+  }
 	</script>
 </body>
 </html>

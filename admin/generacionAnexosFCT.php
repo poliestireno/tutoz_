@@ -134,13 +134,49 @@ else
 
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
-	<?php include('includes/leftbar.php');?>
+
+
+	<nav class="ts-sidebar">
+			<ul class="ts-sidebar-menu">
+		
+						<li class="ts-label">FCT</li>
+<li><a href="resumenFCT.php"><i class="fa fa-dashboard"></i>RESUMEN Y TABLAS</a></li>
+<?php
+
+	$aCiclos = array();
+    $stmt = $dbh->query("SELECT * FROM FCT_CICLOS");
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $aCiclos [] = $fila;
+    }
+	foreach ($aCiclos as $ciclo) 
+	{
+		echo '<li><a href="controlFCT.php?idCiclo='.$ciclo['ID'].'"><i class="fa fa-users"></i>'.$ciclo['INFO'].'</a></li>';
+	}
+?>
+			</ul>
+			<p class="text-center" style="color:#ffffff; margin-top: 100px;">© Gilbert</p>
+		</nav>
+
+
+
+
 		<div class="content-wrapper">
 			<div class="container-fluid">
 
-<h3>Documentación FCT generada para <?php echo $_POST['NOMBRE_CICLO']?> en la carpeta <?php echo $sTextoCarpetaAMostrar;?></h3>
+<?php
+$idCarpetaRaiz = '1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV';
+$idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idCarpetaRaiz);
+?>
 
 
+<h2>Documentación generada para <?php echo $_POST['NOMBRE_CICLO']?></h2>
+<h2>Periodo: <?php echo $_POST['nombrePeriodo']?></h2>
+<h3>Ubicada en dos sitios:</h3>
+<h3><a target="_blank" href="<?php echo $folder?>" class="list-group-item active"><b><?php echo $sTextoCarpetaAMostrar?> (carpeta servidor)</b></a></h3>
+<h3><a target="_blank" href="https://drive.google.com/drive/folders/<?php echo $idFolder?>" class="list-group-item active"><b><?php echo $sTextoCarpetaAMostrar?> (Google drive)</b></a></h3>
+<br/>
+<h3>Estructura de la lista de archivos generada:</h3>
 <div class="just-padding">
 
 <div class="list-group list-group-root well">
@@ -150,6 +186,7 @@ else
     <?php
 
     // INICIO ANEXO 21
+
     $empresaAnterior=$_POST['NOMBRE_EMPRESA1'];
     $aNombres = array();
     $aNombresConApellido1 = array();
@@ -166,12 +203,12 @@ else
 				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
 				if ($i == $_POST['totalAlumnos'])
 				{
-					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs).'</a>';
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
 				}		
 			}
 			else
 			{
-				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs).'</a>';
+				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
 				$empresaAnterior = $_POST['NOMBRE_EMPRESA'.$i];
 				$aNombres = array();
 				$aNombresConApellido1 = array();
@@ -181,7 +218,7 @@ else
 				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
 				if ($i == $_POST['totalAlumnos'])
 				{
-					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs).'</a>';
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
 				}		
 			}
 		}
@@ -190,7 +227,7 @@ else
 
 		// INICIO ANEXO 22
 
-		echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo22($folder, $sTextoCarpetaAMostrar).'</a>';
+		echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo22($folder, $sTextoCarpetaAMostrar,$idFolder).'</a>';
 
 		// FIN ANEXO 22
   ?> 
@@ -229,7 +266,7 @@ else
 <?php
 
 
-function generarAnexo21($folder, $sTextoCarpetaAMostrar,$num,$aNombres,$aNombresConApellido1,$aDNIs)
+function generarAnexo21($folder, $sTextoCarpetaAMostrar,$num,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder)
 {
 
 $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo21.docx');
@@ -330,7 +367,7 @@ $fullxml = $objWriter->getWriterPart('Document')->write();
 $tablexml = preg_replace('/^[\s\S]*(<w:tbl\b.*<\/w:tbl>).*/', '$1', $fullxml);
 
 
-
+	
 $templateProcessor->setValue('table1', $tablexml);
 
 
@@ -342,15 +379,13 @@ $templateProcessor->setValue('table1', $tablexml);
 $templateProcessor->saveAs($folder.'/anexo21_'.$nombresNombreFichero.'.docx');
 
 // subir a drive
-//$idCarpetaRaiz = '1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV';
-//$idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idCarpetaRaiz);
-//subirDocumentoWordDrive	($folder.'/anexo21_'.$_POST['NOMBRE_ALUMNO'.$num]." ".$_POST['APELLIDO1_ALUMNO'.$num]." ".$_POST['APELLIDO2_ALUMNO'.$num].'.docx','anexo21_'.$_POST['NOMBRE_ALUMNO'.$num]." ".$_POST['APELLIDO1_ALUMNO'.$num]." ".$_POST['APELLIDO2_ALUMNO'.$num].'.docx',"anexo21",$idFolder);
+subirDocumentoWordDrive	($folder.'/anexo21_'.$nombresNombreFichero.'.docx','anexo21_'.$nombresNombreFichero.'.docx',"anexo21",$idFolder);
 
 return 'anexo21_'.$nombresNombreFichero.'.docx';
 }
 
 
-function generarAnexo22($folder, $sTextoCarpetaAMostrar)
+function generarAnexo22($folder, $sTextoCarpetaAMostrar,$idFolder)
 {
 
 $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo22.docx');
@@ -425,6 +460,8 @@ $templateProcessor->setValue('table1', $tablexml);
 
 $templateProcessor->saveAs($folder.'/anexo22_'.$_POST['NOMBRE_CICLO'].'.docx');
 
+// subir a drive
+subirDocumentoWordDrive	($folder.'/anexo22_'.$_POST['NOMBRE_CICLO'].'.docx','anexo22_'.$_POST['NOMBRE_CICLO'].'.docx',"anexo22",$idFolder);
 
 return 'anexo22_'.$_POST['NOMBRE_CICLO'].'.docx';
 }

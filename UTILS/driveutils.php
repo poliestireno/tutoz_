@@ -116,17 +116,3 @@ function subirDocumentoWordDrive($documento,$nombre,$descripcion,$idFolder){
 }
 */
 ?>
-<!--html>
-    <head>
-        <title>Subir ficheros a Google drive.</title>
-    </head>
-    <body>
-        <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-            <label for="documento">Documento:</label>
-            <input type="file" name="documento" required /><br>
-            <label for="descripcion">Descripción:</label>
-            <input type="text" name="descripcion" required /><br>
-            <input type="submit" name="enviar" value="Subir documento a Google Drive" />
-        </form>
-    </body>
-</html-->
