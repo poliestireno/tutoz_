@@ -59,8 +59,12 @@ $FECHA_TERMINACION = $periodo['FECHA_TERMINACION'];
 $HORAS_DIA = $periodo['HORAS_DIA'];
 $TOTAL_HORAS = $periodo['TOTAL_HORAS'];
 
-
-$aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_PERIODO =".$idPeriodo." ORDER BY ID_FCT_EMPRESA"); 
+$aAlumnos = ejecutarQuery($dbh,"SELECT * FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo);
+$aPracticas = array();  
+foreach ($aAlumnos as $alumnoAux) 
+{
+  $aPracticas = array_merge($aPracticas, ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO =".$alumnoAux['ID']." AND ID_FCT_PERIODO =".$idPeriodo." ORDER BY ID_FCT_EMPRESA")); 
+}
 
 
 //var_export($aPracticas);

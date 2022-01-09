@@ -601,25 +601,17 @@ $(function() {
 	}
 
 
-$.fn.dataTableExt.ofnSearch['html-input'] = function(value) {
-	alert('devuelve: '.$(value).val());
-    return $(value).val();
-};
-
-
 	tabbb = $('#zctb').DataTable( {
     "order": [[ 2, "asc" ]],
     "scrollX": true
-    
 } );
 	<?php echo ($idSearch!=-1)?'tabbb.column(0).search("_'.$idSearch.'_").draw();':''?>
 
 
+
+
 	$('#zctb2').DataTable( {
-    "scrollX": true,
-    columnDefs: [
-       { "type": "html-input", "targets": [1, 2, 3,4,5,6,7,8,9] }
-    ] 
+    "scrollX": true
 } );
 	</script>
 </body>

@@ -5,23 +5,23 @@
 SQLs varias:
 
 CROMOS QUE ESTÁN SIN ABRIR
-SELECT ID FROM `CROMOS` where `ID_SET`=7 AND `GENERADO`=1 AND `ID_POSEEDOR`is null
+SELECT ID FROM CROMOS where ID_SET=7 AND GENERADO=1 AND ID_POSEEDORis null
 
 documento 20 monoterminos aleatorios de ASIR1
-SELECT PREGUNTA,RESPUESTA FROM PREGUNTAS WHERE `ID_SETPREGUNTA`=4 ORDER BY RAND() LIMIT 20
+SELECT PREGUNTA,RESPUESTA FROM PREGUNTAS WHERE ID_SETPREGUNTA=4 ORDER BY RAND() LIMIT 20
 
 Borrar clanes de un curso: 
 Primero: 
-DELETE FROM `ALUMNOS_CLANES` WHERE `ID_CLAN` IN (SELECT `ID_CLAN` FROM `ALUMNOS_CLANES` where `ID_ALUMNO` IN (SELECT ID FROM ALUMNOS WHERE ID_CURSO= )) 
+DELETE FROM ALUMNOS_CLANES WHERE ID_CLAN IN (SELECT ID_CLAN FROM ALUMNOS_CLANES where ID_ALUMNO IN (SELECT ID FROM ALUMNOS WHERE ID_CURSO= )) 
 Segundo: 
-DELETE FROM `CLANES` WHERE id NOT IN (SELECT `ID_CLAN` FROM `ALUMNOS_CLANES`)
+DELETE FROM CLANES WHERE id NOT IN (SELECT ID_CLAN FROM ALUMNOS_CLANES)
 
 Borrar mercado de una asignatura
-DELETE FROM `MERCADO` WHERE `ID_ASIGNATURA`=XX
+DELETE FROM MERCADO WHERE ID_ASIGNATURA=XX
 
 
 Modificar calas +150 de un curso:
-UPDATE MIACTOR SET CALAS = CALAS + 150 WHERE ID in (SELECT ID_MIACTOR FROM `ALUMNOS` WHERE ID_CURSO=31)
+UPDATE MIACTOR SET CALAS = CALAS + 150 WHERE ID in (SELECT ID_MIACTOR FROM ALUMNOS WHERE ID_CURSO=31)
 
 */
 
@@ -782,6 +782,28 @@ catch (PDOException $ex)
 }  
 }
 
+function insertarFCTAlumnos($db,$nombre,$apellIDo1,$apellIDo2,$correo,$idCiclo)
+{
+  $sentencia= "INSERT INTO FCT_ALUMNOS(NOMBRE, APELLIDO1, APELLIDO2, CORREO, DNI, ID_FCT_CICLO, INFO) VALUES  (:NOMBRE, :APELLIDO1, :APELLIDO2, :CORREO, :DNI, :ID_FCT_CICLO, :INFO)";
+  try
+  {
+  $dni = "1";
+  $info = $nombre." ".$apellIDo1;
+  $stmt = $db->prepare($sentencia);
+  $stmt->bindParam(':NOMBRE',$nombre);
+  $stmt->bindParam(':APELLIDO1',$apellIDo1);
+  $stmt->bindParam(':APELLIDO2',$apellIDo2);
+  $stmt->bindParam(':CORREO',$correo);
+  $stmt->bindParam(':DNI',$dni);
+  $stmt->bindParam(':ID_FCT_CICLO',$idCiclo);
+  $stmt->bindParam(':INFO',$info);
+  $stmt->execute();
+    }
+    catch (PDOException $ex)
+    {
+        mi_info_log( "Error inserción insertarFCTEmpresa:".$ex->getMessage());
+    }  
+}
 function insertarFCTEmpresa($db,$nConvenio,$sNombre,$fechaRev)
 {
   $sentencia= "INSERT INTO FCT_EMPRESAS(N_CONVENIO, NOMBRE, FECHA_REV, ENLACE_CONVENIO, CONTACTO, DIRECCION, INFO) VALUES (:N_CONVENIO, :NOMBRE, :FECHA_REV, :ENLACE_CONVENIO, :CONTACTO, :DIRECCION, :INFO)";
