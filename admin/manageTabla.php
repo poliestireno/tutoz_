@@ -57,7 +57,20 @@ function getInfoColumnaFromTablaId($dbh,$nombreCol,$idAux)
 
 	return $valor;
 }
+function splitx($str) {
 
+    $arr		= [];$len = 1;
+    $length 	= mb_strlen($str, 'UTF-8');
+
+    for ($i = 0; $i < $length; $i += $len) {
+
+        $arr[] = mb_substr($str, $i, $len, 'UTF-8');
+
+    }
+
+    return $arr;
+
+}
 
 function setCampoDeLista($dbh,$fila,$columna)
 {
@@ -102,7 +115,7 @@ function setCampoDeLista($dbh,$fila,$columna)
 						$valor ="ID:".$aData[0]['ID'].(($bEsisteInfo)?" (RELLENAR INFO)":"");
 					}
 				}
-				$sTextSelect .="<option ".(($aData[0]['ID']==$fila[$columna['COLUMN_NAME']])?" selected='selected' ":"")." value ='".$aData[0]['ID']."'>".$valor."</option>";
+				$sTextSelect .="<option ".(($aData[0]['ID']==$fila[$columna['COLUMN_NAME']])?" selected='selected' ":"")." value ='".$aData[0]['ID']."'>".str_replace('_', '&nbsp;',implode(' ',splitx(str_replace(' ', '_', $valor),"UTF-8")))."</option>";
 				if ($aData[0]['ID']==$fila[$columna['COLUMN_NAME']])
 				{
 					$sValorSeleccionado = $valor;
@@ -160,7 +173,7 @@ function setCampoParaInsert($dbh,$nombreCol)
 						$valor ="ID:".$aData[0]['ID'].(($bEsisteInfo)?" (RELLENAR INFO)":"");
 					}
 				}
-				$sTextSelect .="<option value ='".$aData[0]['ID']."'>".$valor."</option>";
+				$sTextSelect .="<option value ='".$aData[0]['ID']."'>".str_replace('_', '&nbsp;',implode(' ',splitx(str_replace(' ', '_', $valor),"UTF-8")))."</option>";
 			}
 			$sTextSelect .="</select></td>";
 		}
@@ -324,6 +337,7 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
 
 	<style>
+
 	.errorWrap {
     padding: 10px;
     margin: 0 0 20px 0;
@@ -340,6 +354,12 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
+tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+
 		</style>
 
 
@@ -398,7 +418,11 @@ $msg.=' Registro '.$cont . ': '.modificarQuery($dbh,"UPDATE ".$nombreTabla." SET
 </div>
 <table ID="zctb2" class="display table table-hover" cellspacing="0" width="100%">
   <!--Table head-->
+
+
   <thead>
+
+
     <tr>
 
 <?php
@@ -463,7 +487,7 @@ foreach ($aColumnas as $columna)
 	<div class="col-sm-4">
 	</div>
 </div>
-<table ID="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+<table ID="example2" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <!--Table head-->
   <thead>
     <tr>
@@ -510,13 +534,25 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 ?>
   </tbody>
   <!--Table body-->
+     <tfoot>
+            <tr>
+            	<td></td>
+            	<td></td>
+<?php
+foreach ($aColumnas as $columna) 
+{
+	echo ($columna['COLUMN_NAME']=='ID')?'':'<th></th>';
 
+}
+?>
+
+            </tr>
+        </tfoot>      
 
 </table>
 
 </div>
 </div>
-
 </form>
 
 							</div>
@@ -613,6 +649,46 @@ $(function() {
 	$('#zctb2').DataTable( {
     "scrollX": true
 } );
+
+
+
+$(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    $('#example2 tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder=" '+title+'" />' );
+    } );
+ 
+    // DataTable
+    var table3 = $('#example2').DataTable({
+    	    	"order": [[ 2, "asc" ]],
+    "scrollX": true,
+        initComplete: function () {
+					
+
+            // Apply the search
+            this.api().columns().every( function () {
+                var that = this;
+ 
+                $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        }
+    });
+  <?php echo ($idSearch!=-1)?'table3.column(0).search("_'.$idSearch.'_").draw();':''?>
+} );
+
+
+
+
+
+
+
 	</script>
 </body>
 </html>

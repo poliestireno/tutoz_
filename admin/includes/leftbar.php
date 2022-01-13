@@ -43,7 +43,7 @@
 						<li class="ts-label">FCT</li>
 <li><a href="resumenFCT.php"><i class="fa fa-dashboard"></i>RESUMEN Y TABLAS</a></li>
 <?php
-	$aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS");
+	$aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS ORDER BY INFO");
 	foreach ($aCiclos as $ciclo) 
 	{
 		echo '<li><a href="controlFCT.php?idCiclo='.$ciclo['ID'].'"><i class="fa fa-users"></i>'.$ciclo['INFO'].'</a></li>';
