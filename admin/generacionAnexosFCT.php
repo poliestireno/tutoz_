@@ -135,7 +135,6 @@ else
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
 
-
 	<nav class="ts-sidebar">
 			<ul class="ts-sidebar-menu">
 		
@@ -183,52 +182,23 @@ $idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idC
   
   <a target="_blank" href="<?php echo $folder?>" class="list-group-item active"><b><?php echo $sTextoCarpetaAMostrar?></b></a>
   <div class="list-group">
-    <?php
+  
+   <?php
 
     // INICIO ANEXO 21
-
-    $empresaAnterior=$_POST['NOMBRE_EMPRESA1'];
-    $aNombres = array();
-    $aNombresConApellido1 = array();
-   
-    $aDNIs = array();
-  	
-  	for ($i=1; $i <= $_POST['totalAlumnos']; $i++) 
-		{ 
-			
-			if ($empresaAnterior == $_POST['NOMBRE_EMPRESA'.$i])
-			{
-				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
-				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
-				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
-				if ($i == $_POST['totalAlumnos'])
-				{
-					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
-				}		
-			}
-			else
-			{
-				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
-				$empresaAnterior = $_POST['NOMBRE_EMPRESA'.$i];
-				$aNombres = array();
-				$aNombresConApellido1 = array();
-    		$aDNIs = array();
-				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
-				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
-				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
-				if ($i == $_POST['totalAlumnos'])
-				{
-					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
-				}		
-			}
-		}
+    if (isset($_POST['anexos21']))
+    {
+    	bloqueAnexo21($sTextoCarpetaAMostrar,$folder,$idFolder);
+    }
+    
 
 		// FIN ANEXO 21
 
 		// INICIO ANEXO 22
-
-		echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo22($folder, $sTextoCarpetaAMostrar,$idFolder).'</a>';
-
+		if (isset($_POST['anexo22']))
+    {
+			echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo22($folder, $sTextoCarpetaAMostrar,$idFolder).'</a>';
+		}
 		// FIN ANEXO 22
   ?> 
   </div> 
@@ -289,6 +259,8 @@ $templateProcessor->setValue('CURSO_ACADEMICO', $_POST['CURSO_ACADEMICO']);
 $templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO']);
 $templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION']);
 $templateProcessor->setValue('HORAS_DIA', $_POST['HORAS_DIA']);
+$templateProcessor->setValue('HORA_INICIO', $_POST['HORA_INICIO'.$num]);
+$templateProcessor->setValue('HORA_TERMINACION', $_POST['HORA_TERMINACION'.$num]);
 $templateProcessor->setValue('TOTAL_HORAS', $_POST['TOTAL_HORAS']);
 $templateProcessor->setValue('FECHA_FIRMA_DOC', $_POST['FECHA_FIRMA_DOC']);
 
@@ -465,6 +437,54 @@ subirDocumentoWordDrive	($folder.'/anexo22_'.$_POST['NOMBRE_CICLO'].'.docx','ane
 
 return 'anexo22_'.$_POST['NOMBRE_CICLO'].'.docx';
 }
+
+
+// BLOQUES DE ANEXOS
+
+
+
+function bloqueAnexo21($sTextoCarpetaAMostrar,$folder,$idFolder)
+{
+	  $empresaAnterior=$_POST['NOMBRE_EMPRESA1'];
+    $aNombres = array();
+    $aNombresConApellido1 = array();
+   
+    $aDNIs = array();
+  	
+  	for ($i=1; $i <= $_POST['totalAlumnos']; $i++) 
+		{ 
+			
+			if ($empresaAnterior == $_POST['NOMBRE_EMPRESA'.$i])
+			{
+				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
+				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
+				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
+				if ($i == $_POST['totalAlumnos'])
+				{
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
+				}		
+			}
+			else
+			{
+				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i-1,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
+				$empresaAnterior = $_POST['NOMBRE_EMPRESA'.$i];
+				$aNombres = array();
+				$aNombresConApellido1 = array();
+    		$aDNIs = array();
+				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
+				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
+				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
+				if ($i == $_POST['totalAlumnos'])
+				{
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo21($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
+				}		
+			}
+		}
+
+}
+
+
+
 
 
 ?>

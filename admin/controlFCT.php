@@ -33,7 +33,7 @@ if (isset($_POST['idCiclo']))
 $aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS WHERE ID =".$idCiclo);
 
 $nombreCiclo = $aCiclos[0]['NOMBRE'];
-var_export($aCiclos[0]);
+//var_export($aCiclos[0]);
 $claveCiclo = $aCiclos[0]['CLAVE_CICLO'];
 $aTutoresCole = ejecutarQuery($dbh,"SELECT * FROM FCT_TUTORES_PROFES WHERE ID_FCT_CICLO =".$idCiclo);
 

@@ -534,6 +534,20 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 ?>
   </tbody>
   <!--Table body-->
+
+  <tr>
+<th></th>
+<th>Select</th>
+<?php
+
+foreach ($aColumnas as $columna) 
+{
+	echo ($columna['COLUMN_NAME']=='ID')?'':'<th>'.$columna['COLUMN_NAME'].'['.$columna['COLUMN_TYPE'].']</th>';
+}
+
+?>      
+
+   </tr>
      <tfoot>
             <tr>
             	<td></td>

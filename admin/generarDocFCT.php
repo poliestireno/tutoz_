@@ -57,14 +57,12 @@ $FECHA_FIRMA_DOC = $periodo['FECHA_FIRMA_DOC'];
 $FECHA_INICIO = $periodo['FECHA_INICIO'];
 $FECHA_TERMINACION = $periodo['FECHA_TERMINACION'];
 $HORAS_DIA = $periodo['HORAS_DIA'];
+$HORA_INICIO = $periodo['HORA_INICIO'];
+$HORA_TERMINACION = $periodo['HORA_TERMINACION'];
 $TOTAL_HORAS = $periodo['TOTAL_HORAS'];
 
-$aAlumnos = ejecutarQuery($dbh,"SELECT * FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo);
-$aPracticas = array();  
-foreach ($aAlumnos as $alumnoAux) 
-{
-  $aPracticas = array_merge($aPracticas, ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO =".$alumnoAux['ID']." AND ID_FCT_PERIODO =".$idPeriodo." ORDER BY ID_FCT_EMPRESA")); 
-}
+$aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO IN (SELECT ID FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo.") AND ID_FCT_PERIODO =".$idPeriodo." ORDER BY ID_FCT_EMPRESA"); 
+
 
 
 //var_export($aPracticas);
@@ -337,6 +335,18 @@ foreach ($aPracticas as $practica)
   </div>
   </div>
 
+  <div class="form-group col-sm-12">
+  <label class="col-sm-2 control-label">HORA_INICIO<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="HORA_INICIO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $HORA_INICIO?>" required>
+  </div>
+
+  <label class="col-sm-2 control-label">HORA_TERMINACION<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="HORA_TERMINACION<?php echo $contAlumnos?>" class="form-control" value="<?php echo $HORA_TERMINACION?>" required/>
+  </div>
+  </div>
+
 	</div>
 </div>
 
@@ -346,6 +356,39 @@ $contAlumnos++;
 ?>
 <div class="panel panel-default">             
   <div class="panel-heading">Generación de documentos</div>
+  <div class="container-fluid">
+        <div class="form-group">
+  <label class="col-sm-1 control-label"></label>
+  <div class="col-sm-5">
+  </div>
+  </div>
+  <div class="form-group col-sm-12">
+  <div class="col-sm-3">
+  <div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" id="anexos21" name="anexos21" checked>
+  <label class="form-check-label" >Anexos 21</label>
+  </div>
+  </div>
+  <div class="col-sm-3">
+  <div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" id="anexo22" name="anexo22" checked>
+  <label class="form-check-label">Anexo 22</label>
+  </div>
+  </div>
+  <div class="col-sm-3">
+  <div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" id="anexos3" name="anexos3" checked>
+  <label class="form-check-label">Anexos 3</label>
+  </div>
+  </div>  
+  <div class="col-sm-3">
+  <div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" id="anexos8" name="anexos8" checked>
+  <label class="form-check-label">Anexos 8</label>
+  </div>
+  </div>
+  </div>
+</div>
 
 <div class="container-fluid">
     <div class="form-group">
