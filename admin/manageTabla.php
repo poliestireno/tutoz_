@@ -368,11 +368,14 @@ tfoot input {
 <body>
 
 
-	<?php include('includes/header.php');?>
-	<div class="ts-main-content">
-	<?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
+
 			<div class="container-fluid">
+								<a onclick="managebuttonDash()"  class="btn btn-dark btn-outline btn-wrap-text">Volver MENU</a>
+								<div class="form-group">
+									<div class="col-sm-4">
+									</div>
+								</div>
 				<div class="row">
 					<div class="col-md-12">
 						<div class="row">
@@ -381,7 +384,8 @@ tfoot input {
 <div class="panel panel-default">
 	<?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>								
 	<div class="panel-heading"><?php echo $nombreTabla?></div>
-
+<form id="form2" method="post" action="resumenFCT.php">
+</form>
 <form method="post" id="form1" class="form-horizontal" enctype="multipart/form-data" >
 <input type="hidden" name="esDelete" id="esDelete" value="0">
 <input type="hidden" name="esModificar" id="esModificar" value="0">
@@ -575,7 +579,6 @@ foreach ($aColumnas as $columna)
 				</div>
 			</div>
 		</div>
-	</div>
 
 	<!-- Loading Scripts -->
 	<script type="text/javascript">
@@ -651,14 +654,6 @@ $(function() {
 	}
 
 
-	tabbb = $('#zctb').DataTable( {
-    "order": [[ 2, "asc" ]],
-    "scrollX": true
-} );
-	<?php echo ($idSearch!=-1)?'tabbb.column(0).search("_'.$idSearch.'_").draw();':''?>
-
-
-
 
 	$('#zctb2').DataTable( {
     "scrollX": true
@@ -699,7 +694,10 @@ $(document).ready(function() {
 
 
 
-
+  function managebuttonDash()
+  { 
+      document.getElementById("form2").submit();
+  }
 
 
 

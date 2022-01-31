@@ -28,6 +28,12 @@ if (isset($_POST['idCiclo']))
 {
   $idCiclo=$_POST['idCiclo'];
 }
+$filtroPeriodoSQL="";
+if ((isset($_POST['idPeriFiltro']))&&($_POST['idPeriFiltro']!=""))
+{
+  $filtroPeriodoSQL=" ID_FCT_PERIODO =".$_POST['idPeriFiltro']." AND ";
+}
+
 
 
 $aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS WHERE ID =".$idCiclo);
@@ -43,7 +49,7 @@ $aAlumnos = ejecutarQuery($dbh,"SELECT * FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".
 $aPracticas = array();	
 foreach ($aAlumnos as $alumnoAux) 
 {
-	$aPracticas = array_merge($aPracticas, ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO =".$alumnoAux['ID'])); 
+	$aPracticas = array_merge($aPracticas, ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ".$filtroPeriodoSQL." ID_FCT_ALUMNO =".$alumnoAux['ID'])); 
 }
 
 //var_export($aPracticas);
@@ -110,6 +116,11 @@ foreach ($aAlumnos as $alumnoAux)
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
+tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
 		</style>
 
 
@@ -118,12 +129,13 @@ foreach ($aAlumnos as $alumnoAux)
 <body>
 
 
-	<?php include('includes/header.php');?>
-	<div class="ts-main-content">
-	<?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
-
+								<a onclick="managebuttonDash()"  class="btn btn-dark btn-outline btn-wrap-text">Volver MENU</a>
+								<div class="form-group">
+									<div class="col-sm-4">
+									</div>
+								</div>
 
 <div class="panel panel-default">
 	<?php if($msg){?><div class="succWrap"><strong>INFO: </strong><?php echo htmlentities($msg); ?> </div><?php }?>								
@@ -131,6 +143,13 @@ foreach ($aAlumnos as $alumnoAux)
 
 <div class="container-fluid">
 	
+<form id="form2" method="post" action="resumenFCT.php">
+</form>
+<form id="form3" method="post" action="controlFCT.php">
+	<input type="hidden" name="idPeriFiltro" id="idPeriFiltro"/>
+	<input type="hidden" name="idCiclo" id="idCiclo" value="<?php echo $idCiclo?>"/>
+
+</form>
 
 <form target="_blank" action="generarDocFCT.php" method="post" id="form1" class="form-horizontal" enctype="multipart/form-data" >
 <input type="hidden" name="idCiclo" id="idCiclo" value="<?php echo $idCiclo?>"/>
@@ -156,13 +175,14 @@ foreach ($aAlumnos as $alumnoAux)
 <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control" id="idPeriodo" name="idPeriodo">
+                        <select onchange="cambiarPeriodo()" class="form-control" id="idPeriodo" name="idPeriodo">
+                        	<option value=""></option>;
                         	<?php
                         	$aPeriodosAux2 = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID IN (SELECT ID_FCT_PERIODO FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO IN (SELECT ID FROM FCT_ALUMNOS WHERE ID_FCT_CICLO=".$idCiclo.")) ORDER BY FECHA_TERMINACION DESC");
                         	foreach ($aPeriodosAux2 as $periAux) 
                         	{
-                        		$nombrePeriodoAux2 = $periAux['FECHA_INICIO']." / ".$periAux['FECHA_TERMINACION'].(($periAux['INFO']=="")?"":" (".$periAux['INFO'].")");
-                        		echo '<option value="'.$periAux['ID'].'">'.$nombrePeriodoAux2.'</option>';
+$nombrePeriodoAux2 = $periAux['FECHA_INICIO']." / ".$periAux['FECHA_TERMINACION'].(($periAux['INFO']=="")?"":" (".$periAux['INFO'].")");
+echo '<option '.(((isset($_POST['idPeriFiltro']))&&($_POST['idPeriFiltro']==$periAux['ID']))?" selected ":"").' value="'.$periAux['ID'].'">'.$nombrePeriodoAux2.'</option>';
                         	}
                         	
                         	?>
@@ -192,7 +212,7 @@ foreach ($aAlumnos as $alumnoAux)
 </div>
 
 
-<table ID="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+<table ID="example2" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <!--Table head-->
   <thead>
     <tr>
@@ -241,8 +261,26 @@ $folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHR
 ?>
 
   </tbody>
-  <!--Table body-->
 
+
+    <tr>
+<th>PERIODO</th>
+<th>ALUMNO</th>
+<th>EMPRESA</th>
+<th>TUTOR_EMPRESA</th>
+<th>ENLACE_DOCS</th>
+   </tr>
+
+
+     <tfoot>
+     	    <tr>
+<th>PERIODO</th>
+<th>ALUMNO</th>
+<th>EMPRESA</th>
+<th>TUTOR_EMPRESA</th>
+<th>ENLACE_DOCS</th>
+   </tr>
+        </tfoot>  
 
 </table>
 
@@ -253,7 +291,6 @@ $folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHR
 			</div>
 		</div>
 	</div>
-</div>
 
 	<!-- Loading Scripts -->
 	<script type="text/javascript">
@@ -266,15 +303,65 @@ $folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHR
 	
 
 
-	tabbb = $('#zctb').DataTable( {
-    "order": [[ 0, "desc" ]],
-    "scrollX": true
+
+$(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    $('#example2 tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder=" '+title+'" />' );
+    } );
+ 
+    // DataTable
+    var table3 = $('#example2').DataTable({
+    	    	"order": [[ 2, "asc" ]],
+    "scrollX": true,
+        initComplete: function () {
+					
+
+            // Apply the search
+            this.api().columns().every( function () {
+                var that = this;
+ 
+                $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        }
+    });	
 } );
+
 
   function generarDoc()
   {
-    document.getElementById('form1').submit();  
+
+  	sSel11Value = document.getElementById('idPeriodo').value;
+     
+     if ((sSel11Value==''))
+     {
+       Swal.fire('EOOHHH!','Elige un periodo' ,'warning');;
+     }
+     else
+     {
+     		document.getElementById('form1').submit();  
+     }
+    
   }
+
+    function managebuttonDash()
+  { 
+      document.getElementById("form2").submit();
+  }
+    function cambiarPeriodo()
+  {  		
+  		document.getElementById("idPeriFiltro").value = document.getElementById('idPeriodo').value;
+      document.getElementById("form3").submit();
+  }
+
+
 	</script>
 </body>
 </html>
