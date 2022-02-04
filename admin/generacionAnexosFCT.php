@@ -191,7 +191,6 @@ $idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idC
     	bloqueAnexo21($sTextoCarpetaAMostrar,$folder,$idFolder);
     }
     
-
 		// FIN ANEXO 21
 
 		// INICIO ANEXO 22
@@ -200,6 +199,13 @@ $idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idC
 			echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo22($folder, $sTextoCarpetaAMostrar,$idFolder).'</a>';
 		}
 		// FIN ANEXO 22
+
+		// INICIO ANEXO 3
+		if (isset($_POST['anexos3']))
+    {
+    	bloqueAnexo3($sTextoCarpetaAMostrar,$folder,$idFolder);
+    }
+		// FIN ANEXO 3
   ?> 
   </div> 
 </div> 
@@ -234,6 +240,52 @@ $idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idC
 
 
 <?php
+
+
+function generarAnexo3($folder, $sTextoCarpetaAMostrar,$num,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder)
+{
+
+$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo3.docx');
+
+
+// tutor colegio
+$templateProcessor->setValue('NOMBRE_TUTOR_COLEGIO', mb_strtoupper($_POST['NOMBRE_TUTOR_COLEGIO'], 'UTF-8'));
+$templateProcessor->setValue('NOMBRE_CICLO', mb_strtoupper($_POST['NOMBRE_CICLO'], 'UTF-8'));
+$templateProcessor->setValue('FAMILIA_PROFESIONAL', mb_strtoupper($_POST['FAMILIA_PROFESIONAL'], 'UTF-8'));
+
+//Empresa
+$templateProcessor->setValue('NOMBRE_EMPRESA', mb_strtoupper($_POST['NOMBRE_EMPRESA'.$num], 'UTF-8'));
+$templateProcessor->setValue('NOMBRE_TUTOR_EMPRESA', mb_strtoupper($_POST['NOMBRE_TUTOR_EMPRESA'.$num], 'UTF-8'));
+
+//FCT Periodo
+$templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO']);
+$templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION']);
+$templateProcessor->setValue('FECHA_FIRMA_DOC', $_POST['FECHA_FIRMA_DOC']);
+
+$nombresNombreFichero= "";
+$barraBaja = "";
+for ($i=0; $i < Count($aNombres); $i++) 
+{ 
+		if (Count($aNombres)>1)
+		{
+				$nombresNombreFichero.= $barraBaja.$aNombresConApellido1[$i];
+		}
+		else
+		{
+				$nombresNombreFichero.= $barraBaja.$aNombres[$i];
+		}		
+		$barraBaja="_";
+}
+
+
+
+$templateProcessor->saveAs($folder.'/anexo3_'.$nombresNombreFichero.'.docx');
+
+// subir a drive
+subirDocumentoWordDrive	($folder.'/anexo3_'.$nombresNombreFichero.'.docx','anexo3_'.$nombresNombreFichero.'.docx',"anexo3",$idFolder);
+
+return 'anexo3_'.$nombresNombreFichero.'.docx';
+}
 
 
 function generarAnexo21($folder, $sTextoCarpetaAMostrar,$num,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder)
@@ -483,7 +535,45 @@ function bloqueAnexo21($sTextoCarpetaAMostrar,$folder,$idFolder)
 
 }
 
+function bloqueAnexo3($sTextoCarpetaAMostrar,$folder,$idFolder)
+{
+	  $empresaAnterior=$_POST['NOMBRE_EMPRESA1'];
+    $aNombres = array();
+    $aNombresConApellido1 = array();
+   
+    $aDNIs = array();
+  	
+  	for ($i=1; $i <= $_POST['totalAlumnos']; $i++) 
+		{ 
+			
+			if ($empresaAnterior == $_POST['NOMBRE_EMPRESA'.$i])
+			{
+				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
+				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
+				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
+				if ($i == $_POST['totalAlumnos'])
+				{
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo3($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
+				}		
+			}
+			else
+			{
+				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo3($folder,$sTextoCarpetaAMostrar,$i-1,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
+				$empresaAnterior = $_POST['NOMBRE_EMPRESA'.$i];
+				$aNombres = array();
+				$aNombresConApellido1 = array();
+    		$aDNIs = array();
+				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
+				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
+				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];
+				if ($i == $_POST['totalAlumnos'])
+				{
+					echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo3($folder,$sTextoCarpetaAMostrar,$i,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
+				}		
+			}
+		}
 
+}
 
 
 

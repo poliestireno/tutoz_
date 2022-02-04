@@ -13,7 +13,6 @@ else{
 //var_export($_POST);
 //var_export($_SESSION);
 $CORREO = $_SESSION['alogin'];
-var_export($CORREO);
 $idAlumno = getAlumnoFromCorreo($dbh,$CORREO)['ID'];
  
 ?>
@@ -70,7 +69,6 @@ $idAlumno = getAlumnoFromCorreo($dbh,$CORREO)['ID'];
 <?php 
 
 $aDataTotal = ejecutarQuery($dbh,"SELECT * FROM FCT_EMPRESAS WHERE DESCRIPCION LIKE '%2022%'");
-			$sTextSelect .='<td class="table-info"><select name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  class="form-control selectpicker" id="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  data-live-search="true" >';
 			$sValorSeleccionado = "";
 			foreach ($aDataTotal as $filaTabla) 
 			{
