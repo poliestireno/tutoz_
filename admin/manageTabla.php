@@ -89,7 +89,7 @@ function setCampoDeLista($dbh,$fila,$columna)
 		if ($bEsisteInfo || $bEsisteNombre)
 		{
 			$aDataTotal = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab);
-			$sTextSelect .='<td class="table-info"><select name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  class="form-control selectpicker" id="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  data-live-search="true" >';
+			$sTextSelect .='<td class="table-info"><select name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  class="form-control selectpicker" id="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'"  data-live-search-placeholder="poner espacio entre letras" data-live-search="true" >';
 			$sValorSeleccionado = "";
 			foreach ($aDataTotal as $filaTabla) 
 			{
@@ -148,7 +148,7 @@ function setCampoParaInsert($dbh,$nombreCol)
 		if ($bEsisteInfo || $bEsisteNombre)
 		{
 			$aDataTotal = ejecutarQuery($dbh,"SELECT * FROM ".$nombreTab);
-			$sTextSelect .='<td class="table-info"><select  class="form-control selectpicker" id="gg__'.$nombreCol.'" data-live-search="true" name="gg__'.$nombreCol.'" >';
+			$sTextSelect .='<td class="table-info"><select  class="form-control selectpicker" id="gg__'.$nombreCol.'" data-live-search-placeholder="poner espacio entre letras" data-live-search="true" name="gg__'.$nombreCol.'" >';
 			foreach ($aDataTotal as $filaTabla) 
 			{
 				$bInfoOk = false;
