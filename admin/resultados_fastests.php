@@ -198,7 +198,7 @@ if((!$seleccionadoActivo)&&(isset($_POST['sFTId'])))
 									<thead>
 										<tr>
 										<th>#</th>
-												<th>Nº Deluxe</th>
+												<th>Resultado</th>
                                                 <th>Imagen</th>
                                                 <th>Nombre</th>
                                                 <th>Apellido1</th>
@@ -221,12 +221,18 @@ $cnt=1;
 foreach($aAlumnosFastest as $alumnoFastI)
 {				
 	$alumnoII = getAlumnoFromId($dbh,$alumnoFastI['ID_ALUMNO']);
-
+	
+	$nMonoDeLuxe = 0;
+	$aRespuestas_ = explode(",",$alumnoFastI['RESPUESTAS']);
+	foreach ($aRespuestas_ as $resII) {
+		$nMonoDeLuxe += (($resII>0)?$resII:0);
+	}
+	$nMonoTotales = count($aRespuestas_);
 	?>	
 										<tr>
 
 											<td><?php echo htmlentities($cnt);?></td>
-											<td><?php echo htmlentities($alumnoFastI['RESULTADO']);?></td>
+											<td><?php echo "<b>".htmlentities($alumnoFastI['RESULTADO'])."</b> (".$nMonoDeLuxe."/".$nMonoTotales.")";?></td>
 											<td><img src="../images/<?php 
 		$dbImage = htmlentities($alumnoII['image']);		
 		if (($dbImage!="")&&(file_exists("../images/".$dbImage)))

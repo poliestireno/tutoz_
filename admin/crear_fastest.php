@@ -27,10 +27,11 @@ if(isset($_POST['sel11']))
   $sel11=$_POST['sel11'];
   $name=quitar_tildes($_POST['name']);
   $descrip=$_POST['descrip'];
+  $psiresta=$_POST['psiresta'];
   $asignaturas = getAsignaturasFromCurso($dbh,$sel11);
   $IdAsignatura =$asignaturas[0]['ID'];
   modificarDesactivarFastests($dbh,$IdAsignatura);
-  insertarFastest($dbh,$IdAsignatura,$name,$descrip);
+  insertarFastest($dbh,$IdAsignatura,$name,$descrip,$psiresta);
   
     $lastInsertId = $dbh->lastInsertId();
     if($lastInsertId)
@@ -147,6 +148,10 @@ if(isset($_POST['sel11']))
                             <label class="col-sm-1 control-label">DESCRIPCIÓN<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                             <input type="text" maxlength = "499" name="descrip" class="form-control" value="TEST RÁPIDO PARA ..." required>
+                            </div>
+                            <label class="col-sm-3 control-label">PUNTOS SI RESTA(ej:0|-1|-0.5)<span style="color:red">*</span></label>
+                            <div class="col-sm-3">
+                            <input type="text" maxlength = "499" name="psiresta" class="form-control" value="0" required>
                             </div>
                             </div>
 

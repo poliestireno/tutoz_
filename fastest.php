@@ -78,11 +78,11 @@ if (($_POST['respuestaUsu']!="SABESQUESI")&&($fastTestActivo)&&$bPuntuar)
 
 	if ($aTestAlumno)
 	{
-modificarAlumnoFastest($dbh,$aTestAlumno,$preContestada['ID'],$respuestaAnteriorOk);
+modificarAlumnoFastest($dbh,$aTestAlumno,$preContestada['ID'],$respuestaAnteriorOk,$fastTestActivo);
 	}
 	else
 	{
-	insertarAlumnoTest($dbh,$fastTestActivo['ID'],$alumnoDB['ID'],$preContestada['ID'],$respuestaAnteriorOk);
+	insertarAlumnoTest($dbh,$fastTestActivo['ID'],$alumnoDB['ID'],$preContestada['ID'],$respuestaAnteriorOk,$fastTestActivo);
 	}
 }
 
@@ -345,7 +345,15 @@ function init()
 $aTestAlumno2 = getTestAlumno($dbh,$fastTestActivo['ID'],$alumnoDB['ID']);
 if ($fastTestActivo)
 {
- echo ((isset($aTestAlumno2['RESULTADO']))?"Nº Monotérminos Deluxe: ".$aTestAlumno2['RESULTADO']:"Monotérminos Deluxe: 0").((isset($aTestAlumno2['PREGUNTAS']))?"/".count(explode(",",$aTestAlumno2['PREGUNTAS'])):"/0");
+
+	$nMonoDeLuxe = 0;
+	$aRespuestas_ = explode(",",$aTestAlumno2['RESPUESTAS']);
+	foreach ($aRespuestas_ as $resII) {
+		$nMonoDeLuxe += (($resII>0)?$resII:0);
+	}
+
+
+ echo ((isset($aTestAlumno2['RESULTADO']))?"Nº Monotérminos Deluxe: ".$nMonoDeLuxe:"Monotérminos Deluxe: 0").((isset($aTestAlumno2['PREGUNTAS']))?"/".count(explode(",",$aTestAlumno2['PREGUNTAS'])):"/0");
 }
 ?>	
 </div>

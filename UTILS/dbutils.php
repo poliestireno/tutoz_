@@ -313,14 +313,14 @@ function insertarAlumnoJuicio($db,$idJuicio,$idAlumno,$opcionElegida)
       mi_info_log( "Error insertarAlumnoJuicio:".$ex->getMessage());
   }  
 }
-function insertarAlumnoTest($db,$idTest,$idAlumno,$idPregunta,$respuestaOK)
+function insertarAlumnoTest($db,$idTest,$idAlumno,$idPregunta,$respuestaOK,$fastTestActivo)
 {
   $sentencia= "INSERT INTO ALUMNOS_FASTESTS ( ID_ALUMNO,  ID_FASTEST, PREGUNTAS, RESPUESTAS, RESULTADO, FECHA)
               VALUES ( :ID_ALUMNO, :ID_FASTEST, :PREGUNTAS, :RESPUESTAS, :RESULTADO, now())";
   try
   {
     
-    $resultadoo = ($respuestaOK)?1:0;
+    $resultadoo = ($respuestaOK)?1:$fastTestActivo['PUNTOS_SI_RESTA'];
     $stmt = $db->prepare($sentencia);
     $stmt->bindParam(':ID_ALUMNO',$idAlumno);
     $stmt->bindParam(':ID_FASTEST',$idTest);
@@ -354,10 +354,10 @@ function insertarJuicio($db,$asignatura,$name,$opciones,$descrip)
       mi_info_log( "Error insertarJuicio:".$ex->getMessage());
   }  
 }
-function insertarFastest($db,$asignatura,$name,$descrip)
+function insertarFastest($db,$asignatura,$name,$descrip,$psr)
 {
-  $sentencia= "INSERT INTO FASTESTS ( ID_ASIGNATURA, NOMBRE, DESCRIPCION, ACTIVO,FECHA)
-              VALUES ( :ID_ASIGNATURA, :NOMBRE,:DESCRIPCION, :ACTIVO, now())";
+  $sentencia= "INSERT INTO FASTESTS ( ID_ASIGNATURA, NOMBRE, DESCRIPCION,PUNTOS_SI_RESTA, ACTIVO,FECHA)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE,:DESCRIPCION,:PUNTOS_SI_RESTA,:ACTIVO, now())";
   try
   {
     $uno = 1;
@@ -365,6 +365,7 @@ function insertarFastest($db,$asignatura,$name,$descrip)
     $stmt->bindParam(':ID_ASIGNATURA',$asignatura);
     $stmt->bindParam(':NOMBRE',$name);
     $stmt->bindParam(':DESCRIPCION',$descrip);
+    $stmt->bindParam(':PUNTOS_SI_RESTA',$psr);
     $stmt->bindParam(':ACTIVO',$uno);
     $stmt->execute();
   }
@@ -2979,11 +2980,11 @@ function modificarDesactivarFastests($db,$IdAsignatura)
   } 
   return $stmt->rowCount();
 }
-function modificarAlumnoFastest($db,$aTestAlumno,$idPregunta,$respuestaOK)
+function modificarAlumnoFastest($db,$aTestAlumno,$idPregunta,$respuestaOK,$fastTestActivo)
 {
   try 
   {
-    $valorResultado = ($respuestaOK)?1:0;
+    $valorResultado = ($respuestaOK)?1:$fastTestActivo['PUNTOS_SI_RESTA'];
     $preguntas = $aTestAlumno['PREGUNTAS'];
     $respuestas = $aTestAlumno['RESPUESTAS'];
     $resultado = $aTestAlumno['RESULTADO'];
