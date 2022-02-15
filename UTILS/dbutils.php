@@ -23,6 +23,15 @@ DELETE FROM MERCADO WHERE ID_ASIGNATURA=XX
 Modificar calas +150 de un curso:
 UPDATE MIACTOR SET CALAS = CALAS + 150 WHERE ID in (SELECT ID_MIACTOR FROM ALUMNOS WHERE ID_CURSO=31)
 
+Meter comodines
+
+asegurar ID_CREADOR yo
+ID de cromo incremental
+power desde n a m (son las referencias), ver desde que referencia existe el comodin
+
+INSERT INTO `CROMOS` (`ID`, `ID_SET`, `ID_CREADOR`, `ID_POSEEDOR`, `GENERADO`, `name`, `color`, `mana_w`, `picture`, `cardtype`, `rarity`, `cardtext`, `power`, `toughness`, `artist`, `bottom`, `ATRIBUTO_AUX`) VALUES (2378, 7, 1, NULL, 0, 'cOMoDÓn', 'Gold', 5, 'se02.jpg', '', 'Mythic', 'Soy Comodón, mi nombre vale para cualquier pareja,doble pareja,trio o cuarteto. Mi referencia y mis estrellas son inmutables hasta la eternidad. Utilizame como quieras, pero utilizame bien...', 5, 20, 'Gilbert', '', NULL);
+
+
 */
 
 $array_ini = parse_ini_file($_SERVER['DOCUMENT_ROOT'].'/sallez.ini');

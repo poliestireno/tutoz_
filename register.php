@@ -30,8 +30,10 @@ if (!(existeCorreo($dbh,$CORREO)))
     mandarNotificacion($dbh,$CORREO,'Admin',$notitype);
 
 // para asignatura con cromos
-if (utilizaCromosCurso($dbh,$curso))
-{
+// 14 de febrero 2022 se pone para que siempre al registrar inserte bot y actor para 
+// poder jugar al videojuego, no solo cuando tenga cromos.
+//if (utilizaCromosCurso($dbh,$curso))
+//{
     // de inicio colocamos el personaje y bot en exteriores id_map 9
         // se genera lugar aleatorio para el sitio dado
     $filaSitio = getSitioFromMapID($dbh,9);
@@ -57,13 +59,13 @@ if (utilizaCromosCurso($dbh,$curso))
     // se inserta su actor (jugador) inicial
     insertarActor($dbh,500,100,0,50);
     $lastInsertIdActor = $dbh->lastInsertId();
-}
-else
-{
-    $lastInsertIdBot = NULL;
-    $lastInsertIdActor = NULL;
-
-}    
+//}
+//else
+//{
+//    $lastInsertIdBot = NULL;
+//    $lastInsertIdActor = NULL;
+//}    
+    
     $sql ="INSERT INTO ALUMNOS(NOMBRE,CORREO, password, gender, APELLIDO1, APELLIDO2, image,ORDEN_ALBUM,ORDEN_COMBOS,ORDEN_CREADORES,ORDEN_REFERENCIAS_TOTAL,NUMERO_NIVEL,ULTIMA_FECHA_NOTI_GENERAL, ID_MIBOT,ID_MIACTOR,ID_CURSO) VALUES(:name, :CORREO, :password, :gender, :APELLIDO1no, :APELLIDO2, :image,'','','','',1,NULL, :IDMiBot,:IDActor,:IDCurso)";
     $query= $dbh -> prepare($sql);
     $query-> bindParam(':name', $name, PDO::PARAM_STR);
@@ -247,7 +249,7 @@ else
 
                              <div class="form-group">
                            
-                            <label class="col-sm-1 control-label">APELLIDO2<span style="color:red">*</span></label>
+                    <label class="col-sm-1 control-label">APELLIDO2<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                             <input type="text" name="APELLIDO2" class="form-control" required>
                             </div>
