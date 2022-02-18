@@ -74,9 +74,6 @@ function splitx($str) {
 
 function setCampoDeLista($dbh,$fila,$columna)
 {
-
-//echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span>'.getInfoColumnaFromTablaId($dbh,$columna['COLUMN_NAME'],$fila[$columna['COLUMN_NAME']]).'</td>';
-
 	$sTextSelect = "";
 	if (substr( $columna['COLUMN_NAME'], 0, 3 ) === "ID_")
 	{
@@ -121,16 +118,17 @@ function setCampoDeLista($dbh,$fila,$columna)
 					$sValorSeleccionado = $valor;
 				}
 			}
-			$sTextSelect .='</select><span style="visibility:hidden">'.$sValorSeleccionado.'</span></td>';
+
+			$sTextSelect .='</select><span style="visibility:hidden">'.substr($sValorSeleccionado,0,50).'</span></td>';
 		}
 		else
 		{
-			$sTextSelect='<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span></td>';
+			$sTextSelect='<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.substr($fila[$columna['COLUMN_NAME']],0,50).'</span></td>';
 		}
 	}
 	else
 	{
-		$sTextSelect='<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span></td>';
+		$sTextSelect='<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.substr($fila[$columna['COLUMN_NAME']],0,50).'</span></td>';
 	}
 	return $sTextSelect;
 }
@@ -529,9 +527,7 @@ echo '<td><input class="form-check-input" type="checkbox" value="'.$fila['ID'].'
 //	 echo '<td onclick="manageDelete('.$fila['ID'].')" align="center" >&nbsp; <i class="fa fa-trash"></i></td>';
 	foreach ($aColumnas as $columna) 
 	{
-		//echo ($columna['COLUMN_NAME']=='ID')?'':'<td><input  name="in__'.$fila['ID'].'__'.$columna['COLUMN_NAME'].'" class="form-control" type="text" value="'.$fila[$columna['COLUMN_NAME']].'" /><span style="visibility:hidden">'.$fila[$columna['COLUMN_NAME']].'</span>'.getInfoColumnaFromTablaId($dbh,$columna['COLUMN_NAME'],$fila[$columna['COLUMN_NAME']]).'</td>';
 		echo ($columna['COLUMN_NAME']=='ID')?'':setCampoDeLista($dbh,$fila,$columna);
-
 	}
   echo '</tr>';
 }
