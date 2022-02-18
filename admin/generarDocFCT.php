@@ -354,6 +354,49 @@ foreach ($aPracticas as $practica)
 $contAlumnos++;
 } 
 ?>
+
+<div class="panel panel-default">             
+  <div class="panel-heading">Nomenclatura de los ficheros generados</div>
+  <div class="container-fluid">
+        <div class="form-group">
+  <label class="col-sm-1 control-label"></label>
+  <div class="col-sm-5">
+  </div>
+  </div>
+  <div class="form-group col-sm-12">
+
+<div class="custom-control custom-radio">
+  <input type="radio" class="custom-control-input" id="defaultChecked" name="rNomenclatura" value="1" checked>
+  <label class="custom-control-label" for="defaultChecked">Por nombre alumno</label>
+</div>
+<div class="custom-control custom-radio">
+  <input type="radio" class="custom-control-input" id="defaultUnchecked" value="2" name="rNomenclatura">
+  <label class="custom-control-label" for="defaultChecked">Por empresa</label>
+</div>
+<div class="custom-control custom-radio">
+  <input type="radio"  value="3" class="custom-control-input" id="defaultUnchecked2" name="rNomenclatura">
+  <label class="custom-control-label" for="defaultChecked">Por nombre alumno y empresa</label>
+</div>
+<div class="custom-control custom-radio">
+  <input type="radio"  value="4" class="custom-control-input" id="defaultUnchecked3" name="rNomenclatura">
+  <label class="custom-control-label" for="defaultChecked">Por empresa y nombre alumno</label>
+</div>      
+
+
+  </div>
+</div>
+
+<div class="container-fluid">
+    <div class="form-group">
+  <label class="col-sm-1 control-label"></label>
+  <div class="col-sm-5">
+  </div>
+  </div>
+
+
+
+  </div>
+</div>
 <div class="panel panel-default">             
   <div class="panel-heading">Generación de documentos</div>
   <div class="container-fluid">
@@ -388,28 +431,14 @@ $contAlumnos++;
   </div>
   </div>
   </div>
-</div>
-
-<div class="container-fluid">
-    <div class="form-group">
-  <label class="col-sm-1 control-label"></label>
-  <div class="col-sm-5">
-  </div>
-  </div>
-
-  <div class="form-group col-sm-12">
+    <div class="form-group col-sm-12">
   <div class="col-sm-6">
     <a data-toggle="tooltip" onclick="manageGeneracion();" class="btn btn-warning btn-outline " title="Generar toda la documentación" >Generar Documentación</a>
   </div>
   </div>
-
-  </div>
-  
-
-
-
 </div>
 
+</div>
 </form>			
 		</div>
 	</div>

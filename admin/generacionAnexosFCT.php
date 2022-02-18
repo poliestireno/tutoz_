@@ -277,14 +277,33 @@ for ($i=0; $i < Count($aNombres); $i++)
 		$barraBaja="_";
 }
 
+$nombreAnexo = 'anexo3';
 
+$nombreF = $nombreAnexo.'_';
 
-$templateProcessor->saveAs($folder.'/anexo3_'.$nombresNombreFichero.'.docx');
+if ($_POST['rNomenclatura']==1)
+{
+	$nombreF = $nombreF.$nombresNombreFichero.'.docx';
+}
+else if ($_POST['rNomenclatura']==2)
+{
+	$nombreF = $nombreF.$_POST['NOMBRE_EMPRESA'.$num].'.docx';
+}
+else if ($_POST['rNomenclatura']==3)
+{
+	$nombreF = $nombreF.$nombresNombreFichero.'__'.$_POST['NOMBRE_EMPRESA'.$num].'.docx';
+}
+else if ($_POST['rNomenclatura']==4)
+{
+	$nombreF = $nombreF.$_POST['NOMBRE_EMPRESA'.$num].'__'.$nombresNombreFichero.'.docx';
+}
+
+$templateProcessor->saveAs($folder.'/'.$nombreF);
 
 // subir a drive
-subirDocumentoWordDrive	($folder.'/anexo3_'.$nombresNombreFichero.'.docx','anexo3_'.$nombresNombreFichero.'.docx',"anexo3",$idFolder);
+subirDocumentoWordDrive	($folder.'/'.$nombreF,$nombreF,$nombreAnexo,$idFolder);
 
-return 'anexo3_'.$nombresNombreFichero.'.docx';
+return $nombreF;
 }
 
 
@@ -395,17 +414,33 @@ $tablexml = preg_replace('/^[\s\S]*(<w:tbl\b.*<\/w:tbl>).*/', '$1', $fullxml);
 $templateProcessor->setValue('table1', $tablexml);
 
 
+$nombreAnexo = 'anexo21';
 
+$nombreF = $nombreAnexo.'_';
 
+if ($_POST['rNomenclatura']==1)
+{
+	$nombreF = $nombreF.$nombresNombreFichero.'.docx';
+}
+else if ($_POST['rNomenclatura']==2)
+{
+	$nombreF = $nombreF.$_POST['NOMBRE_EMPRESA'.$num].'.docx';
+}
+else if ($_POST['rNomenclatura']==3)
+{
+	$nombreF = $nombreF.$nombresNombreFichero.'__'.$_POST['NOMBRE_EMPRESA'.$num].'.docx';
+}
+else if ($_POST['rNomenclatura']==4)
+{
+	$nombreF = $nombreF.$_POST['NOMBRE_EMPRESA'.$num].'__'.$nombresNombreFichero.'.docx';
+}
 
-
-
-$templateProcessor->saveAs($folder.'/anexo21_'.$nombresNombreFichero.'.docx');
+$templateProcessor->saveAs($folder.'/'.$nombreF);
 
 // subir a drive
-subirDocumentoWordDrive	($folder.'/anexo21_'.$nombresNombreFichero.'.docx','anexo21_'.$nombresNombreFichero.'.docx',"anexo21",$idFolder);
+subirDocumentoWordDrive	($folder.'/'.$nombreF,$nombreF,$nombreAnexo,$idFolder);
 
-return 'anexo21_'.$nombresNombreFichero.'.docx';
+return $nombreF;
 }
 
 
