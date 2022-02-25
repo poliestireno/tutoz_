@@ -31,6 +31,8 @@ power desde n a m (son las referencias), ver desde que referencia existe el como
 
 INSERT INTO `CROMOS` (`ID`, `ID_SET`, `ID_CREADOR`, `ID_POSEEDOR`, `GENERADO`, `name`, `color`, `mana_w`, `picture`, `cardtype`, `rarity`, `cardtext`, `power`, `toughness`, `artist`, `bottom`, `ATRIBUTO_AUX`) VALUES (2378, 7, 1, NULL, 0, 'cOMoDÓn', 'Gold', 5, 'se02.jpg', '', 'Mythic', 'Soy Comodón, mi nombre vale para cualquier pareja,doble pareja,trio o cuarteto. Mi referencia y mis estrellas son inmutables hasta la eternidad. Utilizame como quieras, pero utilizame bien...', 5, 20, 'Gilbert', '', NULL);
 
+dejar referencia 1
+pero al meter varios comodines meterlos de diferentes número de estrellas
 
 */
 

@@ -57,8 +57,6 @@ $FECHA_FIRMA_DOC = $periodo['FECHA_FIRMA_DOC'];
 $FECHA_INICIO = $periodo['FECHA_INICIO'];
 $FECHA_TERMINACION = $periodo['FECHA_TERMINACION'];
 $HORAS_DIA = $periodo['HORAS_DIA'];
-$HORA_INICIO = $periodo['HORA_INICIO'];
-$HORA_TERMINACION = $periodo['HORA_TERMINACION'];
 $TOTAL_HORAS = $periodo['TOTAL_HORAS'];
 
 $aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO IN (SELECT ID FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo.") AND ID_FCT_PERIODO =".$idPeriodo." ORDER BY ID_FCT_EMPRESA"); 
@@ -260,6 +258,9 @@ foreach ($aPracticas as $practica)
   $LOCALIDAD_EMPRESA= $empresa['LOCALIDAD_EMPRESA'];
   $NOMBRE_TUTOR_EMPRESA= $practica['NOMBRE_TUTOR_EMPRESA'];
   $CONTACTO_TUTOR_EMPRESA= $practica['CONTACTO_TUTOR_EMPRESA'];
+  $HORA_INICIO = $practica['HORA_INICIO'];
+  $HORA_TERMINACION = $practica['HORA_TERMINACION'];
+
 
 ?>
 <div class="panel panel-default">							

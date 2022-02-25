@@ -594,6 +594,25 @@ $(function() {
 
 	function manageDelete()
 	{
+					var all = document.getElementsByTagName("*");
+			algunCheck=false;
+			for (var i=0, max=all.length; i < max; i++) {
+			     // Do something with the element here
+			     
+			     if (all[i].id.startsWith("cb__"))
+			     {
+			     	//alert(all[i].id);
+			     	if (all[i].checked)
+			     	{
+			     		algunCheck=true;
+			     		break;
+			     	}
+			     	
+			     }
+			}
+				if (algunCheck)
+				{
+
 				Swal.fire({
           title: '¿Seguro que quieres borrar el/los seleccionados?',
           text: "¿Seguro, Seguro, Seguro?",
@@ -608,6 +627,21 @@ $(function() {
     document.getElementById("form1").submit(); 
           }
         });
+              }
+      else
+      {
+				Swal.fire({
+          title: 'Selecciona alguna fila para hacer la operación(a la izquierda de la fila)',
+          text: "",
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          
+        });
+
+      }
+
 	}
 
 	function manageVerTodosDatos()
@@ -616,6 +650,25 @@ $(function() {
 	}
 	function manageModificar()
 	{
+				
+			var all = document.getElementsByTagName("*");
+			algunCheck=false;
+			for (var i=0, max=all.length; i < max; i++) {
+			     // Do something with the element here
+			     
+			     if (all[i].id.startsWith("cb__"))
+			     {
+			     	//alert(all[i].id);
+			     	if (all[i].checked)
+			     	{
+			     		algunCheck=true;
+			     		break;
+			     	}
+			     	
+			     }
+			}
+				if (algunCheck)
+				{
 				Swal.fire({
           title: '¿Seguro que quieres modificar todos los valores de el/los seleccionados?',
           text: "¿Seguro, Seguro, Seguro?",
@@ -630,6 +683,20 @@ $(function() {
     document.getElementById("form1").submit(); 
           }
         });
+      }
+      else
+      {
+				Swal.fire({
+          title: 'Selecciona alguna fila para hacer la operación(a la izquierda de la fila)',
+          text: "",
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          
+        });
+
+      }
 	}
 	function manageInsertar()
 	{
