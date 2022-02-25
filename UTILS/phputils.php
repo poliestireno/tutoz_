@@ -494,7 +494,11 @@ function calcularNivelDeEstrellas($dbh,$estrellasTotales,$correo)
 //var_export($_POST);
 foreach($_POST as $key => $value)
 {
-  $_POST[$key]=htmlentities($_POST[$key], ENT_COMPAT | ENT_HTML401, 'UTF-8');
+  if ((strpos($_POST[$key], "'") !== false) || (strpos($_POST[$key], ";") !== false)) 
+  { 
+      $_POST[$key]=htmlentities($_POST[$key], ENT_COMPAT | ENT_HTML401, 'UTF-8');
+  }
+
 }
 //echo "DESPUESSSSSSSSSSSS";
 //var_export($_POST);
