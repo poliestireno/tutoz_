@@ -274,6 +274,10 @@ foreach ($aPracticas as $practica)
   </div>
 
   <div class="form-group col-sm-12">
+    <span class="col-sm-2">
+  <label class="form-check-label" >Generar:</label>
+  <input class="form-check-input" type="checkbox" id="GG__<?php echo $contAlumnos?>" name="GG__<?php echo $contAlumnos?>" checked>  
+</span>
   <label class="col-sm-2 control-label">NOMBRE_ALUMNO<span style="color:red">*</span></label>
   <div class="col-sm-4">
   <input type="text" name="NOMBRE_ALUMNO_COMPLETO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $NOMBRE_ALUMNO." ".$APELLIDO1_ALUMNO." ".$APELLIDO2_ALUMNO?>" required>
@@ -283,7 +287,7 @@ foreach ($aPracticas as $practica)
 <input type="hidden" name="APELLIDO2_ALUMNO<?php echo $contAlumnos?>" id="APELLIDO2_ALUMNO<?php echo $contAlumnos?>" value="<?php echo $APELLIDO2_ALUMNO?>"/>
 
   <label class="col-sm-2 control-label">DNI_ALUMNO<span style="color:red">*</span></label>
-  <div class="col-sm-4">
+  <div class="col-sm-2">
   <input type="text" name="DNI_ALUMNO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $DNI_ALUMNO?>" required/>
   </div>
   </div>
