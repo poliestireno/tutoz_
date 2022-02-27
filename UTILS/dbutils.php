@@ -34,6 +34,32 @@ INSERT INTO `CROMOS` (`ID`, `ID_SET`, `ID_CREADOR`, `ID_POSEEDOR`, `GENERADO`, `
 dejar referencia 1
 pero al meter varios comodines meterlos de diferentes número de estrellas
 
+
+PASAR A VIDEOJUEGO
+Asegurarse que tengan todos los alumnos bot y actor
+en ASIGNATURA
+        ID_CONF_ASIGNATURAS 6 (CROMOS Y JUGAR)
+        CATEGORIA NIVEL ASIR1_SALLE (8 niveles con recompesas de bot)
+        actualizar a este momento FECHA_INICIO_CAMP_ACTUAL si se empieza evaluación (campaña) 
+TIENDA
+  en tabla TIENDAS poner el id de la asignatura
+  comprobar artítulos tienda para esa tienda
+
+EVENTOS
+  en la tabla EVENTOS asignarlos a id de la asignatura,
+  CAJITA01_BIS parece que es para la busqueda del tesoro, el que primero lo encuentre.
+
+METER A PROFESORES
+  En el tabla CURSOS_PERSONAJES se pueden añadir los cursos que se quieran a uno padre
+  en mi caso a ASIR1 añado el 32 que es el de profesores
+
+
+
+
+
+
+
+
 */
 
 $array_ini = parse_ini_file($_SERVER['DOCUMENT_ROOT'].'/sallez.ini');
