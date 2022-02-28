@@ -639,14 +639,20 @@ foreach ($aToRetos as $reto)
 
 	  	echo '<tr class="table-info">';
 	      
+	      $textoEntregas = '';
+	      $textoInfo = '';
+	  	  
 	  	  // no sale si tiene activado el bot, lo tienen que hacer por SalleZ
 	      if (!opcionMenuOk($dbh,$_SESSION['alogin'],"Mi bot"))
 	      {
-	      
+	      	$textoEntregas = '<a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a>';
+	      	$textoInfo = '<a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a>';
+
+	      }
 
 	      if (strpos($reto['NOMBRE'], 'MATERIAL'))
 	      {
-			echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><span style="color:red;	"> '.$reto['NOMBRE'].'</span></td>';
+			echo '<td title="'.$reto['DESCRIPCION'].'">'.$textoInfo.'<span style="color:red;	"> '.$reto['NOMBRE'].'</span></td>';
 	      }
 	      else
 	      {
@@ -655,14 +661,10 @@ foreach ($aToRetos as $reto)
 	$alumnoAcorregir = getAlumnoFromID($dbh,$alumnoTareaYo['ID_ALUMNO_A_CORREGIR']);
 	      	$tieneQueCorregir = ($alumnoAcorregir=='')?"":'<a href="corregir_reto.php?idt='.$retoId.'&ida='.getAlumnoFromCorreo($dbh,$loginAux)['ID'].'" target="_blank" rel="noopener"> [CORREGIR]</a>';
 
-	      	echo '<td title="'.$reto['DESCRIPCION'].'"><a href="'.$linkDocumentos.'" target="_blank" rel="noopener">[INFO]</a><a href="entregar_reto.php?act=act&idt='.$retoId.'" target="_blank" rel="noopener"> [ENTREGAS]</a>'.'<a href="evaluar_reto.php?idt='.$retoId.'&ida='.getAlumnoFromCorreo($dbh,$loginAux)['ID'].'" target="_blank" rel="noopener"> [EVALUAR]</a>'.$tieneQueCorregir.' [RETO] '.$reto['NOMBRE'].'</td>';
+	      	echo '<td title="'.$reto['DESCRIPCION'].'">'.$textoInfo.$textoEntregas.'<a href="evaluar_reto.php?idt='.$retoId.'&ida='.getAlumnoFromCorreo($dbh,$loginAux)['ID'].'" target="_blank" rel="noopener"> [EVALUAR]</a>'.$tieneQueCorregir.' [RETO] '.$reto['NOMBRE'].'</td>';
 	      }
 
-	  		}
-	  		else
-	  		{
-	  		echo '<td>'.$reto['NOMBRE'].'</td>';	
-	  		}
+	  		
 
 	      echo '<td>'.(strpos($reto['NOMBRE'], 'MATERIAL')?"-":$datosAlumnoTarea['ESTADO']).'</td>';
 echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
