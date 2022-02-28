@@ -151,7 +151,7 @@ function init()
     }
     else if ($compraRealizada ==1)
     {
-        echo "Swal.fire('GUAY!','Artículo correctamente pedido, su entrega puede sufrir una pequeña demora debido que estamos en ERTE parcial a causa de la pandemia y actualmente solamente tenemos un trabajador en plantilla, aun así en menos de 32 horas te llegará por SalleZAmazon. Si necesitas algo sobre este pedido escribe un comentario en el propio pedido en la sección de abajo de \"Mis pedidos realizados\"' ,'success');";
+        echo "Swal.fire('GUAY!','Artículo correctamente pedido, su entrega puede sufrir una pequeña demora debido que estamos en ERTE parcial a causa de la pandemia y actualmente solamente tenemos un trabajador en plantilla, aun así en menos de 32 horas te llegará por SusiAmazon. Si necesitas algo sobre este pedido escribe un comentario en el propio pedido en la sección de abajo de \"Mis pedidos realizados\"' ,'success');";
     }
     ?>
 }

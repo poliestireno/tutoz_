@@ -34,10 +34,10 @@ modificarEstadoCompraFromCompraId($dbh,$_POST['compraI'],'entregado');
 $laCompra = getCompraFromId($dbh,$_POST['compraI']);
 $alumnoAA = getAlumnoFromId($dbh,$laCompra['ID_ALUMNO']);
 $articuloAA = getArticuloFromId($dbh,$laCompra['ID_ARTICULO']);
-$message = "Hola ".$alumnoAA['NOMBRE']."!, estimado comprador de SalleZAmazon, el artículo ".$articuloAA['NOMBRE']." ha sido entregado, si no lo tienes contesta a este correo.
+$message = "Hola ".$alumnoAA['NOMBRE']."!, estimado comprador de SusiAmazon, el artículo ".$articuloAA['NOMBRE']." ha sido entregado, si no lo tienes contesta a este correo.
 Un gran saludo.
 Tuto Z";
-  $subject="SalleZAmazon Entrega artículo ".$articuloAA['NOMBRE'] ;
+  $subject="SusiAmazon Entrega artículo ".$articuloAA['NOMBRE'] ;
   $to=$alumnoAA['CORREO'];
 
   $okEnvio = enviarCorreo($to,$subject,$message);
@@ -56,10 +56,10 @@ $articuloAA = getArticuloFromId($dbh,$laCompra['ID_ARTICULO']);
   modificarCalas($dbh,$alumnoAA['CORREO'],$articuloAA["PRECIO"]);
 modificarCantidadArticulo($dbh,$laCompra['ID_ARTICULO'],1);
 
-$message = "Hola ".$alumnoAA['NOMBRE']."!, estimado comprador de SalleZAmazon, el artículo ".$articuloAA['NOMBRE']." ha sido devuelto, si tienes alguna duda contesta a este correo.
+$message = "Hola ".$alumnoAA['NOMBRE']."!, estimado comprador de SusiAmazon, el artículo ".$articuloAA['NOMBRE']." ha sido devuelto, si tienes alguna duda contesta a este correo.
 Un gran saludo.
 Tuto Z";
-  $subject="SalleZAmazon Devolución artículo ".$articuloAA['NOMBRE'] ;
+  $subject="SusiAmazon Devolución artículo ".$articuloAA['NOMBRE'] ;
   $to=$alumnoAA['CORREO'];
 
   $okEnvio = enviarCorreo($to,$subject,$message);
@@ -225,7 +225,7 @@ $artiAux= getArticuloFromId($dbh,$compraI['ID_ARTICULO']);
     <button class="btn btn-danger" name="bKo" type="submit">Devolver</button>
     <button class="btn btn-warning" name="bComentario" type="submit">Modificar Comentario</button>
     <a class="btn btn-info" href="https://mail.google.com/mail/u/0/?fs=1&to=<?php echo $ali['CORREO']?>&su=<?php
-    echo 'INFO SalleZAmazon Pedido nº '.$compraI['ID'].': '.$artiAux['NOMBRE'];
+    echo 'INFO SusiAmazon Pedido nº '.$compraI['ID'].': '.$artiAux['NOMBRE'];
     ?>
     &tf=cm" target="_blank">Enviar correo</a>
   </div>
@@ -308,7 +308,7 @@ $artiAux= getArticuloFromId($dbh,$compraI['ID_ARTICULO']);
     <button class="btn btn-success" name="bPen" type="submit">Pasar Pendiente</button>
     <button class="btn btn-warning" name="bComentario" type="submit">Modificar Comentario</button>
     <a class="btn btn-info" href="https://mail.google.com/mail/u/0/?fs=1&to=<?php echo $ali['CORREO']?>&su=<?php
-    echo 'INFO SalleZAmazon Pedido nº '.$compraI['ID'].': '.$artiAux['NOMBRE'];
+    echo 'INFO SusiAmazon Pedido nº '.$compraI['ID'].': '.$artiAux['NOMBRE'];
     ?>
     &tf=cm" target="_blank">Enviar correo</a>
   </div>
@@ -390,7 +390,7 @@ $artiAux= getArticuloFromId($dbh,$compraI['ID_ARTICULO']);
   <div class="col-sm-8 col-sm-offset-2">
        <button class="btn btn-warning" name="bComentario" type="submit">Modificar Comentario</button>
      <a class="btn btn-info" href="https://mail.google.com/mail/u/0/?fs=1&to=<?php echo $ali['CORREO']?>&su=<?php
-    echo 'INFO SalleZAmazon Pedido nº '.$artiAux['ID'].': '.$artiAux['NOMBRE'];
+    echo 'INFO SusiAmazon Pedido nº '.$artiAux['ID'].': '.$artiAux['NOMBRE'];
     ?>
     &tf=cm" target="_blank">Enviar correo</a>
   </div>
