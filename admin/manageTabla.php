@@ -132,7 +132,7 @@ function setCampoDeLista($dbh,$fila,$columna)
 	}
 	return $sTextSelect;
 }
-function setCampoParaInsert($dbh,$nombreCol)
+function setCampoParaInsert($dbh,$nombreCol,$nombreTabla)
 {
 	$sTextSelect = "";
 	if (substr( $nombreCol, 0, 3 ) === "ID_")
@@ -182,7 +182,14 @@ function setCampoParaInsert($dbh,$nombreCol)
 	}
 	else
 	{
-		$sTextSelect='<td><input name="gg__'.$nombreCol.'" class="form-control" type="text" value="" /></td>';
+
+$aData = ejecutarQuery($dbh,"SELECT DEFAULT(".$nombreCol.") DEF FROM ".$nombreTabla);
+$valueDefault="";
+if (Count($aData)>0)
+{
+	$valueDefault= $aData[0]['DEF'];
+}
+		$sTextSelect='<td><input name="gg__'.$nombreCol.'" class="form-control" type="text" value="'.$valueDefault.'" /></td>';
 	}
 	return $sTextSelect;
 }
@@ -447,7 +454,7 @@ foreach ($aColumnas as $columna)
 	echo '<tr class="table-info">';
 	foreach ($aColumnas as $columna) 
 	{
-		echo (($columna['COLUMN_NAME']=='ID')?'':setCampoParaInsert($dbh,$columna['COLUMN_NAME']));
+		echo (($columna['COLUMN_NAME']=='ID')?'':setCampoParaInsert($dbh,$columna['COLUMN_NAME'],$nombreTabla));
 	}
   echo '</tr>';	
 	

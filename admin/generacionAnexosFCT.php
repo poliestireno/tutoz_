@@ -362,8 +362,7 @@ $templateProcessor->setValue('CURSO_ACADEMICO', $_POST['CURSO_ACADEMICO']);
 $templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO']);
 $templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION']);
 $templateProcessor->setValue('HORAS_DIA', $_POST['HORAS_DIA']);
-$templateProcessor->setValue('HORA_INICIO', $_POST['HORA_INICIO'.$num]);
-$templateProcessor->setValue('HORA_TERMINACION', $_POST['HORA_TERMINACION'.$num]);
+$templateProcessor->setValue('HORARIOS', $_POST['HORARIOS'.$num]);
 $templateProcessor->setValue('TOTAL_HORAS', $_POST['TOTAL_HORAS']);
 $templateProcessor->setValue('FECHA_FIRMA_DOC', $_POST['FECHA_FIRMA_DOC']);
 
@@ -379,8 +378,8 @@ $templateProcessor->setValue('CONTACTO_TUTOR_EMPRESA', $_POST['CONTACTO_TUTOR_EM
 $templateProcessor->setValue('N_CONVENIO', $_POST['N_CONVENIO'.$num]);
 $templateProcessor->setValue('NOMBRE_EMPRESA', $_POST['NOMBRE_EMPRESA'.$num]);
 $templateProcessor->setValue('FECHA_CONVENIO', $_POST['FECHA_CONVENIO'.$num]);
-$templateProcessor->setValue('LOCALIDAD_EMPRESA', $_POST['LOCALIDAD_EMPRESA'.$num]);
-$templateProcessor->setValue('DIRECCION_EMPRESA', $_POST['DIRECCION_EMPRESA'.$num]);
+$templateProcessor->setValue('LOCALIDAD_TRABAJO', $_POST['LOCALIDAD_TRABAJO'.$num]);
+$templateProcessor->setValue('DIRECCION_TRABAJO', $_POST['DIRECCION_TRABAJO'.$num]);
 $templateProcessor->setValue('NOMBRE_REPRESENTANTE_EMPRESA', $_POST['NOMBRE_REPRESENTANTE_EMPRESA'.$num]);
 
 
@@ -530,7 +529,7 @@ global $aNumAlumnos;
 	$table->addCell(1750,$styleCell)->addText($_POST['HORAS_DIA'],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_TERMINACION'],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_INICIO'],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1600,$styleCell)->addText($_POST['LOCALIDAD_EMPRESA'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1600,$styleCell)->addText($_POST['LOCALIDAD_TRABAJO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1200,$styleCell)->addText($_POST['N_CONVENIO'.$i]."CM",array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1500,$styleCell)->addText($_POST['DNI_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1300,$styleCell)->addText($_POST['NOMBRE_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));

@@ -220,7 +220,8 @@ echo '<option '.(((isset($_POST['idPeriFiltro']))&&($_POST['idPeriFiltro']==$per
 <th>ALUMNO</th>
 <th>EMPRESA</th>
 <th>TUTOR_EMPRESA</th>
-<th>HORARIO</th>
+<th>DIRECCION_TRABAJO</th>
+<th>HORARIOS</th>
 <th>ENLACE_DOCS</th>
 
     
@@ -250,7 +251,9 @@ echo '<td>'.'<a data-toggle="tooltip" title="Nº CONVENIO:'.$aEmpresasAux[0]['N_
 		
 	  echo '<td><a data-toggle="tooltip" title="Pincha para más detalle" href="manageTabla.php?tabla=FCT_PRACTICAS&idSearch='.$practicaAux['ID'].'" target="_blank">'.$practicaAux['NOMBRE_TUTOR_EMPRESA'].'('.$practicaAux['CONTACTO_TUTOR_EMPRESA'].')</a></td>';
 
-	  echo '<td><a data-toggle="tooltip" title="Pincha para más detalle" href="manageTabla.php?tabla=FCT_PRACTICAS&idSearch='.$practicaAux['ID'].'" target="_blank">'.$practicaAux['HORA_INICIO'].'-'.$practicaAux['HORA_TERMINACION'].'</a></td>';
+	  echo '<td><a data-toggle="tooltip" title="Pincha para más detalle" href="manageTabla.php?tabla=FCT_PRACTICAS&idSearch='.$practicaAux['ID'].'" target="_blank">'.$practicaAux['DIRECCION_TRABAJO'].'('.$practicaAux['LOCALIDAD_TRABAJO'].')</a></td>';
+
+	  echo '<td><a data-toggle="tooltip" title="Pincha para más detalle" href="manageTabla.php?tabla=FCT_PRACTICAS&idSearch='.$practicaAux['ID'].'" target="_blank">'.$practicaAux['HORARIOS'].'</a></td>';
 
 $folderServidor="../docsFCT/".$claveCiclo;
 $folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV";
@@ -271,7 +274,8 @@ $folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHR
 <th>ALUMNO</th>
 <th>EMPRESA</th>
 <th>TUTOR_EMPRESA</th>
-<th>HORARIO</th>
+<th>DIRECCION_TRABAJO</th>
+<th>HORARIOS</th>
 <th>ENLACE_DOCS</th>
    </tr>
 
@@ -282,7 +286,8 @@ $folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHR
 <th>ALUMNO</th>
 <th>EMPRESA</th>
 <th>TUTOR_EMPRESA</th>
-<th>HORARIO</th>
+<th>DIRECCION_TRABAJO</th>
+<th>HORARIOS</th>
 <th>ENLACE_DOCS</th>
    </tr>
         </tfoot>  

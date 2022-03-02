@@ -235,7 +235,9 @@ $aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHER
 
 	</div>
 </div>
-
+<a onclick="checkAllAlumnos()"  class="btn btn-success btn-outline btn-wrap-text">
+<span style="font-size:larger;">Seleccionar todos los alumnos</span></a>
+<a onclick="uncheckAllAlumnos()"  class="btn btn-dark btn-outline btn-wrap-text"><span style="font-size:larger;">No selecciconar ningún alumno</span></a>
 <?php
 $contAlumnos=1;
 $totalAlumnos = Count($aPracticas);
@@ -254,12 +256,11 @@ foreach ($aPracticas as $practica)
   $NOMBRE_REPRESENTANTE_EMPRESA= $empresa['NOMBRE_REPRESENTANTE_EMPRESA'];
   $N_CONVENIO= $empresa['N_CONVENIO'];
   $FECHA_CONVENIO= $empresa['FECHA_CONVENIO'];
-  $DIRECCION_EMPRESA= $empresa['DIRECCION_EMPRESA'];
-  $LOCALIDAD_EMPRESA= $empresa['LOCALIDAD_EMPRESA'];
   $NOMBRE_TUTOR_EMPRESA= $practica['NOMBRE_TUTOR_EMPRESA'];
   $CONTACTO_TUTOR_EMPRESA= $practica['CONTACTO_TUTOR_EMPRESA'];
-  $HORA_INICIO = $practica['HORA_INICIO'];
-  $HORA_TERMINACION = $practica['HORA_TERMINACION'];
+  $HORARIOS = $practica['HORARIOS'];
+  $DIRECCION_TRABAJO = $practica['DIRECCION_TRABAJO'];
+  $LOCALIDAD_TRABAJO = $practica['LOCALIDAD_TRABAJO'];
 
 
 ?>
@@ -317,14 +318,14 @@ foreach ($aPracticas as $practica)
   </div>
 
   <div class="form-group col-sm-12">
-  <label class="col-sm-2 control-label">DIRECCION_EMPRESA<span style="color:red">*</span></label>
+  <label class="col-sm-2 control-label">DIRECCION_TRABAJO<span style="color:red">*</span></label>
   <div class="col-sm-4">
-  <input type="text" name="DIRECCION_EMPRESA<?php echo $contAlumnos?>" class="form-control" value="<?php echo $DIRECCION_EMPRESA?>" required>
+  <input type="text" name="DIRECCION_TRABAJO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $DIRECCION_TRABAJO?>" required>
   </div>
 
-  <label class="col-sm-2 control-label">LOCALIDAD_EMPRESA<span style="color:red">*</span></label>
+  <label class="col-sm-2 control-label">LOCALIDAD_TRABAJO<span style="color:red">*</span></label>
   <div class="col-sm-4">
-  <input type="text" name="LOCALIDAD_EMPRESA<?php echo $contAlumnos?>" class="form-control" value="<?php echo $LOCALIDAD_EMPRESA?>" required/>
+  <input type="text" name="LOCALIDAD_TRABAJO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $LOCALIDAD_TRABAJO?>" required/>
   </div>
   </div>
 
@@ -341,14 +342,9 @@ foreach ($aPracticas as $practica)
   </div>
 
   <div class="form-group col-sm-12">
-  <label class="col-sm-2 control-label">HORA_INICIO<span style="color:red">*</span></label>
-  <div class="col-sm-4">
-  <input type="text" name="HORA_INICIO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $HORA_INICIO?>" required>
-  </div>
-
-  <label class="col-sm-2 control-label">HORA_TERMINACION<span style="color:red">*</span></label>
-  <div class="col-sm-4">
-  <input type="text" name="HORA_TERMINACION<?php echo $contAlumnos?>" class="form-control" value="<?php echo $HORA_TERMINACION?>" required/>
+  <label class="col-sm-2 control-label">HORARIOS<span style="color:red">*</span></label>
+  <div class="col-sm-10">
+  <input type="text" name="HORARIOS<?php echo $contAlumnos?>" class="form-control" value="<?php echo $HORARIOS?>" required>
   </div>
   </div>
 
@@ -371,7 +367,7 @@ $contAlumnos++;
   <div class="form-group col-sm-12">
 
 <div class="custom-control custom-radio">
-  <input type="radio" class="custom-control-input" id="defaultChecked" name="rNomenclatura" value="1" checked>
+  <input type="radio" class="custom-control-input" id="defaultChecked" name="rNomenclatura" value="1">
   <label class="custom-control-label" for="defaultChecked">Por nombre alumno</label>
 </div>
 <div class="custom-control custom-radio">
@@ -383,7 +379,7 @@ $contAlumnos++;
   <label class="custom-control-label" for="defaultChecked">Por nombre alumno y empresa</label>
 </div>
 <div class="custom-control custom-radio">
-  <input type="radio"  value="4" class="custom-control-input" id="defaultUnchecked3" name="rNomenclatura">
+  <input type="radio"  value="4" class="custom-control-input" id="defaultUnchecked3" name="rNomenclatura" checked>
   <label class="custom-control-label" for="defaultChecked">Por empresa y nombre alumno</label>
 </div>      
 
@@ -464,9 +460,92 @@ $contAlumnos++;
   function manageGeneracion()
   {
 
-    document.getElementById('totalAlumnos').value = <?php echo $totalAlumnos?>;  
-    document.getElementById('form1').submit();  
+      var all = document.getElementsByTagName("*");
+      algunCheck=false;
+      for (var i=0, max=all.length; i < max; i++) 
+      {
+           // Do something with the element here
+           
+           if (all[i].id.startsWith("GG__"))
+           {
+            if (all[i].checked)
+            {
+              algunCheck=true;
+              break;
+            }
+            
+           }
+      }
+      algunCheckInforme=false;
+      for (var i=0, max=all.length; i < max; i++) 
+      {
+           // Do something with the element here
+           
+           if (all[i].id.startsWith("anexo"))
+           {
+            if (all[i].checked)
+            {
+              algunCheckInforme=true;
+              break;
+            }
+            
+           }
+      }
+
+
+
+
+      if (!algunCheck)
+      {
+        Swal.fire({
+          title: 'Selecciona algun alumno',
+          text: "",
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          
+        });
+
+      }
+      else if (!algunCheckInforme)
+      {
+        Swal.fire({
+          title: 'Selecciona algun tipo de informe',
+          text: "",
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          
+        });
+
+      }
+      else
+      {
+        document.getElementById('totalAlumnos').value = <?php echo $totalAlumnos?>;  
+        document.getElementById('form1').submit();       
+      }      
   }
+
+  function checkAllAlumnos()
+  {  
+    const els = document.querySelectorAll(`[id^="GG__"]`);
+    for (var i=els.length;i--;)
+    {
+      els[i].checked=true; 
+    }                  
+  }
+  function uncheckAllAlumnos()
+  {  
+    const els = document.querySelectorAll(`[id^="GG__"]`);
+    for (var i=els.length;i--;)
+    {
+      els[i].checked=false; 
+    }                  
+  }
+
+
 	</script>
 </body>
 </html>
