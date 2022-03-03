@@ -189,18 +189,6 @@ $aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHER
   </div>
 
   <div class="form-group col-sm-12">
-  <label class="col-sm-2 control-label">FECHA_INICIO<span style="color:red">*</span></label>
-  <div class="col-sm-4">
-  <input type="text" name="FECHA_INICIO" class="form-control" value="<?php echo $FECHA_INICIO?>" required>
-  </div>
-
-  <label class="col-sm-2 control-label">FECHA_TERMINACION<span style="color:red">*</span></label>
-  <div class="col-sm-4">
-  <input type="text" name="FECHA_TERMINACION" class="form-control" value="<?php echo $FECHA_TERMINACION?>" required/>
-  </div>
-  </div>
-
-  <div class="form-group col-sm-12">
   <label class="col-sm-2 control-label">HORAS_DIA<span style="color:red">*</span></label>
   <div class="col-sm-4">
   <input type="text" name="HORAS_DIA" class="form-control" value="<?php echo $HORAS_DIA?>" required>
@@ -317,6 +305,17 @@ foreach ($aPracticas as $practica)
   </div>
   </div>
 
+  <div class="form-group col-sm-12">
+  <label class="col-sm-2 control-label">FECHA_INICIO<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="FECHA_INICIO<?php echo $contAlumnos?>" class="form-control" value="<?php echo $FECHA_INICIO?>" required>
+  </div>
+
+  <label class="col-sm-2 control-label">FECHA_TERMINACION<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="FECHA_TERMINACION<?php echo $contAlumnos?>" class="form-control" value="<?php echo $FECHA_TERMINACION?>" required/>
+  </div>
+  </div>
   <div class="form-group col-sm-12">
   <label class="col-sm-2 control-label">DIRECCION_TRABAJO<span style="color:red">*</span></label>
   <div class="col-sm-4">

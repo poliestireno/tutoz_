@@ -290,8 +290,8 @@ $templateProcessor->setValue('NOMBRE_EMPRESA', mb_strtoupper($_POST['NOMBRE_EMPR
 $templateProcessor->setValue('NOMBRE_TUTOR_EMPRESA', mb_strtoupper($_POST['NOMBRE_TUTOR_EMPRESA'.$num], 'UTF-8'));
 
 //FCT Periodo
-$templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO']);
-$templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION']);
+$templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO'.$num]);
+$templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION'.$num]);
 $templateProcessor->setValue('FECHA_FIRMA_DOC', $_POST['FECHA_FIRMA_DOC']);
 
 $nombresNombreFichero= "";
@@ -359,8 +359,8 @@ $templateProcessor->setValue('NOMBRE_CICLO', $_POST['NOMBRE_CICLO']);
 
 //FCT Periodo
 $templateProcessor->setValue('CURSO_ACADEMICO', $_POST['CURSO_ACADEMICO']);
-$templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO']);
-$templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION']);
+$templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO'.$num]);
+$templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION'.$num]);
 $templateProcessor->setValue('HORAS_DIA', $_POST['HORAS_DIA']);
 $templateProcessor->setValue('HORARIOS', $_POST['HORARIOS'.$num]);
 $templateProcessor->setValue('TOTAL_HORAS', $_POST['TOTAL_HORAS']);
@@ -527,8 +527,8 @@ global $aNumAlumnos;
 	$table->addCell(1750,$styleCell)->addText($_POST['NOMBRE_TUTOR_COLEGIO'],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1500,$styleCell)->addText($_POST['TOTAL_HORAS'],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1750,$styleCell)->addText($_POST['HORAS_DIA'],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_TERMINACION'],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_INICIO'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_TERMINACION'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_INICIO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1600,$styleCell)->addText($_POST['LOCALIDAD_TRABAJO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1200,$styleCell)->addText($_POST['N_CONVENIO'.$i]."CM",array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1500,$styleCell)->addText($_POST['DNI_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
