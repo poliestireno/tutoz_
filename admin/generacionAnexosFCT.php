@@ -276,8 +276,16 @@ flush();
 
 function generarAnexo3($folder, $sTextoCarpetaAMostrar,$num,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder)
 {
+$rutaPlantillaCiclo = "../PHPWord-develop/plantillas/".$_POST['CLAVE_CICLO']."_anexo3.docx";
+if (file_exists($rutaPlantillaCiclo)) 
+{
+	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($rutaPlantillaCiclo);
+}
+else
+{
+	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo3.docx');
+}
 
-$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('../PHPWord-develop/plantillas/anexo3.docx');
 
 
 // tutor colegio
