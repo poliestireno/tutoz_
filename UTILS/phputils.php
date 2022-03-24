@@ -495,6 +495,11 @@ function calcularNivelDeEstrellas($dbh,$estrellasTotales,$correo)
 // sanitiza el post de textos con <
 foreach($_POST as $key => $value)
 {
+  if(!is_array($_POST[$key]))
+  {
+    
+  
+
   if (strpos($_POST[$key], "<") !== false)
   {
       $_POST[$key]=htmlentities($_POST[$key], ENT_COMPAT | ENT_HTML401, 'UTF-8');
@@ -502,6 +507,7 @@ foreach($_POST as $key => $value)
       $_POST[$key]=str_replace("&lt;br/&gt;", "<br/>", $_POST[$key]);
       $_POST[$key]=str_replace("&lt;br&gt;", "<br/>", $_POST[$key]);
   }
+}
 }
 //echo "DESPUESSSSSSSSSSSS";
 //var_export($_POST);

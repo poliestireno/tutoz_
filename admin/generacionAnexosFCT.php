@@ -512,18 +512,18 @@ $table = $section->addTable($styleCell);
 
 // cabecera de la tabla
 $table->addRow();
-$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Tutor Empresa",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1750,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Tutor Centro",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Total Horas",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1750,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Horas/día",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Final",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Inicio",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1600,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Localidad",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1200,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nº convenio",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("NIF/NIE",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nombre",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(2700,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Apellidos",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
-$table->addCell(650,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nº.",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nº.",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1750,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Apellidos",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nombre",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1750,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("NIF/NIE",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Nº convenio",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Localidad",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1600,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Inicio",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1200,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Final",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1500,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Horas/día",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(1300,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Total Horas",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(2700,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Tutor Centro",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
+$table->addCell(650,array_merge($styleCell,array('bgColor'=>'dbdbdb')))->addText("Tutor Empresa",array('name'=>'Arial', 'size'=>9,'bold' => true,'align' => 'center'));
 
 // filas de la tabla
 global $aNumAlumnos;
@@ -531,18 +531,18 @@ global $aNumAlumnos;
 		{ 
 				$i=$aNumAlumnos[$k];	
 				$table->addRow();
-	$table->addCell(1500,$styleCell)->addText($_POST['NOMBRE_TUTOR_EMPRESA'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1750,$styleCell)->addText($_POST['NOMBRE_TUTOR_COLEGIO'],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1500,$styleCell)->addText($_POST['TOTAL_HORAS'],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1750,$styleCell)->addText($_POST['HORAS_DIA'],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_TERMINACION'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1300,$styleCell)->addText($_POST['FECHA_INICIO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1600,$styleCell)->addText($_POST['LOCALIDAD_TRABAJO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1200,$styleCell)->addText($_POST['N_CONVENIO'.$i]."CM",array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1500,$styleCell)->addText($_POST['DNI_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1300,$styleCell)->addText($_POST['NOMBRE_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(2700,$styleCell)->addText($_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(650,$styleCell)->addText($k+1,array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1500,$styleCell)->addText($k+1,array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1750,$styleCell)->addText($_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1500,$styleCell)->addText($_POST['NOMBRE_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1750,$styleCell)->addText($_POST['DNI_ALUMNO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['N_CONVENIO'.$i]."CM",array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['LOCALIDAD_TRABAJO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1600,$styleCell)->addText($_POST['FECHA_INICIO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1200,$styleCell)->addText($_POST['FECHA_TERMINACION'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1500,$styleCell)->addText($_POST['HORAS_DIA'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['TOTAL_HORAS'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(2700,$styleCell)->addText($_POST['NOMBRE_TUTOR_COLEGIO'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(650,$styleCell)->addText($_POST['NOMBRE_TUTOR_EMPRESA'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	
 }
 
