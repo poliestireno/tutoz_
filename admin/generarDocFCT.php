@@ -27,13 +27,13 @@ if (isset($_POST['idCiclo']))
 {
   $idCiclo=$_POST['idCiclo'];
 }
-if (isset($_GET['idPeriodo']))
+if (isset($_GET['idPeriodo2']))
 {
-  $idPeriodo=$_GET['idPeriodo'];
+  $idPeriodo=$_GET['idPeriodo2'];
 }
-if (isset($_POST['idPeriodo']))
+if (isset($_POST['idPeriodo2']))
 {
-  $idPeriodo=$_POST['idPeriodo'];
+  $idPeriodo=$_POST['idPeriodo2'];
 }
 
 
@@ -47,19 +47,22 @@ $aTutoresCole = ejecutarQuery($dbh,"SELECT * FROM FCT_TUTORES_PROFES WHERE ID_FC
 $NOMBRE_TUTOR_COLEGIO = $aTutoresCole[0]['NOMBRE']." ".$aTutoresCole[0]['APELLIDO1']." ".$aTutoresCole[0]['APELLIDO2'];
 $NIF_TUTOR_COLEGIO = $aTutoresCole[0]['DNI'];
 
-$aPeriodos = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID =".$idPeriodo);
+$aPeriodos = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID IN (".$idPeriodo.")");
 $periodo = $aPeriodos[0];
-
-$nombrePeriodo = $periodo['FECHA_INICIO']." / ".$periodo['FECHA_TERMINACION'].(($periodo['INFO']=="")?"":" (".$periodo['INFO'].")");
-
+$nombrePeriodo = "";
+$y="";
+foreach ($aPeriodos as $perri) {
+  $nombrePeriodo = $nombrePeriodo.$y. $perri['FECHA_INICIO']." / ".$perri['FECHA_TERMINACION'].(($perri['INFO']=="")?"":" (".$perri['INFO'].")");
+  $y=" Y ";
+}
 $CURSO_ACADEMICO = $periodo['CURSO_ACADEMICO'];
 $FECHA_FIRMA_DOC = $periodo['FECHA_FIRMA_DOC'];
-$FECHA_INICIO = $periodo['FECHA_INICIO'];
-$FECHA_TERMINACION = $periodo['FECHA_TERMINACION'];
-$HORAS_DIA = $periodo['HORAS_DIA'];
-$TOTAL_HORAS = $periodo['TOTAL_HORAS'];
+//$FECHA_INICIO = $periodo['FECHA_INICIO'];
+//$FECHA_TERMINACION = $periodo['FECHA_TERMINACION'];
+//$HORAS_DIA = $periodo['HORAS_DIA'];
+//$TOTAL_HORAS = $periodo['TOTAL_HORAS'];
 
-$aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO IN (SELECT ID FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo.") AND ID_FCT_PERIODO =".$idPeriodo." ORDER BY ID_FCT_EMPRESA"); 
+$aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO IN (SELECT ID FROM FCT_ALUMNOS WHERE ID_FCT_CICLO =".$idCiclo.") AND ID_FCT_PERIODO IN (".$idPeriodo.") ORDER BY ID_FCT_EMPRESA"); 
 
 
 
@@ -188,17 +191,7 @@ $aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHER
   </div>
   </div>
 
-  <div class="form-group col-sm-12">
-  <label class="col-sm-2 control-label">HORAS_DIA<span style="color:red">*</span></label>
-  <div class="col-sm-4">
-  <input type="text" name="HORAS_DIA" class="form-control" value="<?php echo $HORAS_DIA?>" required>
-  </div>
 
-  <label class="col-sm-2 control-label">TOTAL_HORAS<span style="color:red">*</span></label>
-  <div class="col-sm-4">
-  <input type="text" name="TOTAL_HORAS" class="form-control" value="<?php echo $TOTAL_HORAS?>" required/>
-  </div>
-  </div>
 
   <div class="form-group col-sm-12">
   <label class="col-sm-2 control-label">NOMBRE_TUTOR_COLEGIO<span style="color:red">*</span></label>
@@ -250,7 +243,12 @@ foreach ($aPracticas as $practica)
   $DIRECCION_TRABAJO = $practica['DIRECCION_TRABAJO'];
   $LOCALIDAD_TRABAJO = $practica['LOCALIDAD_TRABAJO'];
 
-
+   $aPeriodosAux = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID =".$practica['ID_FCT_PERIODO']);
+  $periOO = $aPeriodosAux[0];
+  $FECHA_INICIO = $periOO['FECHA_INICIO'];
+  $FECHA_TERMINACION = $periOO['FECHA_TERMINACION'];
+  $HORAS_DIA = $periOO['HORAS_DIA'];
+  $TOTAL_HORAS = $periOO['TOTAL_HORAS'];
 ?>
 <div class="panel panel-default">							
 	<div class="panel-heading"><?php echo $NOMBRE_ALUMNO." ".$APELLIDO1_ALUMNO." ".$APELLIDO2_ALUMNO." (".$contAlumnos."/".$totalAlumnos.")"?></div>
@@ -314,6 +312,18 @@ foreach ($aPracticas as $practica)
   <label class="col-sm-2 control-label">FECHA_TERMINACION<span style="color:red">*</span></label>
   <div class="col-sm-4">
   <input type="text" name="FECHA_TERMINACION<?php echo $contAlumnos?>" class="form-control" value="<?php echo $FECHA_TERMINACION?>" required/>
+  </div>
+  </div>
+
+  <div class="form-group col-sm-12">
+  <label class="col-sm-2 control-label">HORAS_DIA<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="HORAS_DIA<?php echo $contAlumnos?>" class="form-control" value="<?php echo $HORAS_DIA?>" required>
+  </div>
+
+  <label class="col-sm-2 control-label">TOTAL_HORAS<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="TOTAL_HORAS<?php echo $contAlumnos?>" class="form-control" value="<?php echo $TOTAL_HORAS?>" required/>
   </div>
   </div>
   <div class="form-group col-sm-12">

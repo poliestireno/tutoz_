@@ -31,9 +31,19 @@ if (isset($_POST['idCiclo']))
 $filtroPeriodoSQL="";
 if ((isset($_POST['idPeriFiltro']))&&($_POST['idPeriFiltro']!=""))
 {
-  $filtroPeriodoSQL=" ID_FCT_PERIODO =".$_POST['idPeriFiltro']." AND ";
+	$aPeriodos = explode(',', $_POST['idPeriFiltro']);
+	$orr = "";
+	$cond_or = "";
+	foreach ($aPeriodos as $perii) 
+	{
+		if ($perii!="")
+		{
+			$cond_or=$cond_or.$orr." ID_FCT_PERIODO =".$perii." ";
+			$orr=" OR ";
+		}
+	}
+  $filtroPeriodoSQL="(".$cond_or.") AND ";
 }
-
 
 
 $aCiclos = ejecutarQuery($dbh,"SELECT * FROM FCT_CICLOS WHERE ID =".$idCiclo);
@@ -97,7 +107,8 @@ foreach ($aAlumnos as $alumnoAux)
     <script src="js/main.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
 
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 	<style>
 	.errorWrap {
@@ -153,14 +164,12 @@ tfoot input {
 
 <form target="_blank" action="generarDocFCT.php" method="post" id="form1" class="form-horizontal" enctype="multipart/form-data" >
 <input type="hidden" name="idCiclo" id="idCiclo" value="<?php echo $idCiclo?>"/>
+<input type="hidden" name="idPeriodo2" id="idPeriodo2"/>
 
 <h1>CICLO: <?php echo '<a data-toggle="tooltip" title="CLAVE CICLO:'.$claveCiclo.' Pincha para más detalle" href="manageTabla.php?tabla=FCT_CICLOS&idSearch='.$idCiclo.'" target="_blank">'.$nombreCiclo.'</a>'?></h1>
 <h1>CLAVE: <?php echo $claveCiclo?></h1>
 <h2>TUTOR: <?php echo '<a data-toggle="tooltip" title="DNI:'.$aTutoresCole[0]['DNI'].' Pincha para más detalle" href="manageTabla.php?tabla=FCT_TUTORES_PROFES&idSearch='.$aTutoresCole[0]['ID'].'" target="_blank">'.$nombreTutorCole.'</a>'?></h2>
 
-<div class="panel panel-default">
-						
-	<div class="panel-heading">GENERAR DOCUMENTACIÓN DE PERIODO DE CICLO</div>
 
 <div class="container-fluid">
 <div class="form-group">
@@ -171,18 +180,24 @@ tfoot input {
 	<div class="col-sm-4">
 	</div>
 </div>
-<div class="container">
+
+<span class="label label-danger" style="font-size:12px;">NUEVO:Se pueden seleccionar varios periodos, esto sólo tiene sentido para generar el anexo 2.2 de varios periodos, para otros anexos sólo dejar seleccionado 1 periodo</span>
 <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select onchange="cambiarPeriodo()" class="form-control" id="idPeriodo" name="idPeriodo">
+                        <select onchange="cambiarPeriodo()" class="form-control" id="idPeriodo" name="idPeriodo" multiple="multiple">
                         	<option value=""></option>;
                         	<?php
                         	$aPeriodosAux2 = ejecutarQuery($dbh,"SELECT * FROM FCT_PERIODOS WHERE ID IN (SELECT ID_FCT_PERIODO FROM FCT_PRACTICAS WHERE ID_FCT_ALUMNO IN (SELECT ID FROM FCT_ALUMNOS WHERE ID_FCT_CICLO=".$idCiclo.")) ORDER BY FECHA_TERMINACION DESC");
                         	foreach ($aPeriodosAux2 as $periAux) 
                         	{
 $nombrePeriodoAux2 = $periAux['FECHA_INICIO']." / ".$periAux['FECHA_TERMINACION'].(($periAux['INFO']=="")?"":" (".$periAux['INFO'].")");
-echo '<option '.(((isset($_POST['idPeriFiltro']))&&($_POST['idPeriFiltro']==$periAux['ID']))?" selected ":"").' value="'.$periAux['ID'].'">'.$nombrePeriodoAux2.'</option>';
+
+if (isset($_POST['idPeriFiltro']))
+{
+	$aPeriodos = explode(',', $_POST['idPeriFiltro']);
+}
+echo '<option '.(((isset($_POST['idPeriFiltro']))&&(in_array($periAux['ID'], $aPeriodos)))?" selected ":"").' value="'.$periAux['ID'].'">'.$nombrePeriodoAux2.'</option>';
                         	}
                         	
                         	?>
@@ -190,15 +205,15 @@ echo '<option '.(((isset($_POST['idPeriFiltro']))&&($_POST['idPeriFiltro']==$per
                         </select>
                     </div>
                 </div> 
-                	<div class="col-sm-offset-1 col-sm-4">
+            </div>
+            <div class="row">
+                	<div class="col-sm-4">
                     <div class="form-group">
                         <a onclick="generarDoc();"  data-toggle="tooltip" class="btn btn-warning btn-outline btn-wrap-text" title="Generar documentación del periodo" >Generar Documentación</a>
                 </div>
             </div>
 
 
-</div>
-</div>
 </div>
 </div>
 
@@ -310,7 +325,10 @@ $folderDrive = "https://drive.google.com/drive/folders/1jU6GD0c_H33gM_TFjgdmSUHR
 					}, 5000);
 					});
 
-	
+	    $(document).ready(function() 
+	    {
+        	$('#idPeriodo').multiselect();
+    	});
 
 
 
@@ -356,6 +374,7 @@ $(document).ready(function() {
      }
      else
      {
+     		document.getElementById('idPeriodo2').value= getSelectValues(document.getElementById('idPeriodo'));
      		document.getElementById('form1').submit();  
      }
     
@@ -367,11 +386,25 @@ $(document).ready(function() {
   }
     function cambiarPeriodo()
   {  		
-  		document.getElementById("idPeriFiltro").value = document.getElementById('idPeriodo').value;
+  		document.getElementById("idPeriFiltro").value = getSelectValues(document.getElementById('idPeriodo'));
+  		//alert(getSelectValues(document.getElementById('idPeriodo')));
       document.getElementById("form3").submit();
   }
 
+function getSelectValues(select) {
+  var result = [];
+  var options = select && select.options;
+  var opt;
 
+  for (var i=0, iLen=options.length; i<iLen; i++) {
+    opt = options[i];
+
+    if (opt.selected) {
+      result.push(opt.value || opt.text);
+    }
+  }
+  return result;
+}
 	</script>
 </body>
 </html>

@@ -59,7 +59,6 @@ foreach($_POST as $key => $value)
 
 		} 
 		sort($aNumAlumnos);
-		var_export($aNumAlumnos);
 
 
 ?>
@@ -369,9 +368,9 @@ $templateProcessor->setValue('NOMBRE_CICLO', $_POST['NOMBRE_CICLO']);
 $templateProcessor->setValue('CURSO_ACADEMICO', $_POST['CURSO_ACADEMICO']);
 $templateProcessor->setValue('FECHA_INICIO', $_POST['FECHA_INICIO'.$num]);
 $templateProcessor->setValue('FECHA_TERMINACION', $_POST['FECHA_TERMINACION'.$num]);
-$templateProcessor->setValue('HORAS_DIA', $_POST['HORAS_DIA']);
+$templateProcessor->setValue('HORAS_DIA', $_POST['HORAS_DIA'.$num]);
 $templateProcessor->setValue('HORARIOS', $_POST['HORARIOS'.$num]);
-$templateProcessor->setValue('TOTAL_HORAS', $_POST['TOTAL_HORAS']);
+$templateProcessor->setValue('TOTAL_HORAS', $_POST['TOTAL_HORAS'.$num]);
 $templateProcessor->setValue('FECHA_FIRMA_DOC', $_POST['FECHA_FIRMA_DOC']);
 
 //FCT Prácticas
@@ -539,8 +538,8 @@ global $aNumAlumnos;
 	$table->addCell(1300,$styleCell)->addText($_POST['LOCALIDAD_TRABAJO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1600,$styleCell)->addText($_POST['FECHA_INICIO'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(1200,$styleCell)->addText($_POST['FECHA_TERMINACION'.$i],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1500,$styleCell)->addText($_POST['HORAS_DIA'],array('name'=>'Arial Narrow', 'size'=>8));
-	$table->addCell(1300,$styleCell)->addText($_POST['TOTAL_HORAS'],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1500,$styleCell)->addText($_POST['HORAS_DIA'.$i],array('name'=>'Arial Narrow', 'size'=>8));
+	$table->addCell(1300,$styleCell)->addText($_POST['TOTAL_HORAS'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(2700,$styleCell)->addText($_POST['NOMBRE_TUTOR_COLEGIO'],array('name'=>'Arial Narrow', 'size'=>8));
 	$table->addCell(650,$styleCell)->addText($_POST['NOMBRE_TUTOR_EMPRESA'.$i],array('name'=>'Arial Narrow', 'size'=>8));
 	
