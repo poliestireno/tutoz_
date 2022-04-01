@@ -418,28 +418,40 @@ $contAlumnos++;
   <div class="form-group col-sm-12">
   <div class="col-sm-3">
   <div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" id="anexos21" name="anexos21" checked>
+  <input class="form-check-input" type="checkbox" id="anexos21" name="anexos21">
   <label class="form-check-label" >Anexos 21</label>
   </div>
   </div>
   <div class="col-sm-3">
   <div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" id="anexo22" name="anexo22" checked>
+  <input class="form-check-input" type="checkbox" id="anexo22" name="anexo22">
   <label class="form-check-label">Anexo 22</label>
   </div>
   </div>
   <div class="col-sm-3">
   <div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" id="anexos3" name="anexos3" checked>
+  <input class="form-check-input" type="checkbox" id="anexos3" name="anexos3">
   <label class="form-check-label">Anexos 3</label>
   </div>
   </div>  
   <div class="col-sm-3">
   <div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" id="anexos8" name="anexos8" checked>
+  <input class="form-check-input" type="checkbox" id="anexos8" name="anexos8">
   <label class="form-check-label">Anexos 8</label>
   </div>
   </div>
+  </div>
+  <div class="form-group col-sm-12">
+<div class="col-sm-3">
+  <div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" id="anexos7" name="anexos7">
+  <label class="form-check-label">Anexos 7 (cada semana entre comas)</label>
+  </div>  
+</div>
+    <div class="col-sm-9">
+  <input type="text" name="semanas" class="form-control" value="4 a 8 de abril de 2022,11 a 15 de abril de 2022,18 a 22 de abril de 2022" required/>
+  </div>
+
   </div>
     <div class="form-group col-sm-12">
   <div class="col-sm-6">
