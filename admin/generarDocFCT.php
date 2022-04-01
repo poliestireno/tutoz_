@@ -57,6 +57,7 @@ foreach ($aPeriodos as $perri) {
 }
 $CURSO_ACADEMICO = $periodo['CURSO_ACADEMICO'];
 $FECHA_FIRMA_DOC = $periodo['FECHA_FIRMA_DOC'];
+$FECHA_FIRMA_ANEXO8 = $periodo['FECHA_FIRMA_ANEXO8'];
 //$FECHA_INICIO = $periodo['FECHA_INICIO'];
 //$FECHA_TERMINACION = $periodo['FECHA_TERMINACION'];
 //$HORAS_DIA = $periodo['HORAS_DIA'];
@@ -210,10 +211,12 @@ $aPracticas = $aPracticas = ejecutarQuery($dbh,"SELECT * FROM FCT_PRACTICAS WHER
   <div class="col-sm-4">
   <input type="text" name="FECHA_FIRMA_DOC" class="form-control" value="<?php echo $FECHA_FIRMA_DOC?>" required/>
   </div>
-
-
+ <label class="col-sm-2 control-label">FECHA_FIRMA_ANEXO8<span style="color:red">*</span></label>
+  <div class="col-sm-4">
+  <input type="text" name="FECHA_FIRMA_ANEXO8" class="form-control" value="<?php echo $FECHA_FIRMA_ANEXO8?>" required/>
   </div>
 
+  </div>
 	</div>
 </div>
 <a onclick="checkAllAlumnos()"  class="btn btn-success btn-outline btn-wrap-text">

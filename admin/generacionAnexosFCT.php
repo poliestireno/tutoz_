@@ -242,6 +242,13 @@ $idFolder = crearCarpetaDrive($sTextoCarpetaAMostrar,$sTextoCarpetaAMostrar,$idC
     	bloqueAnexo7($sTextoCarpetaAMostrar,$folder,$idFolder,$_POST['semanas']);
     }
 		// FIN ANEXO 7
+
+		// INICIO ANEXO 8
+		if (isset($_POST['anexos8']))
+    {
+    	bloqueAnexo8($sTextoCarpetaAMostrar,$folder,$idFolder);
+    }
+		// FIN ANEXO 8
 			
   ?> 
   </div> 
@@ -409,6 +416,65 @@ for ($i=0; $i < Count($aNombres); $i++)
 }
 
 $nombreAnexo = 'anexo7';
+
+$nombreF = $nombreAnexo.'_';
+
+if ($_POST['rNomenclatura']==1)
+{
+	$nombreF = $nombreF.$nombresNombreFichero.'.docx';
+}
+else if ($_POST['rNomenclatura']==2)
+{
+	$nombreF = $nombreF.$_POST['NOMBRE_EMPRESA'.$num].'.docx';
+}
+else if ($_POST['rNomenclatura']==3)
+{
+	$nombreF = $nombreF.$nombresNombreFichero.'__'.$_POST['NOMBRE_EMPRESA'.$num].'.docx';
+}
+else if ($_POST['rNomenclatura']==4)
+{
+	$nombreF = $nombreF.$_POST['NOMBRE_EMPRESA'.$num].'__'.$nombresNombreFichero.'.docx';
+}
+
+$templateProcessor->saveAs($folder.'/'.$nombreF);
+
+// subir a drive
+subirDocumentoWordDrive	($folder.'/'.$nombreF,$nombreF,$nombreAnexo,$idFolder);
+
+return $nombreF;
+}
+
+
+function generarAnexo8($folder, $sTextoCarpetaAMostrar,$num,$aNombres,$aNombresConApellido1,$aDNIs,$idFolder)
+{
+
+$rutaPlantillaCiclo = "../PHPWord-develop/plantillas/anexo8.docx";
+$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($rutaPlantillaCiclo);
+
+
+$templateProcessor->setValue('NOMBRE_ALUMNO', mb_strtoupper($aNombres[0], 'UTF-8'));
+$templateProcessor->setValue('NOMBRE_CICLO', mb_strtoupper($_POST['NOMBRE_CICLO'], 'UTF-8'));
+$templateProcessor->setValue('NOMBRE_EMPRESA', mb_strtoupper($_POST['NOMBRE_EMPRESA'.$num], 'UTF-8'));
+$templateProcessor->setValue('NOMBRE_TUTOR_EMPRESA', mb_strtoupper($_POST['NOMBRE_TUTOR_EMPRESA'.$num], 'UTF-8'));
+$templateProcessor->setValue('TOTAL_HORAS', $_POST['TOTAL_HORAS'.$num]);
+$templateProcessor->setValue('FECHA_FIRMA_ANEXO8', $_POST['FECHA_FIRMA_ANEXO8']);
+
+$nombresNombreFichero= "";
+$barraBaja = "";
+for ($i=0; $i < Count($aNombres); $i++) 
+{ 
+		if (Count($aNombres)>1)
+		{
+				$nombresNombreFichero.= $barraBaja.$aNombresConApellido1[$i];
+		}
+		else
+		{
+				$nombresNombreFichero.= $barraBaja.$aNombres[$i];
+		}		
+		$barraBaja="_";
+}
+
+$nombreAnexo = 'anexo8';
 
 $nombreF = $nombreAnexo.'_';
 
@@ -766,6 +832,26 @@ function bloqueAnexo7($sTextoCarpetaAMostrar,$folder,$idFolder,$semanas)
 				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo7($folder,$sTextoCarpetaAMostrar,$aNumAlumnos[$k],$aNombres,$aNombresConApellido1,$aDNIs,$idFolder,$semanas).'</a>';
 		}
 }
+
+function bloqueAnexo8($sTextoCarpetaAMostrar,$folder,$idFolder)
+{
+	  global $aNumAlumnos;
+    $aNombres = array();
+    $aNombresConApellido1 = array();   
+    $aDNIs = array();  	
+  	for ($k=0; $k < Count($aNumAlumnos); $k++) 
+		{ 
+				$i=$aNumAlumnos[$k];
+				$aNombres = array();
+				$aNombresConApellido1 = array();
+    		$aDNIs = array();
+				$aNombres [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i]." ".$_POST['APELLIDO2_ALUMNO'.$i];
+				$aNombresConApellido1 [] = $_POST['NOMBRE_ALUMNO'.$i]." ".$_POST['APELLIDO1_ALUMNO'.$i];
+				$aDNIs [] = $_POST['DNI_ALUMNO'.$i];		
+				echo '<a class="list-group-item ">'.'&emsp;&emsp;'.generarAnexo8($folder,$sTextoCarpetaAMostrar,$aNumAlumnos[$k],$aNombres,$aNombresConApellido1,$aDNIs,$idFolder).'</a>';
+		}
+}
+
 
 
 
