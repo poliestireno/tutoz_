@@ -54,9 +54,13 @@ if ($decrypted)
 			{
 				header('location:pacman/pacman.php');
 			}
-			else if ($alumnoAux['NUMERO_NIVEL']>5)
+			else if ($alumnoAux['NUMERO_NIVEL']==6)
 			{
 				header('location:mario/mario.php');
+			}
+			else if ($alumnoAux['NUMERO_NIVEL']>6)
+			{
+				header('location:arkanoid-mini-gh-pages/arkanoid.php');
 			}
 			else
 			{

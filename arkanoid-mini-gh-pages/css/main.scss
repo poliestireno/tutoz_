@@ -1,0 +1,915 @@
+//------------------------------------------------------------------------------
+//   1- VARIABLES AND MIXINS
+//   2- HTML + BODY
+//   3- WELCOME MENU
+//   4- INTRO MENU
+//   5- START MENU
+//   6- THE GAME SCREEN
+//   7- PAUSE
+//   8- GAME OVER
+//   9- END
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// 1- VARIABLES AND MIXINS
+//------------------------------------------------------------------------------
+@font-face {
+  src: url("fonts/arkanoid.ttf");
+  font-family: arka;
+}
+@font-face {
+  src: url("fonts/arkasolid.ttf");
+  font-family: arkasolid;
+}
+@font-face {
+  src: url("fonts/RetroGaming.ttf");
+  font-family: pixel;
+}
+$fontTitle: "arka";
+$fontUndertitle: "arkasolid";
+$font: "pixel";
+$colorText: rgb(255, 255, 255);
+
+@mixin flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@mixin hoverButtons {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+@mixin buttons {
+  border: 3px solid white;
+  border-radius: 10px;
+}
+@mixin introButtons {
+  background-color: transparent;
+  font-family: $font;
+  text-transform: uppercase;
+  color: $colorText;
+  text-align: center;
+  padding: 10px 10px;
+}
+@mixin hoverIntroButtons {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+//------------------------------------------------------------------------------
+// 2- HTML + BODY
+//------------------------------------------------------------------------------
+
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: 14px;
+  height: 100vh;
+  width: 100vw;
+}
+#body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  @include flex;
+  justify-content: center;
+  background-color: black;
+  font-family: $font;
+  color: $colorText;
+  overflow: hidden;
+}
+//------------------------------------------------------------------------------
+// 3- WELCOME MENU
+//------------------------------------------------------------------------------
+#welcome {
+  z-index: 3;
+  @include flex; //switch to display:none
+  text-align: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  @media screen and (max-width: 764px) {
+    width: 100vw;
+  }
+  img {
+    z-index: -1;
+    position: absolute;
+    background-position: center;
+    top: 0;
+    height: 110vh;
+    @media screen and (max-width: 764px) {
+      top: 10%;
+      height: 80%;
+      width: 95%;
+      object-fit: cover;
+      // border: 10px solid red;
+    }
+    @media screen and (max-width: 764px) and (orientation: landscape) {
+      top: 0;
+      height: 120%;
+      object-fit: contain;
+    }
+  }
+  h1 {
+    margin-top: 160px;
+    margin-bottom: 0;
+    padding: 0;
+    position: relative;
+    font-family: $fontTitle;
+    font-size: 16vmin;
+    color: $colorText;
+    letter-spacing: 0.2rem;
+    @media screen and (max-width: 764px) {
+      margin-top: 70px;
+    }
+    &::after {
+      content: "mini";
+      font-size: 5vmin;
+      position: absolute;
+      top: 30px;
+      @media screen and (max-width: 1024px) {
+        display: none;
+      }
+    }
+  }
+  .underTitle {
+    margin-top: 0.9em;
+    font-size: 1.5rem;
+    @media screen and (max-width: 768px) {
+      font-size: 1.5rem;
+      width: 23ch;
+    }
+  }
+  .playGame {
+    margin-top: 3rem;
+    font-size: 7vmin;
+    text-transform: uppercase;
+    color: $colorText;
+    animation: playBlink 800ms infinite ease-in;
+    &:hover {
+      @include hoverButtons;
+    }
+    @media screen and (max-width: 764px) {
+      font-size: 2.5rem;
+      margin-top: 1rem;
+    }
+  }
+  @keyframes playBlink {
+    30% {
+      color: white;
+    }
+    50% {
+      color: black;
+    }
+  }
+  .link {
+    text-decoration: none;
+    color: $colorText;
+    &:hover {
+      color: black;
+    }
+    .gecimen {
+      font-size: 0.7em;
+      position: relative;
+      top: -5px;
+    }
+    .history {
+      font-size: 3vmin;
+      text-decoration: none;
+      color: $colorText;
+      white-space: nowrap;
+      padding-top: 10px;
+      &:hover {
+        @include hoverButtons;
+      }
+      @media screen and (max-width: 768px) {
+        font-size: 1.5rem;
+        width: 23ch;
+        .gecimen {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+  @media screen and (max-height: 400px) and(orientation:landscape) {
+    .playGame {
+      margin-top: 0px;
+    }
+    .link {
+      margin-top: -20px;
+      .history {
+        font-size: 1.25rem;
+        .gecimen {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+  @media screen and (max-height: 600px) and(orientation:landscape) {
+    .playGame {
+      margin-top: 0px;
+    }
+    .link {
+      margin-top: -40px;
+      .history {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+// 4- INTRO MENU
+//------------------------------------------------------------------------------
+#intro {
+  display: none;
+  background-image: url("../img/DOH3d.png");
+  background-repeat: repeat-x;
+  background-position: center;
+  background-size: 30%;
+  height: 400px;
+  width: 90vw;
+  margin: 3em 0;
+  padding: 3em 0;
+  overflow-y: scroll;
+  border: 3px solid white;
+  animation: facezoom 150000ms forwards;
+
+  @media screen and (max-width: 600px) {
+    border: none;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    width: 100vw;
+    height: 70%;
+    padding: 0 10px;
+    animation: facezoomMobile 150000ms forwards;
+  }
+  @media screen and (max-width: 600px) and (orientation: landscape) {
+    background-repeat: space;
+    background-size: 30%;
+    width: 100vw;
+    height: 70%;
+    padding: 0 10px;
+    animation: facezoomMobileLandscape 150000ms forwards;
+  }
+
+  @keyframes facezoomMobileLandscape {
+    0% {
+      background-size: 30%;
+    }
+    100% {
+      background-size: 60%;
+    }
+  }
+  @keyframes facezoomMobile {
+    0% {
+      background-size: 75%;
+    }
+    100% {
+      background-size: 150%;
+    }
+  }
+  @keyframes facezoom {
+    0% {
+      background-size: 30%;
+    }
+    100% {
+      background-size: 80%;
+    }
+  }
+
+  .introtext-wrapper {
+    width: min-content;
+    text-align: center;
+    font-size: 1.75rem;
+    line-height: 1.5rem;
+    margin: 0 auto;
+    transform: translateY(15%);
+    animation: introText 150000ms ease-out forwards;
+    // border: 1px solid red;
+
+    @media screen and (max-width: 600px) and (orientation: portrait) {
+      font-size: 2rem;
+      padding: 0 10px;
+      width: auto;
+      line-height: 2rem;
+      transform: translateY(21%);
+      animation: introTextMobile 150000ms ease-out forwards;
+    }
+
+    @media screen and (max-height: 600px) and (orientation: landscape) {
+      font-size: 1.5rem;
+      padding: 0 10px;
+      width: auto;
+      line-height: 2rem;
+      transform: translateY(12%);
+      animation: introTextMobileLandscape 150000ms ease-out forwards;
+      .p11 {
+        margin-bottom: 0;
+      }
+      .toLevel1 {
+        margin-bottom: 0px;
+      }
+      .chooseLevel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        button {
+          width: 14ch;
+          font-size: 0.75rem;
+        }
+      }
+    }
+    @media screen and (max-width: 400px) and (orientation: portrait) {
+      font-size: 1.75rem;
+      padding: 0 10px;
+      width: auto;
+      line-height: 2rem;
+      transform: translateY(15%);
+      animation: introTextMobileSmall 150000ms ease-out forwards;
+      button {
+        font-size: 1rem;
+      }
+      .chooseLevel button {
+        font-size: 1rem;
+        width: 16ch;
+      }
+    }
+    @media screen and (max-height: 400px) and (orientation: landscape) {
+      font-size: 1.75rem;
+      padding: 0 10px;
+      width: auto;
+      line-height: 2rem;
+      transform: translateY(15%);
+      animation: introTextMobileSmallLandscape 150000ms ease-out forwards;
+      button {
+        font-size: 1rem;
+      }
+      .chooseLevel button {
+        font-size: 1rem;
+        width: max-content;
+      }
+    }
+  }
+  p {
+    line-height: 3rem;
+    @media screen and (max-width: 600px) and (orientation: portrait) {
+      line-height: 2.5rem;
+      max-width: 25ch;
+      margin: 0 auto;
+    }
+  }
+  .p1 {
+    position: relative;
+    margin-top: 0;
+  }
+  .p4 {
+    color: #0aeb00;
+    animation: colorChange 3000ms infinite;
+    @media screen and (max-width: 600px) and (orientation: portrait) {
+      padding: 0.75rem 0;
+    }
+  }
+  .p11 {
+    margin: 2.5rem 0 1.5rem 0;
+    white-space: nowrap;
+    @media screen and (max-width: 600px) and (orientation: portrait) {
+      white-space: normal;
+    }
+  }
+  .vaus {
+    animation: colorChange 3000ms infinite;
+  }
+
+  @keyframes introText {
+    0% {
+      transform: translateY(15%);
+    }
+    100% {
+      transform: translateY(-83.5%);
+    }
+  }
+
+  @keyframes introTextMobile {
+    0% {
+      transform: translateY(21%);
+    }
+    100% {
+      transform: translateY(-80.5%);
+    }
+  }
+
+  @keyframes introTextMobileLandscape {
+    0% {
+      transform: translateY(12%);
+    }
+    100% {
+      transform: translateY(-90.7%);
+    }
+  }
+  @keyframes introTextMobileSmall {
+    0% {
+      transform: translateY(19%);
+    }
+    100% {
+      transform: translateY(-84.5%);
+    }
+  }
+
+  @keyframes introTextMobileSmallLandscape {
+    0% {
+      transform: translateY(19%);
+    }
+    100% {
+      transform: translateY(-91.5%);
+    }
+  }
+
+  @keyframes colorChange {
+    0% {
+      color: #0aeb00;
+    }
+    20% {
+      color: yellow;
+    }
+    40% {
+      color: #4877f4;
+    }
+    60% {
+      color: #ea0f42;
+    }
+    80% {
+      color: #ff8c00;
+    }
+    100% {
+      color: #ffffff;
+    }
+  }
+
+  .toLevel1,
+  .toLevel2,
+  .toLevel3,
+  .toLevel4,
+  .toLevel5,
+  .toEnd {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    @include introButtons;
+    @include buttons;
+    &:hover {
+      @include hoverIntroButtons;
+    }
+  }
+  .skip {
+    @include buttons();
+    @include introButtons();
+    position: absolute;
+    width: 150px;
+    font-size: 1rem;
+    bottom: 10px;
+    right: 5%;
+    transform: translateY(-50%);
+    margin-top: 0;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &:hover {
+      cursor: pointer;
+      border-color: blueviolet;
+    }
+    .skip-chevron {
+      font-size: 1.75rem;
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-54%);
+    }
+    @media screen and (max-width: 1200px) {
+      right: auto;
+      left: 50%;
+      bottom: 50px;
+      transform: translateX(-50%);
+      animation: introBlink 900ms infinite ease-out;
+    }
+    @media screen and (max-width: 1200px) and (orientation: landscape) {
+      right: auto;
+      left: 50%;
+      bottom: 15px;
+      transform: translateX(-45%);
+      animation: introBlink 900ms infinite ease-out;
+    }
+    @media screen and (max-width: 600px) {
+      right: auto;
+      left: 50%;
+      bottom: 88%;
+      transform: translateX(-45%);
+      animation: introBlink 900ms infinite ease-out;
+    }
+  }
+
+  .toLevel1 {
+    animation: introBlink 900ms infinite ease-out;
+    font-size: 1.2rem;
+    width: 250px;
+    margin-bottom: 50px;
+    @media screen and (max-width: 600px) {
+      font-size: 1rem;
+      width: max-content;
+      margin-bottom: 0px;
+    }
+  }
+
+  .chooseLevel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    // border: 1px solid lime;
+  }
+  .toLevel2,
+  .toLevel3,
+  .toLevel4,
+  .toLevel5,
+  .toEnd {
+    font-size: 1rem;
+    width: 250px;
+  }
+  .toLevel2:hover {
+    color: orange;
+    outline: none;
+    &:visited,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+  .toLevel3:hover {
+    color: lightgreen;
+    &:visited,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+  .toLevel4:hover {
+    color: pink;
+    &:visited,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+  .toLevel5:hover {
+    color: red;
+    &:visited,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+  .toEnd:hover {
+    color: lightblue;
+    &:visited,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .toLevel1 {
+      width: 200px;
+      font-size: 1.25rem;
+    }
+    .chooseLevel {
+      @include flex();
+      height: 100%;
+      button {
+        width: 200px;
+        font-size: 1.25rem;
+        margin-right: 0;
+      }
+    }
+  }
+
+  @media screen and (max-width: 600px) and (orientation: landscape) {
+    .chooseLevel {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      .toLevel2,
+      .toLevel3,
+      .toLevel4,
+      .toLevel5 {
+        font-size: 1rem;
+        min-height: 20px;
+      }
+    }
+  }
+}
+
+@keyframes introBlink {
+  40% {
+    color: transparent;
+  }
+}
+//------------------------------------------------------------------------------
+// 5- START MENU
+//------------------------------------------------------------------------------
+
+#start {
+  margin-top: 37.5px;
+  display: none;
+  position: absolute;
+  max-width: 500px;
+  background-color: transparent;
+  color: $colorText;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.3em;
+  .gameRules {
+    visibility: hidden;
+  }
+  .pressSpacebar {
+    animation: startBlink 900ms infinite ease-out;
+  }
+}
+@keyframes startBlink {
+  40% {
+    color: transparent;
+  }
+}
+//------------------------------------------------------------------------------
+// 6- THE GAME SCREEN
+//------------------------------------------------------------------------------
+
+#game {
+  flex-direction: column;
+  display: none;
+  .modal-mobile {
+    display: none;
+  }
+  .levelName {
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.5em;
+    font-size: 1.2em;
+  }
+  #canvas {
+    border-bottom: 5px solid #777;
+    border-radius: 3%;
+  }
+  @media screen and (max-width: 769px) {
+    #canvas {
+      width: 80%;
+      margin: 0 auto;
+    }
+    .modal-mobile {
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      visibility: hidden;
+      opacity: 0;
+      @include flex();
+      justify-content: center;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.85);
+      // animation: fadeIn 500ms forwards;
+      // border: 2px solid white;
+
+      .modal-content {
+        height: max-content;
+        transform: translateY(-50%);
+        opacity: 0;
+        overflow: hidden;
+        // border: 1px solid white;
+        @include flex();
+        .message {
+          height: max-content;
+          width: 80vw;
+          background-color: transparent;
+          font-size: 1.75rem;
+          text-align: center;
+          margin: 55px 0 25px;
+          line-height: 2.5rem;
+          // border: 1px solid red;
+          span {
+            display: inline-block;
+            margin-top: 15px;
+          }
+        }
+        a {
+          @include buttons();
+          @include introButtons();
+          display: inline-block;
+          width: min-content;
+          font-size: 1.5rem;
+          white-space: nowrap;
+          text-decoration: none;
+          animation: startBlink 1000ms infinite;
+        }
+        @keyframes comeIn {
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+      @keyframes fadeIn {
+        100% {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  @media screen and (max-height: 600px) and (orientation: landscape) {
+    #canvas {
+      width: 45%;
+      margin: 0 auto;
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+// 7- PAUSE
+//------------------------------------------------------------------------------
+#pause {
+  display: none;
+  position: absolute;
+  margin-top: 75px;
+  width: 150px;
+  color: $colorText;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 30px;
+  @include buttons;
+}
+//------------------------------------------------------------------------------
+// 8- GAME OVER
+//------------------------------------------------------------------------------
+#gameover {
+  position: absolute;
+  display: none;
+  font-size: 120px;
+  text-transform: uppercase;
+}
+#restart {
+  display: none;
+  position: absolute;
+  padding-top: 175px;
+  text-decoration: none;
+  font-family: pixel;
+  background-color: transparent;
+  color: $colorText;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  animation: restartBlink 900ms infinite ease-out;
+  animation-delay: 150000ms;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.12);
+    font-size: 1.3em;
+  }
+  &:visited {
+    color: $colorText;
+  }
+}
+@keyframes restartBlink {
+  40% {
+    color: transparent;
+  }
+}
+
+//----------------------------------------------------------------------------
+// 9- END
+//----------------------------------------------------------------------------
+#end {
+  display: none;
+  height: max-height;
+  width: 90%;
+  border-left: 3px solid white;
+  border-right: 3px solid white;
+
+  .endtext-wrapper {
+    width: 90%;
+    margin: 0 auto;
+    transform: translateY(65%);
+    color: black;
+    text-align: center;
+    font-size: 1.75em;
+    line-height: 2em;
+    // animation: Outro 120000ms ease-out forwards;
+  }
+
+  .vaus {
+    animation: colorChange 3000ms infinite;
+  }
+  h4 {
+    color: $colorText;
+  }
+  .thankYou {
+    color: $colorText;
+    margin-top: -50px;
+  }
+  .endScreen {
+    letter-spacing: 0.2rem;
+    margin-top: 200px;
+    font-family: $fontTitle;
+    font-size: 6em;
+    color: $colorText;
+    @media screen and (max-width: 1000px) {
+      font-size: 8rem;
+    }
+    @media screen and (max-width: 769px) {
+      font-size: 6rem;
+    }
+    sup {
+      font-size: 0.2em;
+      @media screen and (max-width: 1000px) {
+        display: none;
+      }
+    }
+  }
+  .endMention {
+    color: $colorText;
+    margin-top: -100px;
+    @media screen and (max-width: 1000px) {
+      margin-top: -80px;
+    }
+    @media screen and (max-width: 769px) {
+      margin-top: -60px;
+    }
+  }
+  .socialIcons {
+    margin-top: -20px;
+    padding: 0;
+    a {
+      margin-right: 10px;
+    }
+  }
+  .cartridge {
+    margin-bottom: 10vh;
+  }
+
+  @media screen and (max-width: 600px),
+    screen and (max-height: 500px) and (orientation: landscape) {
+    border-left: none;
+    border-right: none;
+    .endtext-wrapper {
+      transform: translateY(50%);
+      font-size: 1.5rem;
+      max-width: 20ch;
+    }
+    .thankYou {
+      margin-top: -30px;
+    }
+    .endScreen {
+      font-size: 4rem;
+      margin: 50px auto;
+      sup {
+        display: none;
+      }
+    }
+    .endMention {
+      line-height: 2rem;
+      width: 15ch;
+      margin: 20px auto;
+    }
+    .socialIcons {
+      margin-top: 20px;
+    }
+
+    .cartridge {
+      margin-top: 20px;
+      width: 300px;
+      height: 300px;
+    }
+  }
+}
+@keyframes Outro {
+  0% {
+    transform: translateY(65%);
+  }
+  100% {
+    transform: translateY(-26%);
+  }
+}
+@keyframes OutroMobile {
+  0% {
+    transform: translateY(50%);
+  }
+  100% {
+    transform: translateY(-36%);
+  }
+}
