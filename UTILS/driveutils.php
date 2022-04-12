@@ -1,6 +1,63 @@
 <?php
 include_once 'google-api-php-client--PHP7.4/vendor/autoload.php';
 
+function listarEventosCalendar()
+{
+    $pathJSON = 'luminous-smithy-337021-6e7d38f3f7db.json';
+
+    //configurar variable de entorno
+    putenv('GOOGLE_APPLICATION_CREDENTIALS='.dirname(__FILE__)."/".$pathJSON);
+
+    $client = new Google_Client();
+    $client->useApplicationDefaultCredentials();
+    $client->addScope(Google_Service_Calendar::CALENDAR);
+    try{  
+
+      $service = new Google_Service_Calendar($client);
+      $optParams=array();
+$optParams['singleEvents'] = true;
+$optParams['timeMin'] = date("c", strtotime(date('Y-m-d H:i:s').'-30 days'));
+$optParams['timeMax'] = date("c", strtotime(date('Y-m-d H:i:s').'+1 days'));
+  $results = $service->events->listEvents('lasalleinstitucion.es_943bfgn19d6nl8ud67np4bghlc@group.calendar.google.com', $optParams);
+//$results =  $service->calendarList->listCalendarList();
+
+echo 'Número de eventos:';
+var_export(count($results->getItems()));
+
+if (count($results->getItems()) == 0) {
+  print "<h3>No hay Eventos</h3>";
+} else {
+  print "<h3>Proximos Eventos</h3>";
+  echo "<table border=1>";
+  echo "<tr><th>Evento</th><th>Inicio</th><th>Fin</th></tr>";
+  foreach ($results->getItems() as $event) {
+    echo "<tr>";
+    $start = $event->start->dateTime;
+    if (empty($start)) {
+      $start = $event->start->date;
+    }
+    $fin = $event->end->dateTime;
+    if (empty($fin)) {
+      $fin = $event->end->date;
+    }
+    echo "<td>".$event->getSummary()."</td>";
+    echo "<td>".$start."</td>";
+    echo "<td>".$fin."</td>";
+    echo "</tr>";
+  }
+    echo "<table>";
+
+
+}
+
+    }catch(Google_Service_Exception $gs){
+        $m=json_decode($gs->getMessage());
+        echo $m->error->message;
+    }catch(Exception $e){
+        echo $e->getMessage();
+      
+    }
+}
 function crearCarpetaDrive($nombreCarpeta,$descripcion,$idFolder){
     //$claveJSON = '1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV';
     $pathJSON = 'luminous-smithy-337021-6e7d38f3f7db.json';
