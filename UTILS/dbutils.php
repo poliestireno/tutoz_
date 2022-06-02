@@ -35,7 +35,7 @@ dejar referencia 1
 pero al meter varios comodines meterlos de diferentes número de estrellas
 
 
-PASAR A VIDEOJUEGO
+*PASAR A VIDEOJUEGO
 Asegurarse que tengan todos los alumnos bot y actor
 en ASIGNATURA
         ID_CONF_ASIGNATURAS 6 (CROMOS Y JUGAR)
@@ -47,13 +47,21 @@ TIENDA
 
 EVENTOS
   en la tabla EVENTOS asignarlos a id de la asignatura,
-  CAJITA01_BIS parece que es para la busqueda del tesoro, el que primero lo encuentre.
+  CAJITA01_BIS parece que es para la busqueda del tesoro, el que primero lo encuentre, solo 
+  poner este evento con el id de asignatura cuando se vaya a jugar.
 
 METER A PROFESORES
   En el tabla CURSOS_PERSONAJES se pueden añadir los cursos que se quieran a uno padre
   en mi caso a ASIR1 añado el 32 que es el de profesores
 
+*JUGAR A BUSQUEDA DEL TESORO
 
+Poner evento CAJITA01_BIS con el id de asignatura
+
+Para jugar todo el mundo se sale del juego:
+Modificar a mano la ubicación de la CAJITA01_BIS
+poner a null ID_GANADOR_TESORO de la asignatura en la tabla ASIGNATURAS
+Para comprobar ganador mirar en ID_GANADOR_TESORO, cuando no sea null, será el id del ganador.
 
 
 
