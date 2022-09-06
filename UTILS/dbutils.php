@@ -64,6 +64,49 @@ poner a null ID_GANADOR_TESORO de la asignatura en la tabla ASIGNATURAS
 Para comprobar ganador mirar en ID_GANADOR_TESORO, cuando no sea null, será el id del ganador.
 
 
+PROCESO DE NUEVO TUTOZ
+descargar tutoz actual
+renombrar el antiguo
+subir el nuevo, quitando logs, images, justificantes
+redireccionar a la nueva base de datos creando los nuevos ficheros sallez.ini y sallez.js
+
+sallez.ini orientar a la nueva base de datos
+crear (para el antiguo)un sallez2021.ini con la antigua base de datos
+referenciar a sallez2021.ini desde el antiguo en los ficheros dbutils.php y config.php
+descargar script actual de base de datos
+importar el script en un nueva base de datos
+
+truncate
+  autoevaluacion
+  bonos
+  justificantes
+  alumnos_fastest
+  fastests
+  alumnos_juicios
+  cambios
+  mercado
+  eventos
+  juicios
+
+asignaturasSetPreguntas todo escepto marcas que queda como ejemplo del año pasado
+asignaturas excepto el 32 que son personajes y marcas que lo dejamos de ejemplo
+borrar alumnos excepto los del 32, personajes
+
+alumnos_tareas
+articulos_compradores
+autoevaluacion_alumnos
+alumnos_clanes
+clanes
+cromos
+cursos excepto 32 y marcas de ejemplo
+estrellas
+faltas
+miactor excepto las referencias a los personajes
+mibot excepto las referencias a los personajes
+set_cromos excepto 32 y marcas de ejemplo
+tareas
+
+
 
 
 

@@ -4,7 +4,7 @@ include_once 'google-api-php-client--PHP7.4/vendor/autoload.php';
 function listarEventosCalendar()
 {
     $pathJSON = 'luminous-smithy-337021-6e7d38f3f7db.json';
-
+    global $results;
     //configurar variable de entorno
     putenv('GOOGLE_APPLICATION_CREDENTIALS='.dirname(__FILE__)."/".$pathJSON);
 
@@ -16,39 +16,17 @@ function listarEventosCalendar()
       $service = new Google_Service_Calendar($client);
       $optParams=array();
 $optParams['singleEvents'] = true;
-$optParams['timeMin'] = date("c", strtotime(date('Y-m-d H:i:s').'-30 days'));
-$optParams['timeMax'] = date("c", strtotime(date('Y-m-d H:i:s').'+1 days'));
-  $results = $service->events->listEvents('lasalleinstitucion.es_943bfgn19d6nl8ud67np4bghlc@group.calendar.google.com', $optParams);
+$optParams['timeMin'] = date("c", strtotime(date('Y-m-d H:i:s').'-0 days'));
+$optParams['timeMax'] = date("c", strtotime(date('Y-m-d H:i:s').'+2 days'));
+// calendario de la salle general  $results = $service->events->listEvents('lasalleinstitucion.es_943bfgn19d6nl8ud67np4bghlc@group.calendar.google.com', $optParams);
+
+$results = $service->events->listEvents('lasalleinstitucion.es_933u0kscb27fig9ah40mdq89nk@group.calendar.google.com', $optParams);
+//var_export($results);
+//$results = $service->events->listEvents('afsanchez@lasalleinstitucion.es', $optParams);
+//$results = $service->events->listEvents('afsanchez@lasalleinstitucion.es', array());
 //$results =  $service->calendarList->listCalendarList();
 
-echo 'Número de eventos:';
-var_export(count($results->getItems()));
 
-if (count($results->getItems()) == 0) {
-  print "<h3>No hay Eventos</h3>";
-} else {
-  print "<h3>Proximos Eventos</h3>";
-  echo "<table border=1>";
-  echo "<tr><th>Evento</th><th>Inicio</th><th>Fin</th></tr>";
-  foreach ($results->getItems() as $event) {
-    echo "<tr>";
-    $start = $event->start->dateTime;
-    if (empty($start)) {
-      $start = $event->start->date;
-    }
-    $fin = $event->end->dateTime;
-    if (empty($fin)) {
-      $fin = $event->end->date;
-    }
-    echo "<td>".$event->getSummary()."</td>";
-    echo "<td>".$start."</td>";
-    echo "<td>".$fin."</td>";
-    echo "</tr>";
-  }
-    echo "<table>";
-
-
-}
 
     }catch(Google_Service_Exception $gs){
         $m=json_decode($gs->getMessage());
@@ -58,6 +36,51 @@ if (count($results->getItems()) == 0) {
       
     }
 }
+
+function addEvent($calendarId, $summary, $description, $location, $dataTimeStart, $dataTimeEnd, $email, $accept)
+ {
+     $event = new Google_Service_Calendar_Event();
+     $event->setSummary($summary);
+     $event->setLocation($location);
+     $event->setDescription($description);
+     $event->setVisibility('public');
+     $start = new Google_Service_Calendar_EventDateTime();
+     $start->setDateTime($dataTimeStart);
+     $start->setTimeZone('America/Bogota');
+     $event->setStart($start);
+     $end = new Google_Service_Calendar_EventDateTime();
+     $end->setDateTime($dataTimeEnd);
+     $end->setTimeZone('America/Bogota');
+     $event->setEnd($end);
+     $reminder1 = new Google_Service_Calendar_EventReminder();
+     $reminder1->setMethod('email');
+     $reminder1->setMinutes('55');
+     $reminder2 = new Google_Service_Calendar_EventReminder();
+     $reminder2->setMethod('email');
+     $reminder2->setMinutes('15');
+     $reminder = new Google_Service_Calendar_EventReminders();
+     $reminder->setUseDefault('false');
+     $reminder->setOverrides(array($reminder1, $reminder2));
+     $event->setReminders($reminder);
+     //$event->setRecurrence(array('RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z'));
+     $attendee1 = new Google_Service_Calendar_EventAttendee();
+     $attendee1->setEmail($email);
+     if ($accept == "true") {
+         $attendee1->setResponseStatus('accepted');
+     }
+     $attendees = array($attendee1);
+     $event->attendees = $attendees;
+     $optParams = array('sendNotifications' => true, 'maxAttendees' => 1000);
+     /*$creator = new Google_Service_Calendar_EventCreator();
+             $creator->setDisplayName("UNAD Calendar");
+             $creator->setEmail("106295480288-s6a44jaogn7pembonh8mudn4gutbn28n@developer.gserviceaccount.com");
+     
+             $event->setCreator($creator);*/
+     $nEvent = $this->service->events->insert($calendarId, $event, $optParams);
+     return $nEvent;
+ }
+
+
 function crearCarpetaDrive($nombreCarpeta,$descripcion,$idFolder){
     //$claveJSON = '1jU6GD0c_H33gM_TFjgdmSUHRRE_iGlbV';
     $pathJSON = 'luminous-smithy-337021-6e7d38f3f7db.json';
@@ -116,7 +139,7 @@ function subirDocumentoWordDrive($documento,$nombre,$descripcion,$idFolder){
     $client = new Google_Client();
     $client->useApplicationDefaultCredentials();
     $client->setScopes(['https://www.googleapis.com/auth/drive.file']);
-    try{		
+    try{        
         //instanciamos el servicio
         $service = new Google_Service_Drive($client);
 
@@ -165,7 +188,7 @@ function subirDocumentoWordDrive($documento,$nombre,$descripcion,$idFolder){
             echo "3.- Fichero eliminado del servidor";
         }else{
             echo 'Error: No se ha podido eliminar el documento "'.$documento.'" en el servidor.';
-        }		
+        }       
     }else{
         echo "Error: Se ha producido un error, intentelo de nuevo.";
     }
