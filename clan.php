@@ -44,29 +44,86 @@ else if(isset($_POST['submit2']))
 }	
 else if(isset($_POST['submit']))
   {	
-	$file = $_FILES['image']['name'];
-	$file_loc = $_FILES['image']['tmp_name'];
-	$folder="images/";
-	$new_file_name = strtolower($file);
-    
 	$name=$_POST['name'];
-	$descripcion=$_POST['DESCRIPCION'];
-	$final_file=str_replace(' ','-',$new_file_name);
-	$final_file=$name.$descripcion[0].$final_file;
-
-	
+    $descripcion=$_POST['DESCRIPCION'];	
 	$IDedit=$_POST['editID'];
-	$image=$_FILES['image']['name'];
-	$final_file=$name.$final_file;
-	$final_file=remove_accents($final_file);
-    if(move_uploaded_file($file_loc,$folder.$final_file))
-	{
-		$image=$final_file;
+  	$image=$_POST['image'];
+	
+	// Si el valor de la ubicacion de la imagen es vacio, se asigna la imagen que esta en el servidor por defecto.
+	if (empty($file_loc)) {
+		$file_loc="anonimous_clan.jpg";
+	} {
+		$file_loc=$image;
 	}
-	else
-	{
-		$image=$_POST['image'];
+	// Si hay una imagen seleccionada, se sube a la carpeta de imagenes.
+	// Es decir si se ha seleccionado el boton de subir imagen, se sube la imagen a la carpeta de imagenes.
+	if (isset($_FILES['uploadimage'])) {
+		try {
+		// Si esta solicitud entra en algun error, se trata como no válida, invalidando completamente la subida de archivos que no sean imagenes.
+		if (
+			!isset($_FILES['uploadimage']['error']) ||
+			is_array($_FILES['uploadimage']['error'])
+		) {
+			throw new RuntimeException('Parámetro no válido.');
+		}
+		// Comprueba el valor de $_FILES['uploadimage']['error'].
+		switch ($_FILES['uploadimage']['error']) {
+			case UPLOAD_ERR_OK:
+				break;
+			case UPLOAD_ERR_NO_FILE:
+				throw new RuntimeException('No se ha enviado ningún archivo.');
+			case UPLOAD_ERR_INI_SIZE:
+			case UPLOAD_ERR_FORM_SIZE:
+				throw new RuntimeException('Se ha superado el límite del tamaño de los archivo.');
+			default:
+				throw new RuntimeException('Error desconocido.');
+		}
+	
+		// Aquí comprueba el tamaño de los archivos.
+		if ($_FILES['uploadimage']['size'] > 1000000) {
+			throw new RuntimeException('Se ha superado el límite del tamaño del archivo.');
+		}
+	
+		// ¡¡¡No confíes en el valor de $_FILES['uploadimage']['mime']!!!
+		// Compruebe usted mismo el tipo MIME. Porque puede ser una imagen JPEG que se sube como text/plain. y se podria bypassear este filtro
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		if (false === $ext = array_search(
+			$finfo->file($_FILES['uploadimage']['tmp_name']),
+			array(
+				'jpg' => 'image/jpeg',
+				'png' => 'image/png',
+				'gif' => 'image/gif',
+			),
+			true
+		)) {
+			throw new RuntimeException('Formato del archivo no válido.');
+		}
+	
+		// El valor de la imagen hasheado se guarda en la variable $file_loc.
+		// Porque el archivo temporal se borra despues de subirse, por lo que primero se hashea el archivo para tener el valor y luego se sube a la carpeta de imagenes.
+		$file_loc=sprintf('%s.%s',
+		sha1_file($_FILES['uploadimage']['tmp_name']),$ext);
+
+		// Aqui genera una string hasheada del archivo temporal y la sube a la carpeta /images/.
+		// Gracias a esto conseguimos que el nombre del archivo sea unico y no se repita.
+		// Con 'sprintf' creamos una cadena con el nombre del archivo y la extensión.
+		// No cambiar a $_FILES['uploadimage']['name'] dado a que perderia completamente la seguridad de la subida de archivos.
+		if (!move_uploaded_file(
+			$_FILES['uploadimage']['tmp_name'],
+			sprintf('./images/%s.%s',
+				sha1_file($_FILES['uploadimage']['tmp_name']),
+				$ext
+			)
+		)) {
+			throw new RuntimeException('No se ha podido subir el archivo.');	
+		}
+	
+		} catch (RuntimeException $e) {
+			echo $e->getMessage();
+		}
 	}
+
+	$image=$file_loc;
 	$maxNumAlumClan = getConfGeneral($dbh, "NUMERO_ALUMNOS_CLAN");
 	$aAlumnos = array ();
 	for ($i=1; $i <=$maxNumAlumClan ; $i++) 
@@ -238,7 +295,7 @@ function getAsteriscos($nBin)
 			echo "anonimous_clan.jpg";
 		}
 		?>" style="width:200px; border-radius:50%; margin:10px;">
-		<input type="file" 	name="image" class="form-control">
+		<input type="file" 	name="uploadimage" class="form-control">
 		<input type="hidden" name="image" class="form-control" value="<?php echo htmlentities($result['IMAGEN']);?>">
 	</div>
 	<div class="col-sm-4">
