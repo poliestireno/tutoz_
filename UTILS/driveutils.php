@@ -17,10 +17,13 @@ function listarEventosCalendar()
       $optParams=array();
 $optParams['singleEvents'] = true;
 $optParams['timeMin'] = date("c", strtotime(date('Y-m-d H:i:s').'-0 days'));
-$optParams['timeMax'] = date("c", strtotime(date('Y-m-d H:i:s').'+2 days'));
+$optParams['timeMax'] = date("c", strtotime(date('Y-m-d H:i:s').'+7 days'));
 // calendario de la salle general  $results = $service->events->listEvents('lasalleinstitucion.es_943bfgn19d6nl8ud67np4bghlc@group.calendar.google.com', $optParams);
 
-$results = $service->events->listEvents('lasalleinstitucion.es_933u0kscb27fig9ah40mdq89nk@group.calendar.google.com', $optParams);
+//$results = $service->events->listEvents('lasalleinstitucion.es_933u0kscb27fig9ah40mdq89nk@group.calendar.google.com', $optParams);
+//MI_SALLE $results = $service->events->listEvents('c_0qao0gq06u9qk0957pk3lm93hs@group.calendar.google.com', $optParams);
+$results = $service->events->listEvents('lasalleinstitucion.es_943bfgn19d6nl8ud67np4bghlc@group.calendar.google.com', $optParams);
+
 //var_export($results);
 //$results = $service->events->listEvents('afsanchez@lasalleinstitucion.es', $optParams);
 //$results = $service->events->listEvents('afsanchez@lasalleinstitucion.es', array());

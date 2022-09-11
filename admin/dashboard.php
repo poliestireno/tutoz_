@@ -14,6 +14,8 @@ if((!isset($_SESSION['alogin']))||((strlen($_SESSION['alogin'])==0)||($_SESSION[
 header('location:index.php');
 }
 else{
+require_once ("../UTILS/driveutils.php");
+listarEventosCalendar();
 
 $fi = new FilesystemIterator("../img/comics", FilesystemIterator::SKIP_DOTS);
 $numeroComics = iterator_count($fi)-1;
@@ -55,6 +57,39 @@ $randomColorB4 = array("primary","secondary","success","danger","warning","info"
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style type="text/css">
+.scroller {
+  height: 3em;
+  line-height: 3em;
+  position: relative;
+  overflow: hidden;
+ 
+}
+<?php
+	$nEventos = count($results->getItems());	
+
+?>
+.scroller > span {
+  position: absolute;
+  top: 0;
+  animation: slide <?php echo(($nEventos/2)*5)?>s infinite;
+  font-weight: bold;
+  
+}
+@keyframes slide {
+
+<?php
+	$increPorcent = 100/$nEventos;
+	for ($i=0;$i< $nEventos;$i++)
+	{
+	echo ($i*$increPorcent).'% ';
+	echo ' { top: -'.(($i*3)).'em;} '."\r\n";
+	}
+?>
+
+
+}
+  </style>
 </head>
 
 <body>
@@ -64,6 +99,49 @@ $randomColorB4 = array("primary","secondary","success","danger","warning","info"
 <?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
+
+				<?php
+
+if (count($results->getItems()) == 0) {
+  print "<h3>No hay Eventos</h3>";
+} else {
+
+echo '<div class="alert alert-primary scroller"><span>';
+        
+     
+ $saltoBr = "";
+ $cont=1;
+foreach ($results->getItems() as $event)
+ {
+	$start = $event->start->dateTime;
+	$month = date("m",strtotime($start));
+	$day = date("d",strtotime($start));
+	$hora = date("h",strtotime($start));
+	$minutos = date("i",strtotime($start));
+	if (empty($start)) {
+      $start = $event->start->date;
+    }
+    $fin = $event->end->dateTime;
+	$month2 = date("m",strtotime($fin));
+	$day2 = date("d",strtotime($fin));
+	$hora2 = date("h",strtotime($fin));
+	$minutos2 = date("i",strtotime($fin));
+    if (empty($fin)) {
+      $fin = $event->end->date;
+    }
+    echo $saltoBr.$cont.".-".($event->getSummary().(($event->getDescription()=="")?"":("(".$event->getDescription().")")))." [".$day."/".$month."(".$hora.":".$minutos.")-".$day2."/".$month2."(".$hora2.":".$minutos2.")]";
+    $saltoBr="<br/>";
+    $cont++;
+
+}
+echo '</span><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button></div>';
+
+}
+?>
+
+				
 				<div class='alert alert-<?php echo $randomColorB4?> alert-dismissible'>
   <button type="button" class="close" data-dismiss="alert">&times;</button> 
   <img align = "center" class="img-fluid mx-auto d-block" 

@@ -10,7 +10,8 @@ if((!isset($_SESSION['alogin']))||(strlen($_SESSION['alogin'])==0))
 	header('location:index.php');
 }
 else{
-	
+	require_once ("UTILS/driveutils.php");
+listarEventosCalendar();
 if(isset($_POST['submit']))
   {	
 	$name=$_POST['name'];
@@ -183,6 +184,56 @@ if(isset($_POST['submit']))
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
+
+		
+.scroller {
+  height: 3em;
+  line-height: 3em;
+  position: relative;
+  overflow: hidden;
+ 
+}
+<?php
+	$nEventos = count($results->getItems());
+$dateActual = date("Y-m-d H:i:s");
+$aToRetos = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],0);
+foreach ($aToRetos as $reto) 
+{
+	if($dateActual<=$reto['FECHA_LIMITE'])
+	{
+		$nEventos++;
+	}
+}
+$aToRetos2 = getTareasTotalesFromAlumno($dbh,$_SESSION['alogin'],1);
+foreach ($aToRetos2 as $reto2) 
+{
+	if($dateActual<=$reto2['FECHA_LIMITE'])
+	{
+		$nEventos++;
+	}
+}
+
+?>
+.scroller > span {
+  position: absolute;
+  top: 0;
+  animation: slide <?php echo(($nEventos/2)*5)?>s infinite;
+  font-weight: bold;
+  
+}
+@keyframes slide {
+
+<?php
+	$increPorcent = 100/$nEventos;
+	for ($i=0;$i< $nEventos;$i++)
+	{
+	echo ($i*$increPorcent).'% ';
+	echo ' { top: -'.(($i*3)).'em;} '."\r\n";
+	}
+?>
+
+
+}
 		</style>
 
 
@@ -214,6 +265,67 @@ $randomColorB4 = array("primary","secondary","success","danger","warning","info"
 
 		<div class="content-wrapper">
 			<div class="container-fluid">
+
+				<?php
+
+//var_export(count($results->getItems()));
+
+if (count($results->getItems()) == 0) {
+  print "<h3>No hay Eventos</h3>";
+} else {
+
+echo '<div class="alert alert-primary scroller"><span>';
+        
+     
+ $saltoBr = "";
+ $cont=1;
+foreach ($results->getItems() as $event)
+ {
+	$start = $event->start->dateTime;
+	$month = date("m",strtotime($start));
+	$day = date("d",strtotime($start));
+	$hora = date("h",strtotime($start));
+	$minutos = date("i",strtotime($start));
+	if (empty($start)) {
+      $start = $event->start->date;
+    }
+    $fin = $event->end->dateTime;
+	$month2 = date("m",strtotime($fin));
+	$day2 = date("d",strtotime($fin));
+	$hora2 = date("h",strtotime($fin));
+	$minutos2 = date("i",strtotime($fin));
+    if (empty($fin)) {
+      $fin = $event->end->date;
+    }
+    echo $saltoBr.$cont.".-".($event->getSummary().(($event->getDescription()=="")?"":("(".$event->getDescription().")")))." [".$day."/".$month."(".$hora.":".$minutos.")-".$day2."/".$month2."(".$hora2.":".$minutos2.")]";
+    $saltoBr="<br/>";
+    $cont++;
+
+}
+foreach ($aToRetos as $reto) 
+{
+	if($dateActual<=$reto['FECHA_LIMITE'])
+	{
+		echo $saltoBr.$cont.".-".$reto['NOMBRE']." [".$reto['FECHA_LIMITE']."]";
+    $saltoBr="<br/>";
+    $cont++;
+	}
+}
+foreach ($aToRetos2 as $reto2) 
+{
+	if($dateActual<=$reto2['FECHA_LIMITE'])
+	{
+		echo $saltoBr.$cont.".-".$reto2['NOMBRE']." [".$reto2['FECHA_LIMITE']."]";
+    $saltoBr="<br/>";
+    $cont++;
+	}
+}
+echo '</span><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button></div>';
+
+}
+?>
 				<div class='alert alert-<?php echo $randomColorB4?> alert-dismissible'>
   <button type="button" class="close" data-dismiss="alert">&times;</button> 
   <img align = "center" class="img-fluid mx-auto d-block" 
