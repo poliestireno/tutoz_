@@ -217,9 +217,9 @@ foreach ($aToRetos2 as $reto2)
 .scroller > span {
   position: absolute;
   top: 0;
-  animation: slide <?php echo(($nEventos/2)*5)?>s infinite;
+  animation: slide <?php echo(($nEventos/2)*7)?>s infinite;
   font-weight: bold;
-  
+  animation-delay: 2s;
 }
 @keyframes slide {
 
@@ -275,10 +275,29 @@ if (count($results->getItems()) == 0) {
 } else {
 
 echo '<div class="alert alert-primary scroller"><span>';
-        
+
+$saltoBr = "";
+$cont=1;    
+foreach ($aToRetos as $reto) 
+{
+	if($dateActual<=$reto['FECHA_LIMITE'])
+	{
+		echo $saltoBr.$cont.".-".$reto['NOMBRE']." [".$reto['FECHA_LIMITE']."]";
+    $saltoBr="<br/>";
+    $cont++;
+	}
+}
+foreach ($aToRetos2 as $reto2) 
+{
+	if($dateActual<=$reto2['FECHA_LIMITE'])
+	{
+		echo $saltoBr.$cont.".-".$reto2['NOMBRE']." [".$reto2['FECHA_LIMITE']."]";
+    $saltoBr="<br/>";
+    $cont++;
+	}
+}
      
- $saltoBr = "";
- $cont=1;
+
 foreach ($results->getItems() as $event)
  {
 	$start = $event->start->dateTime;
@@ -301,24 +320,6 @@ foreach ($results->getItems() as $event)
     $saltoBr="<br/>";
     $cont++;
 
-}
-foreach ($aToRetos as $reto) 
-{
-	if($dateActual<=$reto['FECHA_LIMITE'])
-	{
-		echo $saltoBr.$cont.".-".$reto['NOMBRE']." [".$reto['FECHA_LIMITE']."]";
-    $saltoBr="<br/>";
-    $cont++;
-	}
-}
-foreach ($aToRetos2 as $reto2) 
-{
-	if($dateActual<=$reto2['FECHA_LIMITE'])
-	{
-		echo $saltoBr.$cont.".-".$reto2['NOMBRE']." [".$reto2['FECHA_LIMITE']."]";
-    $saltoBr="<br/>";
-    $cont++;
-	}
 }
 echo '</span><button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
