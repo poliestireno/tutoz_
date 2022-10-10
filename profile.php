@@ -98,7 +98,7 @@ if(isset($_POST['submit']))
 	// Medida de seguridad extra para evitar futuros ataques en cuanto a la escalabilidad de la plataforma.
 	// Funcion que comprueba si una cadena contiene un simbolo especial.
 	function validar_inputs($input_nombre) {
-		return preg_match("/^[a-zA-Z0-9]+$/", $input_nombre);
+		return preg_match("/^[a-zA-Z0-9ñá-źÁ-Ź]+$/", $input_nombre);
 	}
 	// Si el nombre de usuario no contiene un simbolo especial, se sube a la base de datos.
 	if (validar_inputs($name) && validar_inputs($APELLIDO1no) && validar_inputs($APELLIDO2)) {
