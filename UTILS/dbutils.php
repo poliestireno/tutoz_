@@ -2510,6 +2510,26 @@ function getTareasFromAlumno($db,$correo)
 }
 
 
+function getTareasTotales($db)
+{
+  $vectorTotal = array();
+  try
+  {
+
+    $stmt = $db->query("SELECT * FROM TAREAS");
+   
+    while ($fila = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $vectorTotal [] = $fila;
+    }
+     
+  }
+  catch (PDOException $ex)
+  {
+    mi_info_log( "Error en getTareasTotalesFromCurso:".$ex->getMessage());
+  }
+  return $vectorTotal;  
+}
 function getTareasTotalesFromCurso($db,$idCurso)
 {
   $asignaturas = getAsignaturasFromCurso($db,$idCurso);

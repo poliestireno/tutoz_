@@ -67,13 +67,23 @@ $randomColorB4 = array("primary","secondary","success","danger","warning","info"
 }
 <?php
 	$nEventos = count($results->getItems());	
+ 	$dateActual = date("Y-m-d H:i:s");
+	$aToRetos = getTareasTotales($dbh);
+	foreach ($aToRetos as $reto) 
+	{
+		if($dateActual<=$reto['FECHA_LIMITE'])
+		{
+			$nEventos++;
+		}
+	}
 
 ?>
 .scroller > span {
   position: absolute;
   top: 0;
-  animation: slide <?php echo(($nEventos/2)*5)?>s infinite;
+  animation: slide <?php echo(($nEventos/2)*7)?>s infinite;
   font-weight: bold;
+  animation-delay: 2s;  
   
 }
 @keyframes slide {
@@ -111,6 +121,19 @@ echo '<div class="alert alert-primary scroller"><span>';
      
  $saltoBr = "";
  $cont=1;
+  
+foreach ($aToRetos as $reto) 
+{
+	if($dateActual<=$reto['FECHA_LIMITE'])
+	{
+		$asig = getAsignaturaFromAsignaturaID($dbh,$reto['ID_ASIGNATURA']);
+		echo $saltoBr.$cont.".-".$asig['NOMBRE'].": ".$reto['NOMBRE']." [".$reto['FECHA_LIMITE']."]";
+    $saltoBr="<br/>";
+    $cont++;
+	}
+}
+
+
 foreach ($results->getItems() as $event)
  {
 	$start = $event->start->dateTime;
@@ -271,23 +294,6 @@ $query=$query6->rowCount();
 		
 	window.onload = function(){
     
-		// Line chart from swirlData for dashReport
-		var ctx = document.getElementById("dashReport").getContext("2d");
-		window.myLine = new Chart(ctx).Line(swirlData, {
-			responsive: true,
-			scaleShowVerticalLines: false,
-			scaleBeginAtZero : true,
-			multiTooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
-		}); 
-		
-		// Pie Chart from doughutData
-		var doctx = document.getElementById("chart-area3").getContext("2d");
-		window.myDoughnut = new Chart(doctx).Pie(doughnutData, {responsive : true});
-
-		// Dougnut Chart from doughnutData
-		var doctx = document.getElementById("chart-area4").getContext("2d");
-		window.myDoughnut = new Chart(doctx).Doughnut(doughnutData, {responsive : true});
-
 	}
 	</script>
 </body>
