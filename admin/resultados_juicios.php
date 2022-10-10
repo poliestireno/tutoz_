@@ -23,7 +23,7 @@ $idCur="";
 		}
 		else
 		{
-		  $idCur=$_POST['idc3'];
+		  $idCur=$_POST['idc8'];
 		}
 
 //	$msg="todo ok";
@@ -101,7 +101,11 @@ else if ($_POST['accionI']=='activar')
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="page-title">Resultados Juicios de clase <?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
+						<h3 class="page-title">Resultados Juicios de clase 
+
+
+
+							<?php echo getCursoFromCursoID($dbh,$idCur)['NOMBRE']?>/<?php 
   echo getAsignaturasFromCurso($dbh,$idCur)[0]['NOMBRE']?></h3>
 						<div class="row">
 							<div class="col-md-12">
@@ -112,7 +116,7 @@ else if ($_POST['accionI']=='activar')
 									<div class="panel-body">
 
 <form action="resultados_juicios.php" id="form3" method="post">
-  <input type="hidden" name="idc3" id="idc3" value="<?php echo $_POST['idc3']?>"/>
+  <input type="hidden" name="idc8" id="idc8" value="<?php echo $_POST['idc8']?>"/>
 <input type="hidden" name="accionI" id="accionI"/>
 
 	<div class="form-group">

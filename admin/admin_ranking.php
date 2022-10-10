@@ -506,7 +506,7 @@ echo "</ol>";
 
 </form>
 <form target="_blank" action="resultados_juicios.php" id="form7" method="post">
-    <input type="hidden" name="idc3" id="idc3" />
+    <input type="hidden" name="idc8" id="idc8" />
 
  <div class="form-group">
   <div class="col-sm-12">
@@ -832,7 +832,7 @@ if (Count($aToConcursos)>0)
   }
   function resultadosJuicios()
   {
-    document.getElementById('idc3').value = <?php echo $idCur?>;
+    document.getElementById('idc8').value = <?php echo $idCur?>;
     document.getElementById('form7').submit();  
   }
   function justificantes()
