@@ -667,7 +667,9 @@ foreach ($aToRetos as $reto)
 	  		
 
 	      echo '<td>'.(strpos($reto['NOMBRE'], 'MATERIAL')?"-":$datosAlumnoTarea['ESTADO']).'</td>';
-echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS'].'</b>').'</td>';
+echo '<td>'.(($datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']==NULL)?'-':'<b>'.
+	((($reto['VISIBLE_NOTAS']==1))?$datosAlumnoTarea['ESTRELLAS_CONSEGUIDAS']:'-')
+	.'</b>').'</td>';
 	      echo '<td>'.(strpos($reto['NOMBRE'], 'MATERIAL')?"-":$reto['TOTAL_ESTRELLAS']).'</td>';
 	      echo '<td>'.(($datosAlumnoTarea['FECHA']==NULL)?'-':$datosAlumnoTarea['FECHA']).'</td>';
 	      echo '<td>'.$fechaCreacionReto.'</td>';

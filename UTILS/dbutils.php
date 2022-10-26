@@ -464,8 +464,8 @@ function insertarFastest($db,$asignatura,$name,$descrip,$psr)
 }
 function insertarReto($db,$asignatura,$name,$totalestrellas,$descrip,$selSitios,$posx,$posy,$linkdocumento,$fechalimite,$visible,$examen,$rubrica,$visible_web)
 {
-  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE,VISIBLE_WEB, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN,RUBRICA)
-              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE,:VISIBLE_WEB, :DESCRIPCION, :LINK_DOCUMENTO, now(),:FECHA_LIMITE,:EXAMEN,:RUBRICA)";
+  $sentencia= "INSERT INTO TAREAS ( ID_ASIGNATURA, NOMBRE, TOTAL_ESTRELLAS, ID_SITIO, POS_X, POS_Y,VISIBLE,VISIBLE_WEB,VISIBLE_NOTAS, DESCRIPCION,LINK_DOCUMENTO,FECHA_CREACION,FECHA_LIMITE,EXAMEN,RUBRICA)
+              VALUES ( :ID_ASIGNATURA, :NOMBRE, :TOTAL_ESTRELLAS, :ID_SITIO, :POS_X, :POS_Y,:VISIBLE,:VISIBLE_WEB,0, :DESCRIPCION, :LINK_DOCUMENTO, now(),:FECHA_LIMITE,:EXAMEN,:RUBRICA)";
   try
   {
     $stmt = $db->prepare($sentencia);
@@ -3007,6 +3007,19 @@ function modificarVisibleWebFromRetoId($db,$idReto,$value)
   } catch(PDOException $ex) 
   {    
    mi_info_log( "An Error occured! modificarVisibleWebFromRetoId ".$ex->getMessage());
+  } 
+  return $stmt->rowCount();
+}
+function modificarVisibleNotasFromRetoId($db,$idReto,$value)
+{
+  try 
+  {
+    $sql = "UPDATE TAREAS SET VISIBLE_NOTAS='".$value."' WHERE ID=".$idReto;
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+  } catch(PDOException $ex) 
+  {    
+   mi_info_log( "An Error occured! modificarVisibleNotasFromRetoId ".$ex->getMessage());
   } 
   return $stmt->rowCount();
 }

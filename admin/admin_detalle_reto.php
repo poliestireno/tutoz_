@@ -50,6 +50,15 @@ if (isset($_POST['cambiaVisibilidad'])&&($_POST['cambiaVisibilidad']=='A'))
 	}
 	modificarVisibleWebFromRetoId($dbh,$idReto,$valuee);
 }
+if (isset($_POST['cambiaVisibilidadNotas'])&&($_POST['cambiaVisibilidadNotas']=='A'))
+{
+	$valuee=0;
+	if (isset($_POST['cbVisibleNotas']))
+	{
+		$valuee=1;
+	}
+	modificarVisibleNotasFromRetoId($dbh,$idReto,$valuee);
+}
 if (isset($_POST['incognito'])&&($_POST['incognito']=='A'))
 {
 	$aNull=true;
@@ -247,6 +256,7 @@ function cambioNota(a) {
 <input type='hidden' name='actualizarEs' id='actualizarEs' value='0'/>
 <input type='hidden' name='incognito' id='incognito' value='0'/>
 <input type='hidden' name='cambiaVisibilidad' id='cambiaVisibilidad' value='0'/>
+<input type='hidden' name='cambiaVisibilidadNotas' id='cambiaVisibilidadNotas' value='0'/>
 
   		<input type="hidden" name="idr" value="<?php echo $idReto;?>"/>
  		<input type="hidden" name="idc" value="<?php echo $_POST['idc'];?>"/>
@@ -271,6 +281,7 @@ function cambioNota(a) {
       <th>Descripción</th>
       <th>Documento</th>
       <th>Visible</th>
+      <th>Visible_Notas</th>
     </tr>
   </thead>
   <!--Table head-->
@@ -284,6 +295,7 @@ function cambioNota(a) {
         echo '<td>'.$reto['DESCRIPCION'].'</td>';
         echo '<td>'.(($reto['LINK_DOCUMENTO']==NULL)?'-':'<a href="'.$reto['LINK_DOCUMENTO'].'" target="_blank" rel="noopener">[IR AL DOCUMENTO]</a>').'</td>';
         echo '<td><input type="checkbox" id="cbVisible" name="cbVisible" onchange="managecbVisible();" '.(($reto['VISIBLE_WEB']==1)?'checked="checked"':'').'</td>';
+        echo '<td><input type="checkbox" id="cbVisibleNotas" name="cbVisibleNotas" onchange="managecbVisibleNotas();" '.(($reto['VISIBLE_NOTAS']==1)?'checked="checked"':'').'</td>';
       echo '</tr>';
     
 
@@ -632,6 +644,30 @@ document.getElementById("form1").submit();
           {
 
           	document.getElementById("cbVisible").checked = !document.getElementById("cbVisible").checked;
+          }
+        });
+    
+  }			 
+	 function managecbVisibleNotas()
+  {
+    
+  	Swal.fire({
+          title: '¿Seguro que quieres cambiar la visivilidad de las notas del reto?',
+          text: "...",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, la cambio!'
+        }).then((result) => {
+          if (result.value) {
+ document.getElementById('cambiaVisibilidadNotas').value = 'A';
+document.getElementById("form1").submit();
+          }
+          else
+          {
+
+          	document.getElementById("cbVisibleNotas").checked = !document.getElementById("cbVisibleNotas").checked;
           }
         });
     

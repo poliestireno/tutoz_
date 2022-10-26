@@ -90,8 +90,10 @@ if ($haySitio)
         // notificación general de creación de reto a la clase
         $clase = getAsignaturasFromCurso($dbh,$curso['ID'])[0]['NOMBRE'];
         $mensaje = "Se ha creado un nuevo reto de " .$totalestrellas. " estrellas llamado ".$name.", ¡A por él!";
-        
-        mandarNotificacion($dbh,'Admin',$clase,$mensaje);
+        if ($visible_web==1)
+        {
+            mandarNotificacion($dbh,'Admin',$clase,$mensaje);
+        }       
         echo "<script type='text/javascript'>alert('Reto creado correctamente!');</script>";
     }
     else
