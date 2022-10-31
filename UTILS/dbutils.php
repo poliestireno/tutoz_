@@ -85,7 +85,6 @@ truncate
   alumnos_juicios
   cambios
   mercado
-  eventos
   juicios
 
 asignaturasSetPreguntas todo escepto marcas que queda como ejemplo del año pasado
