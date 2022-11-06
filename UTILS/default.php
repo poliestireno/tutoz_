@@ -268,7 +268,7 @@
                 <div class="column-custom">
                     <h3 style="padding-bottom: 5px">Hostinger Blog</h3>
                     <br>
-                    <p>Become a part of Hostinger community. Subscribe to receive updates on the daily life at Hostinger, engineering, marketing and other web hosting news.</p>
+                    <p>Become a part of Hostinger community. Subscribe to suave receive updates on the daily life at Hostinger, engineering, marketing and other web hosting news.</p>
                     <br>
                     <a href="https://www.hostinger.com/blog/">Learn more</a>
                 </div>
